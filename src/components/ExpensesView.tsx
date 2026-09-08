@@ -1,0 +1,1042 @@
+import React, { useState, useMemo } from 'react';
+import {
+  ArrowDownRight,
+  Plus,
+  Search,
+  Download,
+  Calendar,
+  CreditCard,
+  Trash2,
+  Edit2,
+  PieChart as PieIcon,
+  Tag,
+  AlertCircle,
+  TrendingDown,
+  ShoppingBag,
+  SlidersHorizontal,
+  Coffee,
+  Utensils,
+  Home,
+  Layers,
+  Zap,
+  GraduationCap,
+  HeartPulse,
+  Film,
+  Plane,
+  Clock,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle2,
+  Flame,
+  LayoutGrid,
+  ListFilter,
+  BarChart3,
+  Split,
+  ArrowLeft,
+} from 'lucide-react';
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart,
+  Pie,
+  Cell,
+  CartesianGrid,
+  AreaChart,
+  Area,
+} from 'recharts';
+import { useFinance } from '../context/FinanceContext';
+import { DEFAULT_EXPENSE_CATEGORIES } from '../data/defaultData';
+import { Transaction } from '../types';
+
+interface ExpensesViewProps {
+  onOpenTransactionModal: (type?: 'income' | 'expense') => void;
+  onEditTransaction: (tx: Transaction) => void;
+  onBackToDashboard?: () => void;
+}
+
+const CATEGORY_COLORS: Record<string, string> = {
+  'Food & Dining': '#10b981',
+  'Housing & Rent': '#6366f1',
+  'Household & Living': '#14b8a6',
+  'Utilities & Bills': '#f59e0b',
+  'Transportation': '#3b82f6',
+  'Education': '#8b5cf6',
+  'Shopping': '#ec4899',
+  'Entertainment': '#06b6d4',
+  'Healthcare & Medical': '#ef4444',
+  'Personal Care': '#2dd4bf',
+  'Travel': '#f97316',
+  'Other': '#64748b',
+};
+
+const SECTOR_ICON_MAP: Record<string, React.ReactNode> = {
+  'Food & Dining': <Utensils className="w-4 h-4 text-emerald-400" />,
+  'Housing & Rent': <Home className="w-4 h-4 text-indigo-400" />,
+  'Household & Living': <Layers className="w-4 h-4 text-teal-400" />,
+  'Utilities & Bills': <Zap className="w-4 h-4 text-amber-400" />,
+  'Transportation': <TrendingDown className="w-4 h-4 text-blue-400" />,
+  'Education': <GraduationCap className="w-4 h-4 text-violet-400" />,
+  'Shopping': <ShoppingBag className="w-4 h-4 text-pink-400" />,
+  'Entertainment': <Film className="w-4 h-4 text-cyan-400" />,
+  'Healthcare & Medical': <HeartPulse className="w-4 h-4 text-rose-400" />,
+  'Personal Care': <HeartPulse className="w-4 h-4 text-teal-300" />,
+  'Travel': <Plane className="w-4 h-4 text-orange-400" />,
+  'Other': <SlidersHorizontal className="w-4 h-4 text-slate-400" />,
+};
+
+// Daily Quick Expense Presets in Taka (৳ BDT)
+const DAILY_PRESETS = [
+  { label: '☕ Tea & Snacks', amount: 40, category: 'Food & Dining', desc: 'Street Tea Stall & Biscuit' },
+  { label: '🍛 Daily Lunch', amount: 150, category: 'Food & Dining', desc: 'Mess / Office Meal' },
+  { label: '🛺 Commute & Transit', amount: 50, category: 'Transportation', desc: 'Rickshaw, Metro MRT & Bus' },
+  { label: '🛒 Daily Groceries', amount: 350, category: 'Household & Living', desc: 'Vegetables, Milk & Eggs' },
+  { label: '🥟 Evening Snacks', amount: 60, category: 'Food & Dining', desc: 'Singara, Samucha & Snack' },
+];
+
+export const ExpensesView: React.FC<ExpensesViewProps> = ({
+  onOpenTransactionModal,
+  onEditTransaction,
+  onBackToDashboard,
+}) => {
+  const {
+    transactions,
+    addTransaction,
+    deleteTransaction,
+    selectedMonth,
+    setSelectedMonth,
+    formatCurrency,
+    exportCSV,
+    profile,
+    budgets,
+  } = useFinance();
+
+  // Active view tab: 'all' (Standard Transactions) | 'daily' (Daily Expense Tracker) | 'sectors' (Sector Division Analysis)
+  const [activeTab, setActiveTab] = useState<'all' | 'daily' | 'sectors'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSector, setSelectedSector] = useState<string>('all');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('all');
+  const [sortBy, setSortBy] = useState<'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc'>('date_desc');
+  const [expandedDays, setExpandedDays] = useState<Record<string, boolean>>({});
+
+  // Filter expense transactions
+  const expenseTransactions = useMemo(() => {
+    return transactions.filter((tx) => tx.type === 'expense');
+  }, [transactions]);
+
+  // Monthly expenses list
+  const monthlyExpenses = useMemo(() => {
+    return expenseTransactions.filter((tx) => tx.date.startsWith(selectedMonth));
+  }, [expenseTransactions, selectedMonth]);
+
+  // Category & Sector Summary
+  const sectorSummary = useMemo(() => {
+    const map: Record<string, { count: number; total: number }> = {};
+    DEFAULT_EXPENSE_CATEGORIES.forEach((cat) => {
+      map[cat] = { count: 0, total: 0 };
+    });
+
+    monthlyExpenses.forEach((tx) => {
+      const cat = tx.category || 'Other';
+      if (!map[cat]) {
+        map[cat] = { count: 0, total: 0 };
+      }
+      map[cat].count += 1;
+      map[cat].total += tx.amount;
+    });
+
+    return map;
+  }, [monthlyExpenses]);
+
+  // Filtered expenses for standard view
+  const displayExpenses = useMemo(() => {
+    return expenseTransactions
+      .filter((tx) => {
+        const matchesMonth = selectedMonth ? tx.date.startsWith(selectedMonth) : true;
+        const matchesSearch =
+          tx.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tx.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (tx.tags && tx.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))) ||
+          (tx.notes && tx.notes.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesSector = selectedSector === 'all' || tx.category === selectedSector;
+        const matchesPayment = selectedPaymentMethod === 'all' || tx.paymentMethod === selectedPaymentMethod;
+        return matchesMonth && matchesSearch && matchesSector && matchesPayment;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'date_desc') return new Date(b.date).getTime() - new Date(a.date).getTime();
+        if (sortBy === 'date_asc') return new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (sortBy === 'amount_desc') return b.amount - a.amount;
+        if (sortBy === 'amount_asc') return a.amount - b.amount;
+        return 0;
+      });
+  }, [expenseTransactions, selectedMonth, searchQuery, selectedSector, selectedPaymentMethod, sortBy]);
+
+  // Stats calculation
+  const totalMonthlyExpense = useMemo(() => {
+    return monthlyExpenses.reduce((sum, tx) => sum + tx.amount, 0);
+  }, [monthlyExpenses]);
+
+  const monthlyBudgetLimit = profile.monthlyExpenseBudget || 3400;
+  const daysInMonth = 30;
+  const targetDailyBudget = monthlyBudgetLimit / daysInMonth;
+  const actualAvgDailySpend = totalMonthlyExpense / daysInMonth;
+
+  // Daily Expense Aggregation (Group by Date)
+  const dailyGroups = useMemo(() => {
+    const groups: Record<string, { date: string; total: number; transactions: Transaction[] }> = {};
+
+    monthlyExpenses.forEach((tx) => {
+      if (!groups[tx.date]) {
+        groups[tx.date] = { date: tx.date, total: 0, transactions: [] };
+      }
+      groups[tx.date].total += tx.amount;
+      groups[tx.date].transactions.push(tx);
+    });
+
+    return Object.values(groups).sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }, [monthlyExpenses]);
+
+  // Daily spending chart data
+  const dailyChartData = useMemo(() => {
+    const map: Record<string, number> = {};
+    for (let d = 1; d <= 30; d++) {
+      const dayStr = d < 10 ? `0${d}` : `${d}`;
+      const fullDate = `${selectedMonth}-${dayStr}`;
+      map[fullDate] = 0;
+    }
+    monthlyExpenses.forEach((tx) => {
+      if (map[tx.date] !== undefined) {
+        map[tx.date] += tx.amount;
+      }
+    });
+
+    return Object.entries(map).map(([date, amount]) => ({
+      day: date.split('-')[2] || date,
+      fullDate: date,
+      amount,
+      targetDailyBudget,
+    }));
+  }, [monthlyExpenses, selectedMonth, targetDailyBudget]);
+
+  // Sector chart data
+  const sectorChartData = useMemo(() => {
+    return (Object.entries(sectorSummary) as [string, { count: number; total: number }][])
+      .filter(([_, data]) => data.total > 0)
+      .map(([sector, data]) => ({
+        name: sector,
+        value: data.total,
+        count: data.count,
+        percentage: totalMonthlyExpense > 0 ? (data.total / totalMonthlyExpense) * 100 : 0,
+        color: CATEGORY_COLORS[sector] || '#64748b',
+      }))
+      .sort((a, b) => b.value - a.value);
+  }, [sectorSummary, totalMonthlyExpense]);
+
+  const topSector = sectorChartData[0] || { name: 'Food & Dining', value: 0, percentage: 0 };
+
+  // Quick 1-click log
+  const handleQuickLog = (preset: (typeof DAILY_PRESETS)[0]) => {
+    addTransaction({
+      type: 'expense',
+      amount: preset.amount,
+      category: preset.category,
+      description: preset.desc,
+      date: new Date().toISOString().split('T')[0],
+      paymentMethod: 'Credit Card',
+      recurring: 'none',
+      tags: ['DailyExpense', preset.category.split(' ')[0]],
+    });
+  };
+
+  const toggleDayExpansion = (date: string) => {
+    setExpandedDays((prev) => ({ ...prev, [date]: !prev[date] }));
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-200" id="finora-expenses-view">
+      {onBackToDashboard && (
+        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
+          <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
+        </button>
+      )}
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+        <div>
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-400">
+              Expense Engine & Sectors
+            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
+            <span className="text-xs text-slate-400">
+              Food & Dining • Housing & Rent • Household & Living • Daily Expenses
+            </span>
+          </div>
+          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+            Expense Tracking & Sector Division
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Track daily living expenses and analyze sector allocations across food, rent, household, and utilities.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center space-x-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs">
+            <Calendar className="w-4 h-4 text-slate-400" />
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="bg-transparent text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer font-mono"
+            />
+          </div>
+
+          <button
+            onClick={() => exportCSV('expense')}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+            title="Download Expense CSV"
+          >
+            <Download className="w-4 h-4" />
+            <span className="hidden sm:inline">Export CSV</span>
+          </button>
+
+          <button
+            onClick={() => onOpenTransactionModal('expense')}
+            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white text-xs font-bold shadow-md shadow-rose-500/25 transition-all active:scale-95 cursor-pointer"
+            id="expenses-view-add-btn"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Add Expense</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Quick 1-Tap Daily Expense Bar */}
+      <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+          <div className="flex items-center space-x-2">
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <Coffee className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-xs font-bold text-white">Daily Expense 1-Click Fast-Log</h3>
+              <p className="text-[10px] text-slate-400">
+                Log common daily purchases into Food, Transit, and Household with a single tap.
+              </p>
+            </div>
+          </div>
+          <span className="text-[11px] text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 self-start sm:self-auto">
+            Today's Target: {formatCurrency(targetDailyBudget)}/day
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {DAILY_PRESETS.map((preset) => (
+            <button
+              key={preset.label}
+              type="button"
+              onClick={() => handleQuickLog(preset)}
+              className="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all active:scale-95 cursor-pointer group"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                  {preset.label}
+                </span>
+                <span className="text-xs font-black text-rose-400 font-mono">
+                  {formatCurrency(preset.amount)}
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+                {preset.category}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4 Summary Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Outflow */}
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Monthly Outflow</span>
+            <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center">
+              <ArrowDownRight className="w-4 h-4 stroke-[2.5]" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-rose-400 tracking-tight mt-2 font-mono">
+            {formatCurrency(totalMonthlyExpense)}
+          </p>
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+            <span>Budget: {formatCurrency(monthlyBudgetLimit)}</span>
+            <span className={totalMonthlyExpense > monthlyBudgetLimit ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
+              {((totalMonthlyExpense / monthlyBudgetLimit) * 100).toFixed(0)}% Used
+            </span>
+          </div>
+        </div>
+
+        {/* Daily Burn Rate */}
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Daily Burn Velocity</span>
+            <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
+              <Flame className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-white tracking-tight mt-2 font-mono">
+            {formatCurrency(actualAvgDailySpend)}
+            <span className="text-xs font-normal text-slate-400">/day</span>
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+            {actualAvgDailySpend <= targetDailyBudget ? (
+              <span className="text-emerald-400 font-bold flex items-center gap-0.5">
+                <CheckCircle2 className="w-3 h-3" /> Pacing under {formatCurrency(targetDailyBudget)}
+              </span>
+            ) : (
+              <span className="text-rose-400 font-bold flex items-center gap-0.5">
+                <AlertCircle className="w-3 h-3" /> Over {formatCurrency(targetDailyBudget)} limit
+              </span>
+            )}
+          </p>
+        </div>
+
+        {/* Top Outflow Sector */}
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Primary Sector</span>
+            <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+              <Layers className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-xl font-black text-white tracking-tight mt-2 truncate">
+            {topSector.name}
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            <strong className="text-rose-400 font-mono">{formatCurrency(topSector.value)}</strong> ({topSector.percentage.toFixed(0)}% of total)
+          </p>
+        </div>
+
+        {/* Total Expense Entries */}
+        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Recorded Outflows</span>
+            <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
+              <Clock className="w-4 h-4" />
+            </div>
+          </div>
+          <p className="text-2xl font-black text-white tracking-tight mt-2">
+            {monthlyExpenses.length} <span className="text-xs font-normal text-slate-400">items</span>
+          </p>
+          <p className="text-[11px] text-slate-400 mt-1">
+            Across {dailyGroups.length} active spending days
+          </p>
+        </div>
+      </div>
+
+      {/* Main View Mode Selector */}
+      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div className="flex items-center space-x-2 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <button
+            type="button"
+            onClick={() => setActiveTab('all')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'all'
+                ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <ListFilter className="w-3.5 h-3.5" />
+            <span>All Transactions ({displayExpenses.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('daily')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'daily'
+                ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Daily Expense Tracker ({dailyGroups.length} Days)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('sectors')}
+            className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+              activeTab === 'sectors'
+                ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>Sector Division (Food, Rent, Household)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* TAB 1: ALL TRANSACTIONS WITH SECTOR PILLS & SEARCH */}
+      {activeTab === 'all' && (
+        <div className="space-y-6 animate-in fade-in duration-150">
+          {/* Sector Filter Chips */}
+          <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-rose-400" /> Filter by Sector
+              </span>
+              <button
+                onClick={() => setSelectedSector('all')}
+                className={`text-xs font-semibold cursor-pointer ${
+                  selectedSector === 'all' ? 'text-rose-400 font-bold underline' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                Reset Filter (Show All)
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {DEFAULT_EXPENSE_CATEGORIES.map((cat) => {
+                const data = sectorSummary[cat] || { count: 0, total: 0 };
+                const isSelected = selectedSector === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedSector(isSelected ? 'all' : cat)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer ${
+                      isSelected
+                        ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25 ring-2 ring-rose-400'
+                        : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                    }`}
+                  >
+                    <div
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: CATEGORY_COLORS[cat] || '#64748b' }}
+                    />
+                    <span>{cat}</span>
+                    <span className="text-[10px] opacity-75 font-mono">
+                      ({formatCurrency(data.total)})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Search & Sort Bar */}
+          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+            <div className="relative w-full sm:w-80">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search expense merchant, sector, tag..."
+                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+              <select
+                value={selectedPaymentMethod}
+                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+              >
+                <option value="all">All Payment Methods</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cash">Cash</option>
+                <option value="UPI / Online">UPI / Online</option>
+                <option value="PayPal / Stripe">PayPal / Stripe</option>
+              </select>
+
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+              >
+                <option value="date_desc">Newest Date First</option>
+                <option value="date_asc">Oldest Date First</option>
+                <option value="amount_desc">Highest Amount</option>
+                <option value="amount_asc">Lowest Amount</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Expense Records List */}
+          <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden" id="expenses-table-card">
+            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <span>Expense Outflows</span>
+                <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-normal">
+                  {displayExpenses.length} transactions
+                </span>
+              </h3>
+              <span className="text-xs text-rose-400 font-bold font-mono">
+                Total: {formatCurrency(displayExpenses.reduce((s, t) => s + t.amount, 0))}
+              </span>
+            </div>
+
+            {displayExpenses.length === 0 ? (
+              <div className="py-16 text-center text-slate-400 text-xs">
+                <ShoppingBag className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+                No expense transactions match your filters.
+              </div>
+            ) : (
+              <div className="divide-y divide-slate-800">
+                {displayExpenses.map((tx) => (
+                  <div
+                    key={tx.id}
+                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors"
+                  >
+                    <div className="flex items-start space-x-3">
+                      <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                        {SECTOR_ICON_MAP[tx.category] || <ArrowDownRight className="w-5 h-5 stroke-[2.5]" />}
+                      </div>
+                      <div>
+                        <div className="flex items-center space-x-2 flex-wrap gap-y-1">
+                          <h4 className="text-xs font-bold text-white">{tx.description}</h4>
+                          <span
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                            style={{
+                              backgroundColor: `${CATEGORY_COLORS[tx.category] || '#64748b'}25`,
+                              color: CATEGORY_COLORS[tx.category] || '#94a3b8',
+                              border: `1px solid ${CATEGORY_COLORS[tx.category] || '#64748b'}50`,
+                            }}
+                          >
+                            {tx.category}
+                          </span>
+                          {tx.sectorSplits && tx.sectorSplits.length > 0 && (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40 flex items-center gap-1">
+                              <Split className="w-2.5 h-2.5" /> Multi-Sector Split ({tx.sectorSplits.length})
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 mt-1">
+                          <span className="font-mono">{tx.date}</span>
+                          <span>•</span>
+                          <span>{tx.paymentMethod}</span>
+                          {tx.recurring && tx.recurring !== 'none' && (
+                            <>
+                              <span>•</span>
+                              <span className="text-rose-400 font-medium capitalize">{tx.recurring} Recurring</span>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Multi-Sector Split Itemized Badges */}
+                        {tx.sectorSplits && tx.sectorSplits.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-2 p-2 rounded-lg bg-slate-950 border border-slate-800 text-[10px]">
+                            <span className="text-slate-400 font-bold">Divided in Sectors:</span>
+                            {tx.sectorSplits.map((s, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-200"
+                              >
+                                <strong>{s.sector}</strong>: {formatCurrency(s.amount)} {s.note ? `(${s.note})` : ''}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        {tx.notes && (
+                          <p className="text-[11px] text-slate-400 mt-1 italic">
+                            "{tx.notes}"
+                          </p>
+                        )}
+
+                        {tx.tags && tx.tags.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1.5">
+                            {tx.tags.map((t) => (
+                              <span
+                                key={t}
+                                className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono"
+                              >
+                                #{t}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between sm:justify-end space-x-4 shrink-0">
+                      <span className="text-base font-black text-rose-400 tracking-tight font-mono">
+                        -{formatCurrency(tx.amount)}
+                      </span>
+                      <div className="flex items-center space-x-1">
+                        <button
+                          onClick={() => onEditTransaction(tx)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                          title="Edit Expense"
+                        >
+                          <Edit2 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => deleteTransaction(tx.id)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                          title="Delete Expense"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 2: DAILY EXPENSE TRACKER & TIMELINE */}
+      {activeTab === 'daily' && (
+        <div className="space-y-6 animate-in fade-in duration-150">
+          {/* Daily Timeline Chart */}
+          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                  <Flame className="w-4 h-4 text-amber-400" />
+                  Daily Spending Velocity & Budget Pacing
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Day-by-day outflow vs recommended daily budget limit ({formatCurrency(targetDailyBudget)}/day).
+                </p>
+              </div>
+              <div className="flex items-center gap-3 text-xs font-medium">
+                <span className="flex items-center gap-1 text-slate-300">
+                  <span className="w-3 h-3 rounded bg-rose-500 inline-block"></span> Daily Outflow
+                </span>
+                <span className="flex items-center gap-1 text-slate-400">
+                  <span className="w-3 h-0.5 bg-amber-400 inline-block"></span> Target Threshold
+                </span>
+              </div>
+            </div>
+
+            <div className="h-56 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={dailyChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
+                  <XAxis dataKey="day" stroke="#94a3b8" fontSize={10} tickFormatter={(val) => `D${val}`} />
+                  <YAxis stroke="#94a3b8" fontSize={10} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                    formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Daily Spent']}
+                    labelFormatter={(label) => `Day ${label} (${selectedMonth})`}
+                  />
+                  <Bar dataKey="amount" fill="#f43f5e" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Grouped Day-by-Day Expense Cards */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-white flex items-center justify-between">
+              <span>Day-by-Day Expense Feed ({dailyGroups.length} Active Days)</span>
+              <span className="text-xs text-slate-400 font-normal">Click day to expand/collapse details</span>
+            </h3>
+
+            {dailyGroups.length === 0 ? (
+              <div className="p-12 text-center bg-slate-900 rounded-2xl border border-slate-800 text-slate-400 text-xs">
+                No daily expense records found for {selectedMonth}.
+              </div>
+            ) : (
+              dailyGroups.map((group) => {
+                const isExpanded = expandedDays[group.date] !== false; // expanded by default
+                const isOverDailyBudget = group.total > targetDailyBudget;
+
+                return (
+                  <div
+                    key={group.date}
+                    className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden transition-all shadow-sm"
+                  >
+                    {/* Day Header */}
+                    <div
+                      onClick={() => toggleDayExpansion(group.date)}
+                      className="p-4 bg-slate-950/60 flex items-center justify-between cursor-pointer hover:bg-slate-950 transition-colors"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs font-mono border ${
+                            isOverDailyBudget
+                              ? 'bg-rose-500/20 text-rose-400 border-rose-500/30'
+                              : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30'
+                          }`}
+                        >
+                          {group.date.split('-')[2]}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h4 className="text-xs font-bold text-white font-mono">{group.date}</h4>
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                                isOverDailyBudget
+                                  ? 'bg-rose-500/20 text-rose-300'
+                                  : 'bg-emerald-500/20 text-emerald-300'
+                              }`}
+                            >
+                              {isOverDailyBudget ? 'Above Target' : 'Within Target'}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-400">
+                            {group.transactions.length} purchase{group.transactions.length > 1 ? 's' : ''} logged
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <div className="text-right">
+                          <span className="text-sm font-black text-rose-400 font-mono">
+                            -{formatCurrency(group.total)}
+                          </span>
+                          <span className="text-[10px] text-slate-500 block">Day Total</span>
+                        </div>
+                        {isExpanded ? (
+                          <ChevronUp className="w-4 h-4 text-slate-400" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4 text-slate-400" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Day Itemized List */}
+                    {isExpanded && (
+                      <div className="divide-y divide-slate-800/80 bg-slate-900/40">
+                        {group.transactions.map((tx) => (
+                          <div
+                            key={tx.id}
+                            className="p-3.5 sm:px-6 flex items-center justify-between hover:bg-slate-800/30 text-xs"
+                          >
+                            <div className="flex items-center space-x-3">
+                              <div className="p-1.5 rounded-lg bg-slate-950 border border-slate-800">
+                                {SECTOR_ICON_MAP[tx.category] || <ShoppingBag className="w-3.5 h-3.5 text-slate-400" />}
+                              </div>
+                              <div>
+                                <span className="font-bold text-slate-200">{tx.description}</span>
+                                <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                  <span className="text-emerald-400 font-semibold">{tx.category}</span>
+                                  <span>•</span>
+                                  <span>{tx.paymentMethod}</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="flex items-center space-x-3">
+                              <span className="font-bold text-slate-100 font-mono">
+                                -{formatCurrency(tx.amount)}
+                              </span>
+                              <button
+                                onClick={() => onEditTransaction(tx)}
+                                className="p-1 text-slate-400 hover:text-white cursor-pointer"
+                                title="Edit"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: SECTOR DIVISION (Food, Rent, Household, Utilities, Transport, etc.) */}
+      {activeTab === 'sectors' && (
+        <div className="space-y-6 animate-in fade-in duration-150">
+          {/* Sector Highlight Cards: Food, Housing/Rent, Household/Groceries */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Sector 1: Food & Dining */}
+            <div className="p-5 rounded-2xl bg-slate-900 border border-emerald-500/30 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                    <Utensils className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white">Food & Dining Sector</h4>
+                    <p className="text-[10px] text-slate-400">Meals, Cafeteria, Dining, Coffee</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-2xl font-black text-emerald-400 tracking-tight mt-3 font-mono">
+                {formatCurrency(sectorSummary['Food & Dining']?.total || 0)}
+              </p>
+              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+                <span>{sectorSummary['Food & Dining']?.count || 0} meals logged</span>
+                <span className="text-emerald-300 font-bold">
+                  {totalMonthlyExpense > 0
+                    ? (((sectorSummary['Food & Dining']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
+                    : 0}
+                  % Outflow
+                </span>
+              </div>
+            </div>
+
+            {/* Sector 2: Housing & Rent */}
+            <div className="p-5 rounded-2xl bg-slate-900 border border-indigo-500/30 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                    <Home className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white">Housing & Rent Sector</h4>
+                    <p className="text-[10px] text-slate-400">Apartment Rent, Hostel, Lease</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-2xl font-black text-indigo-400 tracking-tight mt-3 font-mono">
+                {formatCurrency(sectorSummary['Housing & Rent']?.total || 0)}
+              </p>
+              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+                <span>Fixed monthly shelter</span>
+                <span className="text-indigo-300 font-bold">
+                  {totalMonthlyExpense > 0
+                    ? (((sectorSummary['Housing & Rent']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
+                    : 0}
+                  % Outflow
+                </span>
+              </div>
+            </div>
+
+            {/* Sector 3: Household & Living */}
+            <div className="p-5 rounded-2xl bg-slate-900 border border-teal-500/30 shadow-sm relative overflow-hidden">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
+                    <Layers className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-white">Household & Living Sector</h4>
+                    <p className="text-[10px] text-slate-400">Groceries, Essentials, Cleaning</p>
+                  </div>
+                </div>
+              </div>
+              <p className="text-2xl font-black text-teal-400 tracking-tight mt-3 font-mono">
+                {formatCurrency(sectorSummary['Household & Living']?.total || 0)}
+              </p>
+              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+                <span>{sectorSummary['Household & Living']?.count || 0} purchases</span>
+                <span className="text-teal-300 font-bold">
+                  {totalMonthlyExpense > 0
+                    ? (((sectorSummary['Household & Living']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
+                    : 0}
+                  % Outflow
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Sector Breakdown Chart & Full Comparison */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                <PieIcon className="w-4 h-4 text-rose-400" />
+                Sector Allocation Share
+              </h3>
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={sectorChartData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={70}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {sectorChartData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                      formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Total Spent']}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="lg:col-span-2 p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+                <BarChart3 className="w-4 h-4 text-rose-400" />
+                Sector Expense Comparison
+              </h3>
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={sectorChartData} layout="vertical" margin={{ top: 5, right: 20, left: 65, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.4} />
+                    <XAxis type="number" stroke="#94a3b8" fontSize={11} />
+                    <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                      formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Spent']}
+                    />
+                    <Bar dataKey="value" fill="#f43f5e" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+
+          {/* Sector Deep Dive Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {DEFAULT_EXPENSE_CATEGORIES.map((cat) => {
+              const data = sectorSummary[cat] || { count: 0, total: 0 };
+              const pct = totalMonthlyExpense > 0 ? (data.total / totalMonthlyExpense) * 100 : 0;
+              return (
+                <div
+                  key={cat}
+                  className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="p-1.5 rounded-lg bg-slate-950 border border-slate-800">
+                        {SECTOR_ICON_MAP[cat] || <ShoppingBag className="w-4 h-4 text-slate-400" />}
+                      </div>
+                      <span className="text-xs font-bold text-white">{cat}</span>
+                    </div>
+                    <span className="text-xs font-mono font-bold text-rose-400">
+                      {formatCurrency(data.total)}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 space-y-1">
+                    <div className="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.min(pct, 100)}%`,
+                          backgroundColor: CATEGORY_COLORS[cat] || '#64748b',
+                        }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] text-slate-400">
+                      <span>{data.count} transactions</span>
+                      <span className="font-bold">{pct.toFixed(1)}% of total</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

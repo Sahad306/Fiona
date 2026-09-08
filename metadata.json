@@ -1,0 +1,6 @@
+{
+  "name": "FINORA - Personal Finance Management",
+  "description": "FINORA: Track Smarter. Save Better. Personal finance management app for income, expense tracking, category budgets, savings goals, and visual analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,636 @@
+import express from "express";
+import path from "path";
+import { createServer as createViteServer } from "vite";
+import { GoogleGenAI } from "@google/genai";
+import dotenv from "dotenv";
+import { db, verifyPassword } from "./server/db";
+
+dotenv.config();
+
+const app = express();
+const PORT = 3000;
+
+app.use(express.json({ limit: "1mb" }));
+
+// ==========================================
+// SECURITY MIDDLEWARE
+// ==========================================
+
+// CORS
+app.use((req, res, next) => {
+  const origin = process.env.CORS_ORIGIN || "*";
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+  res.header("Access-Control-Max-Age", "86400");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
+// Security headers (helmet-equivalent)
+app.use((_req, res, next) => {
+  res.header("X-Content-Type-Options", "nosniff");
+  res.header("X-Frame-Options", "DENY");
+  res.header("X-XSS-Protection", "1; mode=block");
+  res.header("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  next();
+});
+
+// Simple in-memory rate limiter
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+function rateLimit(maxRequests: number, windowMs: number) {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const ip = req.ip || "unknown";
+    const now = Date.now();
+    const entry = rateLimitMap.get(ip);
+    if (!entry || now > entry.resetAt) {
+      rateLimitMap.set(ip, { count: 1, resetAt: now + windowMs });
+      return next();
+    }
+    entry.count++;
+    if (entry.count > maxRequests) {
+      return res.status(429).json({ error: "Too many requests. Please try again later." });
+    }
+    next();
+  };
+}
+
+// Apply rate limiting to auth endpoints (10 requests per minute)
+const authRateLimit = rateLimit(10, 60_000);
+// General API rate limit (100 requests per minute)
+const apiRateLimit = rateLimit(100, 60_000);
+
+app.use("/api/auth/", authRateLimit);
+app.use("/api/", apiRateLimit);
+
+// Lazy-initialized Gemini client
+let aiClient: GoogleGenAI | null = null;
+function getGeminiClient(): GoogleGenAI | null {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  if (!aiClient) {
+    aiClient = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        },
+      },
+    });
+  }
+  return aiClient;
+}
+
+const MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions";
+const MISTRAL_MODEL = process.env.MISTRAL_MODEL || "ministral-14b-latest";
+
+function getMistralApiKey(): string | null {
+  return process.env.MISTRAL_API_KEY || null;
+}
+
+function extractJson(text: string): any {
+  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch {}
+
+  const first = cleaned.indexOf("{");
+  const last = cleaned.lastIndexOf("}");
+  if (first !== -1 && last > first) {
+    try {
+      return JSON.parse(cleaned.slice(first, last + 1));
+    } catch {}
+  }
+  return null;
+}
+
+function toStringArray(value: any): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => String(item)).filter(Boolean);
+}
+
+function buildAdvisorReply(analysis: any): string {
+  const recommendations = toStringArray(analysis?.actionableRecommendations);
+  const cutbacks = toStringArray(analysis?.cutbackOpportunities);
+  const lines: string[] = [];
+
+  if (analysis?.executiveSummary) lines.push(analysis.executiveSummary);
+  if (recommendations.length) {
+    lines.push("\n**Key Action Items:**");
+    recommendations.forEach((item) => lines.push(`- ${item}`));
+  }
+  if (cutbacks.length) {
+    lines.push("\n**Cutback Opportunities:**");
+    cutbacks.forEach((item) => lines.push(`- ${item}`));
+  }
+  if (analysis?.savingsOpportunity) lines.push(`\n**Savings Opportunity:** ${analysis.savingsOpportunity}`);
+  if (analysis?.encouragement) lines.push(`\n${analysis.encouragement}`);
+
+  return lines.join("\n").trim();
+}
+
+function normalizeAdvisorResult(raw: any): { analysis: any; reply: string } {
+  const source = raw && typeof raw.analysis === "object" && raw.analysis !== null ? raw.analysis : raw || {};
+  const executiveSummary =
+    source.executiveSummary ||
+    (typeof raw?.analysis === "string" ? raw.analysis : "") ||
+    source.analysis ||
+    "Your financial data was analyzed, but no detailed summary was returned.";
+
+  const analysis = {
+    executiveSummary: String(executiveSummary),
+    healthScore: Number(source.healthScore ?? raw?.healthScore ?? 70),
+    actionableRecommendations: toStringArray(source.actionableRecommendations || raw?.recommendations),
+    cutbackOpportunities: toStringArray(source.cutbackOpportunities),
+    savingsOpportunity: String(source.savingsOpportunity || source.cutbackOpportunities?.[0] || raw?.savingsOpportunity || ""),
+    encouragement: String(source.encouragement || raw?.encouragement || ""),
+  };
+
+  if (!analysis.cutbackOpportunities.length && analysis.savingsOpportunity) {
+    analysis.cutbackOpportunities = [analysis.savingsOpportunity];
+  }
+
+  return {
+    analysis,
+    reply: typeof raw?.reply === "string" && raw.reply.trim() ? raw.reply : buildAdvisorReply(analysis),
+  };
+}
+
+async function generateWithMistral(systemPrompt: string, userPrompt: string): Promise<any> {
+  const apiKey = getMistralApiKey();
+  if (!apiKey) throw new Error("MISTRAL_API_KEY is not configured");
+
+  const fetchFn: any = (globalThis as any).fetch;
+  if (!fetchFn) throw new Error("fetch is not available in this Node runtime");
+
+  const response = await fetchFn(MISTRAL_API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: MISTRAL_MODEL,
+      temperature: 0.4,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Mistral API ${response.status}: ${String(errorText).slice(0, 300)}`);
+  }
+
+  const data: any = await response.json();
+  const content = data?.choices?.[0]?.message?.content || "";
+  const parsed = extractJson(content);
+  if (parsed) return parsed;
+
+  return {
+    analysis: {
+      executiveSummary: content,
+      actionableRecommendations: [],
+      cutbackOpportunities: [],
+    },
+  };
+}
+
+// Authentication Middleware Helper
+function getAuthUser(req: express.Request) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return null;
+  }
+  const token = authHeader.substring(7).trim();
+  const session = db.getSession(token);
+  if (!session) return null;
+  const user = db.findUserById(session.userId);
+  if (!user) return null;
+  return { user, session };
+}
+
+// Health & Database Status
+app.get("/api/health", (_req, res) => {
+  const stats = db.getStats();
+  res.json({
+    status: "ok",
+    app: "FINORA - Personal Finance Management System",
+    database: "active",
+    databaseStats: stats,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/db/status", (_req, res) => {
+  res.json({
+    status: "healthy",
+    storage: "Disk JSON Database with Atomic Writes",
+    stats: db.getStats(),
+  });
+});
+
+// ==========================================
+// AUTHENTICATION & REGISTRATION ENDPOINTS
+// ==========================================
+
+// Register New User
+app.post("/api/auth/register", (req, res) => {
+  try {
+    const { email, password, name, role, currency, monthlyIncomeTarget, monthlyExpenseBudget } = req.body;
+
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ error: "Please provide a valid email address." });
+    }
+    if (!password || password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters long." });
+    }
+    if (!name || !name.trim()) {
+      return res.status(400).json({ error: "Name is required." });
+    }
+
+    const existing = db.findUserByEmail(email);
+    if (existing) {
+      return res.status(409).json({ error: "An account with this email already exists. Please sign in." });
+    }
+
+    const { user, userData } = db.createUser({
+      email,
+      name,
+      password,
+      role: role || "Salaried Employee",
+      currency: currency || "USD",
+      monthlyIncomeTarget: parseFloat(monthlyIncomeTarget) || 4000,
+      monthlyExpenseBudget: parseFloat(monthlyExpenseBudget) || 2500,
+    });
+
+    const session = db.createSession(user.id);
+
+    // Strip sensitive fields
+    const safeUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      currency: user.currency,
+      currencySymbol: user.currencySymbol,
+      monthlyIncomeTarget: user.monthlyIncomeTarget,
+      monthlyExpenseBudget: user.monthlyExpenseBudget,
+      createdAt: user.createdAt,
+    };
+
+    return res.status(201).json({
+      message: "Registration successful! Welcome to FINORA.",
+      token: session.token,
+      user: safeUser,
+      userData,
+    });
+  } catch (error: any) {
+    console.error("Registration error:", error);
+    return res.status(500).json({ error: error.message || "Failed to create account" });
+  }
+});
+
+// Login User
+app.post("/api/auth/login", (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password are required." });
+    }
+
+    const user = db.findUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email or password. Please verify your credentials." });
+    }
+
+    const isValid = verifyPassword(password, user.passwordHash, user.salt);
+    if (!isValid) {
+      return res.status(401).json({ error: "Invalid email or password. Please verify your credentials." });
+    }
+
+    const session = db.createSession(user.id);
+    const userData = db.getUserData(user.id);
+
+    const safeUser = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      currency: user.currency,
+      currencySymbol: user.currencySymbol,
+      monthlyIncomeTarget: user.monthlyIncomeTarget,
+      monthlyExpenseBudget: user.monthlyExpenseBudget,
+      createdAt: user.createdAt,
+    };
+
+    return res.json({
+      message: `Welcome back, ${user.name}!`,
+      token: session.token,
+      user: safeUser,
+      userData,
+    });
+  } catch (error: any) {
+    console.error("Login error:", error);
+    return res.status(500).json({ error: error.message || "Failed to authenticate" });
+  }
+});
+
+// Get Current Authenticated User & Database Data
+app.get("/api/auth/me", (req, res) => {
+  const auth = getAuthUser(req);
+  if (!auth) {
+    return res.status(401).json({ error: "Unauthorized or session expired" });
+  }
+
+  const { user } = auth;
+  const userData = db.getUserData(user.id);
+
+  const safeUser = {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    currency: user.currency,
+    currencySymbol: user.currencySymbol,
+    monthlyIncomeTarget: user.monthlyIncomeTarget,
+    monthlyExpenseBudget: user.monthlyExpenseBudget,
+    createdAt: user.createdAt,
+  };
+
+  return res.json({
+    user: safeUser,
+    userData,
+  });
+});
+
+// Logout
+app.post("/api/auth/logout", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.substring(7).trim();
+    db.deleteSession(token);
+  }
+  return res.json({ success: true, message: "Logged out successfully" });
+});
+
+// Delete Account
+app.delete("/api/auth/delete-account", (req, res) => {
+  try {
+    const auth = getAuthUser(req);
+    if (!auth) {
+      return res.status(401).json({ error: "Unauthorized or session expired" });
+    }
+
+    db.deleteUser(auth.user.id);
+    // Also invalidate the current session
+    const token = req.headers.authorization?.substring(7).trim();
+    if (token) db.deleteSession(token);
+
+    return res.json({ success: true, message: "Account and all associated data have been permanently deleted." });
+  } catch (error: any) {
+    console.error("Delete account error:", error);
+    return res.status(500).json({ error: error.message || "Failed to delete account" });
+  }
+});
+
+// Sync User Financial Data to Database
+app.post("/api/db/sync", (req, res) => {
+  try {
+    const auth = getAuthUser(req);
+    if (!auth) {
+      return res.status(401).json({ error: "Unauthorized. Please log in to sync database." });
+    }
+
+    const { profile, transactions, budgets, savingsGoals, notifications } = req.body;
+    const updated = db.updateUserData(auth.user.id, {
+      profile,
+      transactions,
+      budgets,
+      savingsGoals,
+      notifications,
+    });
+
+    return res.json({
+      success: true,
+      message: "Financial records successfully synchronized to database.",
+      updatedAt: updated.updatedAt,
+    });
+  } catch (error: any) {
+    console.error("Sync error:", error);
+    return res.status(500).json({ error: "Failed to sync data to database" });
+  }
+});
+
+// Reset User Data to default archetype
+app.post("/api/db/reset", (req, res) => {
+  try {
+    const auth = getAuthUser(req);
+    if (!auth) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const user = auth.user;
+    const { profile, transactions, budgets, savingsGoals } = req.body;
+
+    const resetData = db.updateUserData(user.id, {
+      profile,
+      transactions,
+      budgets,
+      savingsGoals,
+      notifications: [
+        {
+          id: `notif_${Date.now()}`,
+          type: 'system',
+          title: 'Database Reset Completed',
+          message: 'Your financial ledger was reset to clean archetype baseline.',
+          timestamp: new Date().toISOString(),
+          read: false,
+          severity: 'info',
+        }
+      ]
+    });
+
+    return res.json({
+      success: true,
+      userData: resetData,
+    });
+  } catch (error: any) {
+    return res.status(500).json({ error: "Failed to reset data" });
+  }
+});
+
+// AI Financial Advisor Endpoint
+app.post("/api/ai/advisor", async (req, res) => {
+  try {
+    const auth = getAuthUser(req);
+    if (!auth) {
+      return res.status(401).json({ error: "Unauthorized. Please log in to use the AI advisor." });
+    }
+
+    const { financialSummary, userQuery, targetProfile } = req.body;
+    const ai = getGeminiClient();
+
+    if (!ai) {
+      // Return high-quality rule-based financial advice when key is unavailable
+      const fallbackTips = [
+        "Based on your 50/30/20 budget framework, prioritize setting aside 20% into your savings goal first.",
+        "Your top spending category is taking the largest share of your budget; consider setting a category alert at 80% threshold.",
+        "Track weekly variable expenses like Dining and Entertainment to avoid month-end budget surprises.",
+      ];
+      return res.json({
+        analysis: "Your finances look healthy. Keep an eye on recurring subscriptions and maintain your positive cash flow buffer.",
+        healthScore: 75,
+        recommendations: fallbackTips,
+        savingsOpportunity: "Allocating an extra 5% of monthly income can accelerate your primary savings goal by 2 months.",
+        encouragement: "You're already tracking — that alone puts you ahead of most people. Keep it up!",
+        isFallback: true,
+      });
+    }
+
+    const prompt = `You are FINORA's intelligent personal finance assistant.
+Analyze the following user's financial snapshot and provide friendly, actionable, and encouraging financial advice.
+
+User Profile: ${targetProfile || 'Standard User'}
+Financial Data:
+- Total Monthly Income: $${financialSummary?.totalIncome || 0}
+- Total Monthly Expenses: $${financialSummary?.totalExpenses || 0}
+- Remaining Balance: $${financialSummary?.remainingBalance || 0}
+- Monthly Savings Rate: ${financialSummary?.savingsRate || 0}%
+- Top Expense Categories: ${JSON.stringify(financialSummary?.topExpenseCategories || [])}
+- Income Sources: ${JSON.stringify(financialSummary?.incomeSourcesBreakdown || [])}
+- Budget Utilization: ${JSON.stringify(financialSummary?.budgetUtilization || {})}
+
+User Specific Question/Goal: ${userQuery || 'Provide an overall financial health checkup and 3 actionable tips to improve savings.'}
+
+Respond strictly in JSON format with this structure:
+{
+  "analysis": "A concise 2-3 sentence overview of their financial health and spending velocity.",
+  "healthScore": 85,
+  "recommendations": [
+    "Specific tip 1",
+    "Specific tip 2",
+    "Specific tip 3"
+  ],
+  "savingsOpportunity": "Highlight one practical cut or adjustment to save more money this month.",
+  "encouragement": "A brief uplifting motivational closing line."
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+      },
+    });
+
+    const text = response.text || "{}";
+    const parsed = JSON.parse(text);
+    return res.json(parsed);
+  } catch (error) {
+    console.error("AI Advisor error:", error);
+    return res.status(500).json({
+      error: "Failed to generate AI insights",
+      analysis: "Keep tracking your daily transactions regularly to maintain steady financial progress.",
+      healthScore: 60,
+      recommendations: [
+        "Review your recurring subscriptions monthly.",
+        "Set strict category budgets for non-essential spending.",
+        "Maintain an emergency fund covering 3-6 months of essential expenses."
+      ],
+      savingsOpportunity: "Consolidate dining out into meal prep to save significantly each week.",
+      encouragement: "Every step you take toward financial awareness is a step toward freedom.",
+    });
+  }
+});
+
+// Automated Expense Categorizer API
+app.post("/api/ai/categorize", async (req, res) => {
+  try {
+    const auth = getAuthUser(req);
+    if (!auth) {
+      return res.status(401).json({ error: "Unauthorized. Please log in to use auto-categorization." });
+    }
+
+    const { description } = req.body;
+    if (!description) {
+      return res.status(400).json({ error: "Description is required" });
+    }
+
+    const ai = getGeminiClient();
+    const categories = [
+      "Food & Dining",
+      "Transportation",
+      "Housing & Rent",
+      "Utilities & Bills",
+      "Shopping",
+      "Education",
+      "Entertainment",
+      "Healthcare & Medical",
+      "Personal Care",
+      "Travel",
+      "Other"
+    ];
+
+    if (!ai) {
+      // Local heuristic matcher
+      const descLower = description.toLowerCase();
+      let category = "Other";
+      if (descLower.includes("grocery") || descLower.includes("restaurant") || descLower.includes("coffee") || descLower.includes("starbucks") || descLower.includes("pizza") || descLower.includes("food") || descLower.includes("burger") || descLower.includes("cafe")) category = "Food & Dining";
+      else if (descLower.includes("uber") || descLower.includes("gas") || descLower.includes("fuel") || descLower.includes("subway") || descLower.includes("metro") || descLower.includes("bus") || descLower.includes("parking") || descLower.includes("flight")) category = "Transportation";
+      else if (descLower.includes("rent") || descLower.includes("mortgage") || descLower.includes("apartment")) category = "Housing & Rent";
+      else if (descLower.includes("wifi") || descLower.includes("internet") || descLower.includes("electric") || descLower.includes("water") || descLower.includes("phone") || descLower.includes("bill")) category = "Utilities & Bills";
+      else if (descLower.includes("amazon") || descLower.includes("clothes") || descLower.includes("shoes") || descLower.includes("walmart") || descLower.includes("target") || descLower.includes("shop")) category = "Shopping";
+      else if (descLower.includes("book") || descLower.includes("tuition") || descLower.includes("course") || descLower.includes("udemy") || descLower.includes("school") || descLower.includes("college")) category = "Education";
+      else if (descLower.includes("netflix") || descLower.includes("spotify") || descLower.includes("cinema") || descLower.includes("movie") || descLower.includes("game") || descLower.includes("concert")) category = "Entertainment";
+      else if (descLower.includes("doctor") || descLower.includes("pharmacy") || descLower.includes("medicine") || descLower.includes("dental") || descLower.includes("hospital")) category = "Healthcare & Medical";
+
+      return res.json({ category, confidence: 0.85 });
+    }
+
+    const prompt = `Given the transaction merchant/description "${description}", classify it into one of these exact categories:
+${categories.join(", ")}.
+Respond in JSON format: {"category": "Exact Category Name", "suggestedType": "expense"}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+      },
+    });
+
+    const parsed = JSON.parse(response.text || "{}");
+    return res.json(parsed);
+  } catch (error) {
+    console.error("Categorize error:", error);
+    return res.json({ category: "Other", confidence: 0.5 });
+  }
+});
+
+// Vite dev middleware or production static serving
+async function startServer() {
+  if (process.env.NODE_ENV !== "production") {
+    const vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: "spa",
+    });
+    app.use(vite.middlewares);
+  } else {
+    const distPath = path.join(process.cwd(), "dist");
+    app.use(express.static(distPath));
+    app.get("*", (_req, res) => {
+      res.sendFile(path.join(distPath, "index.html"));
+    });
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`FINORA Server running on http://0.0.0.0:${PORT}`);
+  });
+}
+
+startServer();

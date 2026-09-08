@@ -1,0 +1,782 @@
+import React, { useState } from 'react';
+import {
+  Wallet,
+  Lock,
+  Mail,
+  User,
+  CheckCircle2,
+  AlertCircle,
+  Database,
+  LogIn,
+  UserPlus,
+  Loader2,
+  Eye,
+  EyeOff,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  GraduationCap,
+  Briefcase,
+  Store,
+  CreditCard,
+  Code2,
+  TrendingUp,
+  PieChart,
+  Target,
+} from 'lucide-react';
+import { useFinance } from '../context/FinanceContext';
+import { PRESET_PROFILES } from '../data/defaultData';
+import { UserRole } from '../types';
+
+interface AuthGatewayProps {
+  onEnterGuest?: () => void;
+}
+
+export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
+  const { login, register, switchProfile, isDbConnected } = useFinance();
+
+  const [activeTab, setActiveTab] = useState<'login' | 'register' | 'presets'>('login');
+
+  // Form input states
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+
+  const [regName, setRegName] = useState('');
+  const [regEmail, setRegEmail] = useState('');
+  const [regPassword, setRegPassword] = useState('');
+  const [showRegPassword, setShowRegPassword] = useState(false);
+  const [regRole, setRegRole] = useState<UserRole>('University Student');
+  const [regCurrency, setRegCurrency] = useState('USD');
+  const [regIncomeTarget, setRegIncomeTarget] = useState('1800');
+  const [regExpenseBudget, setRegExpenseBudget] = useState('1200');
+
+  // Status feedback
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Handle User Login
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!loginEmail.trim() || !loginPassword) {
+      setErrorMessage('Please provide both your Login Email/ID and Password.');
+      return;
+    }
+
+    setLoading(true);
+    const result = await login(loginEmail.trim(), loginPassword);
+    setLoading(false);
+
+    if (result.success) {
+      setSuccessMessage('Authentication successful! Loading your financial vault...');
+    } else {
+      setErrorMessage(result.error || 'Invalid credentials. Please verify your email/ID and password.');
+    }
+  };
+
+  // Handle User Registration and Redirect to Login Page
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    if (!regName.trim()) {
+      setErrorMessage('Please enter your full name.');
+      return;
+    }
+    if (!regEmail.trim() || !regEmail.includes('@')) {
+      setErrorMessage('Please enter a valid email or login ID.');
+      return;
+    }
+    if (!regPassword || regPassword.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
+
+    setLoading(true);
+    // register with autoLogin = false so user comes back to log in with ID and password as requested
+    const result = await register(
+      {
+        name: regName.trim(),
+        email: regEmail.trim(),
+        password: regPassword,
+        role: regRole,
+        currency: regCurrency,
+        monthlyIncomeTarget: parseFloat(regIncomeTarget) || 1800,
+        monthlyExpenseBudget: parseFloat(regExpenseBudget) || 1200,
+      },
+      false
+    );
+    setLoading(false);
+
+    if (result.success) {
+      // Prepopulate login email and switch to login tab with triumphant success feedback
+      setLoginEmail(regEmail.trim());
+      setLoginPassword('');
+      setActiveTab('login');
+      setSuccessMessage(
+        `🎉 Account registered successfully for ${regName.trim()}! Please sign in with your password below.`
+      );
+    } else {
+      setErrorMessage(result.error || 'Failed to create account. Please try again.');
+    }
+  };
+
+  // Quick 1-click Demo Login
+  const DEMO_PASSWORD = 'password123'; // demo credential; must match server DEMO_PASSWORD default
+  const handleQuickDemo = async (email: string, presetKey: string, name: string) => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    setLoginEmail(email);
+    setLoginPassword(DEMO_PASSWORD);
+    setLoading(true);
+    const result = await login(email, DEMO_PASSWORD);
+    setLoading(false);
+
+    if (result.success) {
+      setSuccessMessage(`Welcome back, ${name}! Vault unlocked.`);
+    } else {
+      // Fallback local switch
+      switchProfile(presetKey);
+      setSuccessMessage(`Loaded ${name} profile.`);
+      if (onEnterGuest) onEnterGuest();
+    }
+  };
+
+  return (
+    <div
+      id="finora_auth_gateway"
+      className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950"
+    >
+      {/* Top Brand Bar */}
+      <header className="border-b border-slate-900 bg-slate-950/90 backdrop-blur-xl px-6 py-4 sticky top-0 z-30">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3.5 group cursor-pointer">
+            {/* Precision Designed Emblem Logo */}
+            <div className="relative">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 p-[1px] shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/35 transition-all">
+                <div className="w-full h-full bg-slate-950/95 rounded-[11px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
+                  <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/15 via-transparent to-cyan-500/15" />
+                  <Wallet className="w-5 h-5 text-emerald-400 stroke-[2.2] relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                  <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-400 rounded-full blur-[2px] opacity-70" />
+                </div>
+              </div>
+            </div>
+
+            {/* Polished Design Name & Brand Hierarchy */}
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-emerald-300">
+                  FINORA
+                </span>
+                <span className="text-[9px] uppercase font-extrabold tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-xs">
+                  Vault OS
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
+                Intelligent Financial Architecture
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <Database className="w-3.5 h-3.5" />
+              {isDbConnected ? 'Encrypted Vault Active' : 'Local Sandbox Mode'}
+            </span>
+            {onEnterGuest && (
+              <button
+                id="btn_guest_bypass"
+                onClick={onEnterGuest}
+                className="text-xs text-slate-400 hover:text-emerald-300 transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-slate-900 border border-slate-800/80 hover:border-emerald-500/30 font-semibold"
+              >
+                Explore Preview →
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Authentication Container */}
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 my-auto">
+        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Left Column: Value Proposition & Inspiring Visual Callout */}
+          <div className="lg:col-span-5 space-y-6 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wide">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Next-Gen Wealth Management System</span>
+            </div>
+
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-[1.15]">
+                Master Your Capital. <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
+                  Command Your Future.
+                </span>
+              </h1>
+              <p className="text-sm text-slate-400 mt-3 leading-relaxed font-normal">
+                An institutional-grade personal financial operating system with real-time transaction tracking, predictive budget guardrails, and AI wealth intelligence.
+              </p>
+            </div>
+
+            {/* Inspiring Statement Card (Replaced Welcome Banner) */}
+            <div className="p-4.5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-900/80 to-emerald-950/40 border border-emerald-500/25 shadow-xl relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+              
+              <div className="flex items-center space-x-2.5 mb-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm">
+                  <ShieldCheck className="w-4 h-4 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-xs font-bold text-white tracking-wide uppercase">
+                    Architect Your Financial Independence
+                  </h3>
+                  <div className="text-[10px] text-emerald-400/90 font-semibold">
+                    Autonomous Intelligence • Complete Data Sovereignty
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-300 leading-relaxed pt-1">
+                Gain uncompromising clarity over every dollar. Eliminate wasteful spending, automate compounding savings targets, and let proactive intelligence guide your wealth accumulation.
+              </p>
+
+              <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
+                <span className="text-slate-400 flex items-center gap-1.5 font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Bank-Grade Encryption
+                </span>
+                <span className="text-emerald-400 font-semibold">100% Private & Persistent</span>
+              </div>
+            </div>
+
+            {/* Highlights Grid */}
+            <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition-colors">
+                <TrendingUp className="w-4 h-4 text-emerald-400 mb-1.5 stroke-[2.2]" />
+                <div className="text-xs font-bold text-white">Live Cashflow Analytics</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Multi-stream income & recurring bills</div>
+              </div>
+              <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition-colors">
+                <Target className="w-4 h-4 text-teal-400 mb-1.5 stroke-[2.2]" />
+                <div className="text-xs font-bold text-white">Target Milestone Engine</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">Visual progress & pacing analytics</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Authentication Card */}
+          <div className="lg:col-span-7">
+            <div
+              id="auth_gateway_card"
+              className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 relative overflow-hidden"
+            >
+              {/* Decorative Accent Glow */}
+              <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              {/* Mode Switch Tabs */}
+              <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 mb-6">
+                <button
+                  id="tab_gateway_login"
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('login');
+                    setErrorMessage(null);
+                  }}
+                  className={`py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                    activeTab === 'login'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <LogIn className="w-3.5 h-3.5" /> Sign In
+                </button>
+
+                <button
+                  id="tab_gateway_register"
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('register');
+                    setErrorMessage(null);
+                  }}
+                  className={`py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                    activeTab === 'register'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <UserPlus className="w-3.5 h-3.5" /> Register
+                </button>
+
+                <button
+                  id="tab_gateway_presets"
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('presets');
+                    setErrorMessage(null);
+                  }}
+                  className={`py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+                    activeTab === 'presets'
+                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                      : 'text-slate-400 hover:text-slate-200'
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5" /> Quick Demos
+                </button>
+              </div>
+
+              {/* Status & Error Alerts */}
+              {errorMessage && (
+                <div
+                  id="gateway_error_alert"
+                  className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-start gap-2.5 animate-in fade-in"
+                >
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+                  <span>{errorMessage}</span>
+                </div>
+              )}
+
+              {successMessage && (
+                <div
+                  id="gateway_success_alert"
+                  className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2.5 animate-in fade-in"
+                >
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400 mt-0.5" />
+                  <span>{successMessage}</span>
+                </div>
+              )}
+
+              {/* TAB 1: SIGN IN FORM */}
+              {activeTab === 'login' && (
+                <form id="form_gateway_login" onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div className="text-left">
+                    <h2 className="text-lg font-bold text-white">Sign In to Your Vault</h2>
+                    <p className="text-xs text-slate-400">
+                      Enter your login credentials to access your financial records.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Email Address / Login ID
+                    </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_login_email"
+                        type="email"
+                        required
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
+                        placeholder="e.g. demo@finora.io or sarah@finora.io"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Password
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_login_password"
+                        type={showLoginPassword ? 'text' : 'password'}
+                        required
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginPassword(!showLoginPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                      >
+                        {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    id="btn_gateway_submit_login"
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Verifying Credentials...
+                      </>
+                    ) : (
+                      <>
+                        <LogIn className="w-4 h-4" /> Sign In & Unlock Vault
+                      </>
+                    )}
+                  </button>
+
+                  {/* Switch to Register link */}
+                  <div className="pt-2 text-center text-xs text-slate-400">
+                    Don't have an account yet?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('register');
+                        setErrorMessage(null);
+                        setSuccessMessage(null);
+                      }}
+                      className="text-emerald-400 hover:underline font-bold cursor-pointer"
+                    >
+                      Register here →
+                    </button>
+                  </div>
+
+                  {/* 1-Click Fast Demo Logins */}
+                  <div className="pt-4 border-t border-slate-800">
+                    <span className="text-[11px] font-semibold text-slate-400 block mb-2 text-left">
+                      Or 1-click test login with pre-configured accounts:
+                    </span>
+                    <div className="grid grid-cols-2 gap-2 text-left">
+                      {/* Generic demo account */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleQuickDemo('demo@finora.io', 'demo', 'Demo User')
+                        }
+                        className="p-2.5 bg-slate-950 hover:bg-slate-800/80 border border-emerald-500/30 hover:border-emerald-500 rounded-xl transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs group-hover:text-emerald-400">
+                            Demo
+                          </span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                            Try It
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">demo@finora.io</div>
+                      </button>
+
+                      {/* Sarah Tech Employee */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleQuickDemo('sarah@finora.io', 'employee', 'Sarah Chen')
+                        }
+                        className="p-2.5 bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 rounded-xl transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs group-hover:text-emerald-400">
+                            Sarah Chen
+                          </span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300">
+                            Salaried
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">sarah@finora.io</div>
+                      </button>
+
+                      {/* Alex Student */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleQuickDemo('alex@finora.io', 'student', 'Alex Turner')
+                        }
+                        className="p-2.5 bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 rounded-xl transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs group-hover:text-emerald-400">
+                            Alex Turner
+                          </span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">
+                            Student
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">alex@finora.io</div>
+                      </button>
+
+                      {/* Marco Freelancer */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleQuickDemo('marco@finora.io', 'freelancer', 'Marco Silva')
+                        }
+                        className="p-2.5 bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 rounded-xl transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-white text-xs group-hover:text-emerald-400">
+                            Marco Silva
+                          </span>
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300">
+                            Freelance
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 mt-0.5">marco@finora.io</div>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              )}
+
+              {/* TAB 2: REGISTRATION FORM */}
+              {activeTab === 'register' && (
+                <form id="form_gateway_register" onSubmit={handleRegisterSubmit} className="space-y-3.5">
+                  <div className="text-left">
+                    <h2 className="text-lg font-bold text-white">Create Your Account</h2>
+                    <p className="text-xs text-slate-400">
+                      Register your profile, then return to the sign in page to log in.
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Full Name *
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_register_name"
+                        type="text"
+                        required
+                        value={regName}
+                        onChange={(e) => setRegName(e.target.value)}
+                        placeholder="e.g. Sahad (RUET CSE)"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Login Email / ID *
+                    </label>
+                    <div className="relative">
+                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_register_email"
+                        type="email"
+                        required
+                        value={regEmail}
+                        onChange={(e) => setRegEmail(e.target.value)}
+                        placeholder="e.g. demo@finora.io or you@example.com"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Create Password (min 6 chars) *
+                    </label>
+                    <div className="relative">
+                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_register_password"
+                        type={showRegPassword ? 'text' : 'password'}
+                        required
+                        value={regPassword}
+                        onChange={(e) => setRegPassword(e.target.value)}
+                        placeholder="Create a strong password"
+                        className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowRegPassword(!showRegPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                      >
+                        {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-left">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Archetype
+                      </label>
+                      <select
+                        id="select_gateway_role"
+                        value={regRole}
+                        onChange={(e) => setRegRole(e.target.value as UserRole)}
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                      >
+                        <option value="University Student">University Student (CSE / Engr)</option>
+                        <option value="Salaried Employee">Salaried Tech Employee</option>
+                        <option value="Freelancer">Freelance Developer / Creator</option>
+                        <option value="Small Business Owner">Small Business Owner</option>
+                        <option value="Family Household">Family Household</option>
+                        <option value="Individual">Individual</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Currency
+                      </label>
+                      <select
+                        id="select_gateway_currency"
+                        value={regCurrency}
+                        onChange={(e) => setRegCurrency(e.target.value)}
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                      >
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="BDT">BDT (৳)</option>
+                        <option value="INR">INR (₹)</option>
+                        <option value="CAD">CAD ($)</option>
+                        <option value="AUD">AUD ($)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-left">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Monthly Income Target
+                      </label>
+                      <input
+                        id="input_gateway_income_target"
+                        type="number"
+                        step="50"
+                        value={regIncomeTarget}
+                        onChange={(e) => setRegIncomeTarget(e.target.value)}
+                        placeholder="1800"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Monthly Expense Budget
+                      </label>
+                      <input
+                        id="input_gateway_expense_budget"
+                        type="number"
+                        step="50"
+                        value={regExpenseBudget}
+                        onChange={(e) => setRegExpenseBudget(e.target.value)}
+                        placeholder="1200"
+                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    id="btn_gateway_submit_register"
+                    type="submit"
+                    disabled={loading}
+                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" /> Provisioning Database...
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus className="w-4 h-4" /> Register & Go to Sign In
+                      </>
+                    )}
+                  </button>
+
+                  <div className="pt-2 text-center text-xs text-slate-400">
+                    Already have an account?{' '}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveTab('login');
+                        setErrorMessage(null);
+                        setSuccessMessage(null);
+                      }}
+                      className="text-emerald-400 hover:underline font-bold cursor-pointer"
+                    >
+                      Sign In here →
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* TAB 3: QUICK DEMO PERSONAS */}
+              {activeTab === 'presets' && (
+                <div className="space-y-3 text-left">
+                  <div>
+                    <h2 className="text-lg font-bold text-white">Explore Demo Vaults</h2>
+                    <p className="text-xs text-slate-400 mb-3">
+                      Select an archetype to instantly sign in with sample financial ledgers:
+                    </p>
+                  </div>
+
+                  <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                    {Object.entries(PRESET_PROFILES).map(([key, data]) => {
+                      const p = data.profile;
+                      return (
+                        <div
+                          key={key}
+                          id={`gateway_preset_${key}`}
+                          onClick={() =>
+                            handleQuickDemo(
+                              p.email || `${key}@finora.io`,
+                              key,
+                              p.name
+                            )
+                          }
+                          className="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-emerald-500/50 hover:bg-slate-850 transition-all cursor-pointer flex items-center justify-between group"
+                        >
+                          <div className="flex items-center space-x-3">
+                            <div className="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                              {p.name.charAt(0)}
+                            </div>
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <span className="text-xs font-bold text-white group-hover:text-emerald-400 transition-colors">
+                                  {p.name}
+                                </span>
+                                <span className="text-[10px] font-semibold px-2 py-0.2 rounded-full bg-slate-800 text-slate-300">
+                                  {p.role}
+                                </span>
+                              </div>
+                              <p className="text-[11px] text-slate-400 mt-0.5">
+                                Target: ${p.monthlyIncomeTarget}/mo • {data.transactions.length} Txns • {data.savingsGoals.length} Goals
+                              </p>
+                            </div>
+                          </div>
+
+                          <span className="text-xs text-emerald-400 font-bold group-hover:translate-x-1 transition-transform flex items-center gap-1">
+                            Sign In →
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-900 bg-slate-950 py-4.5 text-center text-xs text-slate-500">
+        <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="flex items-center space-x-2">
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+              FINORA
+            </span>
+            <span className="text-slate-400">— Precision Wealth & Personal Finance Intelligence System</span>
+          </div>
+          <div className="flex items-center space-x-3 text-[11px] text-slate-400">
+            <span>Disk JSON Database</span>
+            <span>•</span>
+            <span>PBKDF2 Password Security</span>
+            <span>•</span>
+            <span>Encrypted Ledger</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
