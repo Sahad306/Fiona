@@ -977,7 +977,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
             <span className="text-slate-400">— Precision Wealth & Personal Finance Intelligence System</span>
           </div>
           <div className="flex items-center space-x-3 text-[11px] text-slate-400">
-            <span>Disk JSON Database</span>
+            <span>Encrypted Ledger Storage</span>
             <span>•</span>
             <span>PBKDF2 Password Security</span>
             <span>•</span>

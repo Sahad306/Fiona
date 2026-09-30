@@ -34,6 +34,7 @@ app.use((_req, res, next) => {
   res.header("X-XSS-Protection", "1; mode=block");
   res.header("Referrer-Policy", "strict-origin-when-cross-origin");
   res.header("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  res.header("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   next();
 });
 
@@ -56,7 +57,9 @@ function rateLimit(maxRequests: number, windowMs: number) {
   };
 }
 
-// Rate limiting removed per user request — it blocked legitimate rapid logins with 429s.
+// Rate limiting: generous limits to avoid blocking legitimate use
+const authRateLimit = rateLimit(30, 60_000);   // 30 requests/min for auth endpoints
+const apiRateLimit = rateLimit(60, 60_000);    // 60 requests/min for general API
 
 // Lazy-initialized Gemini client
 let aiClient: GoogleGenAI | null = null;
@@ -246,7 +249,7 @@ app.get("/api/db/status", (_req, res) => {
 // ==========================================
 
 // Register New User
-app.post("/api/auth/register", (req, res) => {
+app.post("/api/auth/register", authRateLimit, (req, res) => {
   try {
     const { email, password, name, role, currency, monthlyIncomeTarget, monthlyExpenseBudget, university, program, degree, year, semester, studentId, bio, location, financialGoal, phone, occupation, avatarUrl } = req.body;
 
@@ -315,7 +318,7 @@ app.post("/api/auth/register", (req, res) => {
 });
 
 // Login User
-app.post("/api/auth/login", (req, res) => {
+app.post("/api/auth/login", authRateLimit, (req, res) => {
   try {
     const { email, password } = req.body;
 

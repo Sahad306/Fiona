@@ -136,7 +136,7 @@ const MainAppContent: React.FC = () => {
             <span className="text-slate-400">— Precision Wealth & Personal Finance Intelligence System</span>
           </div>
           <div className="flex items-center space-x-4 text-[11px] text-slate-400">
-            <span>Encrypted Ledger DB</span>
+            <span>Encrypted Ledger Storage</span>
             <span>•</span>
             <span>Gemini AI Intelligence</span>
             <span>•</span>
