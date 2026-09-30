@@ -159,6 +159,10 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           month: selectedMonth,
           aiProvider,
           query: textToSend,
+          conversationHistory: messages.slice(-10).map((m) => ({
+            role: m.sender === 'user' ? 'user' : 'assistant',
+            content: m.text,
+          })),
         }),
       });
 

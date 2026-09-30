@@ -33,6 +33,7 @@ import {
 } from 'recharts';
 import { useFinance } from '../context/FinanceContext';
 import { Transaction } from '../types';
+import { AIInsightsWidget } from './AIInsightsWidget';
 
 interface DashboardProps {
   onOpenTransactionModal: (type?: 'income' | 'expense') => void;
@@ -221,6 +222,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </button>
         </div>
       )}
+
+      {/* AI Insights Widget — Proactive intelligence on dashboard */}
+      <AIInsightsWidget />
 
       {/* 4 Key Metric Cards (Specified in PDF) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboard-stats-grid">

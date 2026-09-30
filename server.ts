@@ -674,6 +674,7 @@ app.post("/api/ai/advisor", async (req, res) => {
       savingsGoals,
       aiProvider,
       month,
+      conversationHistory,
     } = req.body;
 
     const finance = financialSummary || summary || {};
@@ -844,9 +845,13 @@ app.post("/api/ai/advisor", async (req, res) => {
       '  "encouragement": "brief uplifting close" } }',
     ].join('\n');
 
+    const historyBlock = Array.isArray(conversationHistory) && conversationHistory.length > 0
+      ? `\nConversation History (last ${conversationHistory.length} messages for context):\n${conversationHistory.map((m: any) => `${m.role}: ${m.content}`).join('\n')}\n`
+      : '';
+
     const userPrompt = `Financial Context (private reference data — do not dump):
 ${JSON.stringify(financialContext, null, 2)}
-
+${historyBlock}
 User Request:
 ${question}
 
