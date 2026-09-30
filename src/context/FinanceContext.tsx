@@ -10,7 +10,7 @@ import {
   AuthUser,
   UserRole,
 } from '../types';
-import { PRESET_PROFILES, ProfileData } from '../data/defaultData';
+import { ProfileData } from '../data/defaultData';
 
 interface FinanceContextType {
   profile: UserProfile;
@@ -47,6 +47,30 @@ interface FinanceContextType {
   logout: () => Promise<void>;
   deleteAccount: () => Promise<{ success: boolean; error?: string }>;
   syncDatabase: () => Promise<boolean>;
+  verifyPassword: (password: string) => Promise<{ success: boolean; error?: string }>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  changeEmail: (password: string, newEmail: string) => Promise<{ success: boolean; error?: string }>;
+  updateAccountProfile: (fields: {
+    name?: string;
+    role?: UserRole;
+    currency?: string;
+    currencySymbol?: string;
+    monthlyIncomeTarget?: number;
+    monthlyExpenseBudget?: number;
+    phone?: string;
+    location?: string;
+    occupation?: string;
+    bio?: string;
+    financialGoal?: string;
+    riskTolerance?: 'conservative' | 'moderate' | 'aggressive';
+    avatarUrl?: string;
+    university?: string;
+    program?: string;
+    degree?: string;
+    year?: string;
+    semester?: string;
+    studentId?: string;
+  }) => Promise<{ success: boolean; error?: string }>;
 
   // Profile management
   switchProfile: (profileKey: string) => void;
@@ -100,7 +124,7 @@ const createId = (prefix: string, salt = ''): string => {
 
 export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [activeProfileKey, setActiveProfileKey] = useState<string>(() => {
-    return localStorage.getItem('finora_active_profile') || 'employee';
+    return localStorage.getItem('finora_active_profile') || 'default';
   });
 
   const [authToken, setAuthToken] = useState<string | null>(() => {
@@ -142,8 +166,24 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         console.error('Failed to parse saved state, using preset fallback', e);
       }
     }
-    return PRESET_PROFILES[activeProfileKey] || PRESET_PROFILES.employee;
-  }, [activeProfileKey]);
+    return {
+      profile: {
+        id: currentUser?.id || 'local_registered_user',
+        name: currentUser?.name || '',
+        email: currentUser?.email || '',
+        role: currentUser?.role || 'Individual',
+        currency: 'BDT',
+        currencySymbol: 'Tk',
+        monthlyIncomeTarget: 0,
+        monthlyExpenseBudget: 0,
+        joinedDate: new Date().toISOString().split('T')[0],
+      },
+      transactions: [],
+      budgets: [],
+      savingsGoals: [],
+      notifications: [],
+    };
+  }, [activeProfileKey, currentUser]);
 
   const [profile, setProfile] = useState<UserProfile>(initialData.profile);
   const [transactions, setTransactions] = useState<Transaction[]>(initialData.transactions);
@@ -155,6 +195,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   // Prevents writing data back to the server right after it was loaded on login/register.
   const skipNextSyncRef = useRef(false);
+  // Guards against the mount race: without a completed server load, the autosave effect
+  // would push EMPTY state to /api/db/sync and wipe the user's data (e.g. on page reload).
+  const hasLoadedServerDataRef = useRef(false);
 
   // Load user data from server database if token exists
   useEffect(() => {
@@ -185,10 +228,13 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
             localStorage.setItem('finora_db_last_sync', now);
           }
           setIsDbConnected(true);
+          // Server load completed — autosave to the server is now safe.
+          hasLoadedServerDataRef.current = true;
         } else if (res.status === 401) {
           // Token expired
           setAuthToken(null);
           setCurrentUser(null);
+          hasLoadedServerDataRef.current = false;
           localStorage.removeItem(AUTH_TOKEN_KEY);
           localStorage.removeItem(AUTH_USER_KEY);
         }
@@ -204,24 +250,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [authToken]);
 
   // Sync state whenever active demo profile changes
-  const switchProfile = useCallback((profileKey: string) => {
-    // Demo archetypes are a guest feature; never blend them into a live authenticated session.
-    if (authToken) return;
-    setActiveProfileKey(profileKey);
-    localStorage.setItem('finora_active_profile', profileKey);
-    const saved = localStorage.getItem(`${STORAGE_KEY_PREFIX}${profileKey}`);
-    let data: ProfileData;
-    try {
-      data = saved ? JSON.parse(saved) : (PRESET_PROFILES[profileKey] || PRESET_PROFILES.employee);
-    } catch {
-      data = PRESET_PROFILES[profileKey] || PRESET_PROFILES.employee;
-    }
-    setProfile(data.profile);
-    setTransactions(data.transactions);
-    setBudgets(data.budgets);
-    setSavingsGoals(data.savingsGoals);
-    setNotifications(data.notifications);
-  }, [authToken]);
+  // ponytail: preset profiles removed — only registered accounts allowed. Kept as no-op to preserve interface.
+  const switchProfile = useCallback((_profileKey: string) => {
+    // no-op: demo profiles removed
+  }, []);
 
   // Save current profile data to localStorage on changes
   useEffect(() => {
@@ -241,6 +273,11 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Skip the write-back that fires immediately after login/register loaded server data.
       if (skipNextSyncRef.current) {
         skipNextSyncRef.current = false;
+        return;
+      }
+      // CRITICAL: never push to the server before the initial server load completed,
+      // otherwise empty mount state would overwrite the user's real data.
+      if (!hasLoadedServerDataRef.current) {
         return;
       }
       if (syncTimeoutRef.current) {
@@ -274,43 +311,57 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [activeProfileKey, profile, transactions, budgets, savingsGoals, notifications, authToken]);
 
-  // Manual database sync
+  // Manual database sync — works for both server-backed and local-only modes
   const syncDatabase = useCallback(async (): Promise<boolean> => {
-    if (!authToken) return false;
-    try {
-      setIsDbSyncing(true);
-      const dataToSave: ProfileData = {
-        profile,
-        transactions,
-        budgets,
-        savingsGoals,
-        notifications,
-      };
-      const res = await fetch('/api/db/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(dataToSave),
-      });
+    setIsDbSyncing(true);
+    const dataToSave: ProfileData = {
+      profile,
+      transactions,
+      budgets,
+      savingsGoals,
+      notifications,
+    };
 
-      if (res.ok) {
-        const now = new Date().toISOString();
-        setDbLastSynced(now);
-        localStorage.setItem('finora_db_last_sync', now);
+    try {
+      // Always persist locally as the reliable source
+      localStorage.setItem(`${STORAGE_KEY_PREFIX}${activeProfileKey}`, JSON.stringify(dataToSave));
+
+      // If authenticated, also push to server
+      if (authToken) {
+        try {
+          const res = await fetch('/api/db/sync', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify(dataToSave),
+          });
+          if (res.ok) {
+            setIsDbConnected(true);
+          } else {
+            setIsDbConnected(false);
+          }
+        } catch {
+          // Server unreachable — local save still succeeded
+          setIsDbConnected(false);
+        }
+      } else {
+        // Local mode — mark as connected since localStorage is reliable
         setIsDbConnected(true);
-        return true;
       }
-      return false;
+
+      const now = new Date().toISOString();
+      setDbLastSynced(now);
+      localStorage.setItem('finora_db_last_sync', now);
+      return true;
     } catch (err) {
-      console.error('Manual sync error:', err);
-      setIsDbConnected(false);
+      console.error('Sync error:', err);
       return false;
     } finally {
       setIsDbSyncing(false);
     }
-  }, [authToken, profile, transactions, budgets, savingsGoals, notifications]);
+  }, [activeProfileKey, authToken, profile, transactions, budgets, savingsGoals, notifications]);
 
   // Authentication: Register
   const register = useCallback(
@@ -323,6 +374,18 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         currency: string;
         monthlyIncomeTarget?: number;
         monthlyExpenseBudget?: number;
+        phone?: string;
+        occupation?: string;
+        university?: string;
+        program?: string;
+        degree?: string;
+        year?: string;
+        semester?: string;
+        studentId?: string;
+        bio?: string;
+        location?: string;
+        financialGoal?: string;
+        avatarUrl?: string;
       },
       autoLogin = false
     ): Promise<{ success: boolean; error?: string; user?: AuthUser }> => {
@@ -352,6 +415,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
             setSavingsGoals(data.userData.savingsGoals || []);
             setNotifications(data.userData.notifications || []);
           }
+          // Server data is now in state — autosave to the server is safe from here on.
+          hasLoadedServerDataRef.current = true;
 
           // Clear stale guest localStorage data to prevent cross-user bleed on reload
           Object.keys(localStorage).forEach(k => { if (k.startsWith("finora_v2_")) localStorage.removeItem(k); });
@@ -402,6 +467,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSavingsGoals(data.userData.savingsGoals || []);
           setNotifications(data.userData.notifications || []);
         }
+        // Server data is now in state — autosave to the server is safe from here on.
+        hasLoadedServerDataRef.current = true;
 
         // Clear stale guest localStorage data to prevent cross-user bleed on reload
         Object.keys(localStorage).forEach(k => { if (k.startsWith("finora_v2_")) localStorage.removeItem(k); });
@@ -438,8 +505,28 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
     setAuthToken(null);
     setCurrentUser(null);
+    // Reset in-memory state so the next login starts clean instead of leaking
+    // this user's data into the guest/localStorage slot.
+    setProfile({
+      id: 'local_registered_user',
+      name: '',
+      email: '',
+      role: 'Individual',
+      currency: 'BDT',
+      currencySymbol: 'Tk',
+      monthlyIncomeTarget: 0,
+      monthlyExpenseBudget: 0,
+      joinedDate: new Date().toISOString().split('T')[0],
+    });
+    setTransactions([]);
+    setBudgets([]);
+    setSavingsGoals([]);
+    setNotifications([]);
+    hasLoadedServerDataRef.current = false;
     localStorage.removeItem(AUTH_TOKEN_KEY);
     localStorage.removeItem(AUTH_USER_KEY);
+    // Remove any stale guest cache so a returning guest starts fresh, not with this user's leftovers.
+    Object.keys(localStorage).forEach(k => { if (k.startsWith("finora_v2_")) localStorage.removeItem(k); });
   }, [authToken]);
 
   // Delete Account
@@ -464,6 +551,127 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       return { success: false, error: err.message || 'Network error' };
     }
   }, [authToken]);
+
+  // Password gate for profile editing
+  const verifyPassword = useCallback(
+    async (password: string): Promise<{ success: boolean; error?: string }> => {
+      if (!authToken) return { success: false, error: 'Not authenticated' };
+      try {
+        const res = await fetch('/api/auth/verify-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify({ password }),
+        });
+        if (!res.ok) {
+          const data = await res.json();
+          return { success: false, error: data.error || 'Password verification failed' };
+        }
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Network error' };
+      }
+    },
+    [authToken]
+  );
+
+  // Update registered account profile (server-persisted)
+  const updateAccountProfile = useCallback(
+    async (fields: {
+      name?: string;
+      role?: UserRole;
+      currency?: string;
+      currencySymbol?: string;
+      monthlyIncomeTarget?: number;
+      monthlyExpenseBudget?: number;
+      phone?: string;
+      location?: string;
+      occupation?: string;
+    bio?: string;
+    financialGoal?: string;
+    riskTolerance?: 'conservative' | 'moderate' | 'aggressive';
+      avatarUrl?: string;
+      university?: string;
+      program?: string;
+      degree?: string;
+      year?: string;
+      semester?: string;
+      studentId?: string;
+    }): Promise<{ success: boolean; error?: string }> => {
+      if (!authToken) return { success: false, error: 'Not authenticated' };
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify(fields),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          return { success: false, error: data.error || 'Failed to update profile' };
+        }
+        if (data.user) {
+          setCurrentUser(data.user);
+          localStorage.setItem(AUTH_USER_KEY, JSON.stringify(data.user));
+        }
+        if (data.userData?.profile) {
+          setProfile(data.userData.profile);
+          skipNextSyncRef.current = true;
+        }
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Network error' };
+      }
+    },
+    [authToken]
+  );
+
+  // Change account password (server-persisted; keeps current session alive)
+  const changePassword = useCallback(
+    async (currentPassword: string, newPassword: string): Promise<{ success: boolean; error?: string }> => {
+      if (!authToken) return { success: false, error: 'Not authenticated' };
+      try {
+        const res = await fetch('/api/auth/change-password', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        const data = await res.json();
+        if (!res.ok) return { success: false, error: data.error || 'Failed to change password' };
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Network error' };
+      }
+    },
+    [authToken]
+  );
+
+  // Change account email (server-persisted; password-gated)
+  const changeEmail = useCallback(
+    async (password: string, newEmail: string): Promise<{ success: boolean; error?: string }> => {
+      if (!authToken) return { success: false, error: 'Not authenticated' };
+      try {
+        const res = await fetch('/api/auth/change-email', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${authToken}` },
+          body: JSON.stringify({ password, newEmail }),
+        });
+        const data = await res.json();
+        if (!res.ok) return { success: false, error: data.error || 'Failed to change email' };
+        if (data.user && currentUser) {
+          const updatedUser = { ...currentUser, email: data.user.email };
+          setCurrentUser(updatedUser);
+          localStorage.setItem(AUTH_USER_KEY, JSON.stringify(updatedUser));
+        }
+        if (data.userData?.profile) {
+          setProfile(data.userData.profile);
+          skipNextSyncRef.current = true;
+        }
+        return { success: true };
+      } catch (err: any) {
+        return { success: false, error: err.message || 'Network error' };
+      }
+    },
+    [authToken, currentUser]
+  );
 
   // Currency Formatter
   const formatCurrency = useCallback(
@@ -492,6 +700,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const sourceTotals: Record<string, number> = {};
 
     monthlyTransactions.forEach((tx) => {
+      // Savings transfers move cash between pockets — never income or expense.
+      if (tx.savingsTransfer) return;
       if (tx.type === 'income') {
         totalIncome += tx.amount;
         sourceTotals[tx.category] = (sourceTotals[tx.category] || 0) + tx.amount;
@@ -529,17 +739,71 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       remaining: overallBudget - totalExpenses,
     };
 
+    /* ── Financial Health Score (0-100) — STRICT scoring ──
+       EARN (max 100):
+       - Savings rate (35 pts): 25%+ of income saved = full marks, scales down to 0
+       - Budget discipline (25 pts): full marks ONLY while spending stays within budget
+       - Positive cash flow (25 pts): income > expenses = full, shrinks with the shortfall
+       - Goal progress (15 pts): average progress across savings goals (neutral 5 if none set)
+       LOSE (subtracted from your earned total):
+       - Over budget: -1 pt per 1% past 100% utilization (up to -30)
+       - Negative cash flow: flat -10 when expenses exceed income
+       - Zero savings: -5 when income is recorded but nothing was saved
+    */
+    const savingsRatePts = Math.min(35, (savingsRate / 25) * 35);
+    const budgetPct = budgetUtilization.percentage;
+    const budgetPts = budgetPct <= 100 ? 25 : 0;
+    const overBudgetPenalty = budgetPct > 100 ? Math.min(30, Math.round(budgetPct - 100)) : 0;
+    const cashFlowPts = totalIncome > 0
+      ? (remainingBalance >= 0 ? 25 : Math.max(0, 25 + (remainingBalance / totalIncome) * 25))
+      : 10; // no income recorded yet — neutral
+    const negativeCashPenalty = totalIncome > 0 && remainingBalance < 0 ? 10 : 0;
+    const noSavingsPenalty = totalIncome > 0 && savingsRate === 0 ? 5 : 0;
+    // Category budgets (Rent, Food, etc.) count too: each breached category costs
+    // -5 base, plus -1 per full 25% over its limit, capped at -15 per category / -30 total.
+    const categoryOverBudgetPenalty = Math.min(30, budgets
+      .filter((b) => b.category !== 'Overall' && b.limitAmount > 0)
+      .reduce((penalty, b) => {
+        const spent = categoryTotals[b.category] || 0;
+        if (spent <= b.limitAmount) return penalty;
+        const overPct = ((spent - b.limitAmount) / b.limitAmount) * 100;
+        return penalty + Math.min(15, 5 + Math.floor(overPct / 25));
+      }, 0));
+    const goalProgressPts = savingsGoals.length > 0
+      ? (savingsGoals.reduce((s, g) => s + Math.min(1, g.targetAmount > 0 ? g.currentAmount / g.targetAmount : 0), 0) / savingsGoals.length) * 15
+      : 5;
+    const financialHealthScore = Math.round(
+      Math.max(0, Math.min(100,
+        savingsRatePts + budgetPts + cashFlowPts + goalProgressPts
+        - overBudgetPenalty - negativeCashPenalty - noSavingsPenalty
+        - categoryOverBudgetPenalty
+      ))
+    );
+
+    const financialHealthBreakdown = [
+      { label: 'Savings rate', points: Math.round(savingsRatePts * 10) / 10, max: 35, note: `${savingsRate}% saved (25%+ = full marks)` },
+      { label: 'Budget discipline', points: budgetPts, max: 25, note: budgetPct <= 100 ? `${budgetPct}% of budget used` : `Budget exceeded (${budgetPct}%) — 0 pts` },
+      { label: 'Positive cash flow', points: Math.round(cashFlowPts * 10) / 10, max: 25, note: totalIncome > 0 ? (remainingBalance >= 0 ? 'Spending below income' : 'Spending exceeds income') : 'No income recorded (neutral)' },
+      { label: 'Goal progress', points: Math.round(goalProgressPts * 10) / 10, max: 15, note: savingsGoals.length > 0 ? `${savingsGoals.length} active goal(s)` : 'No goals set (neutral)' },
+      { label: 'Penalty: overall over-budget', points: -overBudgetPenalty, max: 0, note: budgetPct > 100 ? `${budgetPct - 100}% over overall budget (−1/%)` : 'None' },
+      { label: 'Penalty: category budgets over', points: -categoryOverBudgetPenalty, max: 0, note: '−5 per breached category + −1 per 25% over' },
+      { label: 'Penalty: negative cash flow', points: -negativeCashPenalty, max: 0, note: negativeCashPenalty ? 'Expenses exceeded income' : 'None' },
+      { label: 'Penalty: zero savings', points: -noSavingsPenalty, max: 0, note: noSavingsPenalty ? 'Income recorded but nothing saved' : 'None' },
+    ];
+
     return {
       totalIncome,
       totalExpenses,
       remainingBalance,
       monthlySavings,
       savingsRate,
+      financialHealthScore,
+      financialHealthBreakdown,
       topExpenseCategories,
       incomeSourcesBreakdown,
       budgetUtilization,
     };
-  }, [monthlyTransactions, budgets, profile.monthlyExpenseBudget]);
+  }, [monthlyTransactions, budgets, profile.monthlyExpenseBudget, savingsGoals]);
 
   // Check budget limits and generate notifications on expense creation
   const checkBudgetThresholds = useCallback(
@@ -692,6 +956,24 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const contributeToGoal = useCallback(
     (goalId: string, amount: number, note?: string) => {
+      // A deposit is a TRANSFER, not an expense: cash is deducted (balance drops),
+      // the money counts as savings, and it never touches expense totals.
+      const goal = savingsGoals.find((g) => g.id === goalId);
+      if (goal) {
+        const transferTx: Transaction = {
+          id: createId('tx'),
+          type: 'expense',
+          category: 'Savings Transfer',
+          description: `Deposit to savings goal: ${goal.name}`,
+          amount,
+          date: new Date().toISOString().split('T')[0],
+          paymentMethod: 'Bank Transfer',
+          savingsTransfer: true,
+          notes: note,
+          createdAt: new Date().toISOString(),
+        };
+        setTransactions((prev) => [transferTx, ...prev]);
+      }
       setSavingsGoals((prev) =>
         prev.map((g) => {
           if (g.id === goalId) {
@@ -715,7 +997,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
                 const notif: AppNotification = {
                   id: createId('notif'),
                   type: 'savings_milestone',
-                  title: `Savings Milestone Reached! 🎉`,
+                  title: `Savings Milestone Reached! `,
                   message: `Congratulations! Your goal "${g.name}" has reached ${milestone}% (${formatCurrency(newAmount)} of ${formatCurrency(g.targetAmount)}).`,
                   timestamp: new Date().toISOString(),
                   read: false,
@@ -738,10 +1020,26 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         })
       );
     },
-    [formatCurrency]
+    [savingsGoals, formatCurrency]
   );
 
   const withdrawFromGoal = useCallback((goalId: string, amount: number) => {
+    // A withdrawal returns cash: it is NOT income, just money moving back to your balance.
+    const goal = savingsGoals.find((g) => g.id === goalId);
+    if (goal) {
+      const returnTx: Transaction = {
+        id: createId('tx'),
+        type: 'income',
+        category: 'Savings Withdrawal',
+        description: `Withdrawal from savings goal: ${goal.name}`,
+        amount,
+        date: new Date().toISOString().split('T')[0],
+        paymentMethod: 'Bank Transfer',
+        savingsTransfer: true,
+        createdAt: new Date().toISOString(),
+      };
+      setTransactions((prev) => [returnTx, ...prev]);
+    }
     setSavingsGoals((prev) =>
       prev.map((g) => {
         if (g.id === goalId) {
@@ -755,7 +1053,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         return g;
       })
     );
-  }, []);
+  }, [savingsGoals]);
 
   // Notifications Management
   const unreadNotificationCount = useMemo(() => {
@@ -783,13 +1081,11 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const resetCurrentProfile = useCallback(() => {
-    const preset = PRESET_PROFILES[activeProfileKey] || PRESET_PROFILES.employee;
-    setProfile(preset.profile);
-    setTransactions(preset.transactions);
-    setBudgets(preset.budgets);
-    setSavingsGoals(preset.savingsGoals);
-    setNotifications(preset.notifications);
-  }, [activeProfileKey]);
+    setTransactions([]);
+    setBudgets([]);
+    setSavingsGoals([]);
+    setNotifications([]);
+  }, []);
 
   // Export Data to CSV
   const exportCSV = useCallback(
@@ -892,6 +1188,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         logout,
         deleteAccount,
         syncDatabase,
+        verifyPassword,
+        updateAccountProfile,
+        changePassword,
+        changeEmail,
         switchProfile,
         updateProfile,
         resetCurrentProfile,

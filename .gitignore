@@ -6,3 +6,4 @@ coverage/
 *.log
 .env*
 !.env.example
+.editor_tools_backups/

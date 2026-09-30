@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: finora
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false
+      - key: MISTRAL_MODEL
+        value: ministral-14b-latest
+      - key: DEMO_ACCOUNT_PASSWORD
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+    healthCheckPath: /api/health

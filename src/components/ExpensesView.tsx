@@ -4,6 +4,7 @@ import {
   Plus,
   Search,
   Download,
+  Printer,
   Calendar,
   CreditCard,
   Trash2,
@@ -88,13 +89,13 @@ const SECTOR_ICON_MAP: Record<string, React.ReactNode> = {
   'Other': <SlidersHorizontal className="w-4 h-4 text-slate-400" />,
 };
 
-// Daily Quick Expense Presets in Taka (৳ BDT)
+// Daily Quick Expense Presets in Taka (Tk BDT)
 const DAILY_PRESETS = [
-  { label: '☕ Tea & Snacks', amount: 40, category: 'Food & Dining', desc: 'Street Tea Stall & Biscuit' },
-  { label: '🍛 Daily Lunch', amount: 150, category: 'Food & Dining', desc: 'Mess / Office Meal' },
-  { label: '🛺 Commute & Transit', amount: 50, category: 'Transportation', desc: 'Rickshaw, Metro MRT & Bus' },
-  { label: '🛒 Daily Groceries', amount: 350, category: 'Household & Living', desc: 'Vegetables, Milk & Eggs' },
-  { label: '🥟 Evening Snacks', amount: 60, category: 'Food & Dining', desc: 'Singara, Samucha & Snack' },
+  { label: ' Tea & Snacks', amount: 40, category: 'Food & Dining', desc: 'Street Tea Stall & Biscuit' },
+  { label: ' Daily Lunch', amount: 150, category: 'Food & Dining', desc: 'Mess / Office Meal' },
+  { label: ' Commute & Transit', amount: 50, category: 'Transportation', desc: 'Rickshaw, Metro MRT & Bus' },
+  { label: ' Daily Groceries', amount: 350, category: 'Household & Living', desc: 'Vegetables, Milk & Eggs' },
+  { label: ' Evening Snacks', amount: 60, category: 'Food & Dining', desc: 'Singara, Samucha & Snack' },
 ];
 
 export const ExpensesView: React.FC<ExpensesViewProps> = ({
@@ -124,7 +125,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
   // Filter expense transactions
   const expenseTransactions = useMemo(() => {
-    return transactions.filter((tx) => tx.type === 'expense');
+    return transactions.filter((tx) => tx.type === 'expense' && !tx.savingsTransfer);
   }, [transactions]);
 
   // Monthly expenses list
@@ -259,6 +260,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200" id="finora-expenses-view">
+      <div className="print:hidden">
       {onBackToDashboard && (
         <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
@@ -302,6 +304,15 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           >
             <Download className="w-4 h-4" />
             <span className="hidden sm:inline">Export CSV</span>
+          </button>
+
+          <button
+            onClick={() => window.print()}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer"
+            title="Print Expense Report"
+          >
+            <Printer className="w-4 h-4" />
+            <span>Print Report</span>
           </button>
 
           <button
@@ -1037,6 +1048,81 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           </div>
         </div>
       )}
+      </div>
+
+      {/* ══════════ PRINT-ONLY EXPENSE STATEMENT ══════════ */}
+      <div className="hidden print:block text-slate-900">
+        <div className="border-t-4 border-emerald-600 pt-3 mb-6">
+          <div className="flex items-start justify-between pb-3 border-b border-slate-300">
+            <div>
+              <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+            </div>
+            <div className="text-right text-xs">
+              <p className="font-bold text-sm text-slate-900">EXPENSE STATEMENT</p>
+              <p className="text-slate-500">Period: {selectedMonth}</p>
+              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
+          <div>
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="font-bold text-base">{profile.name}</p>
+            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+          </div>
+          <div className="text-right">
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Total Expenses</p>
+            <p className="font-black text-2xl text-red-700">{formatCurrency(totalMonthlyExpense)}</p>
+          </div>
+        </div>
+
+        <p className="text-sm font-black uppercase tracking-wider text-slate-800 mb-2">Expense Ledger — {displayExpenses.length} transactions</p>
+        <table className="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Date</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Description</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Sector</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Method</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {displayExpenses.map((tx, i) => (
+              <tr key={tx.id} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.date}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{tx.description || '—'}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.category}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.paymentMethod}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right font-bold text-slate-900">{formatCurrency(tx.amount)}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={4}>Total Expenses</td>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-red-700">{formatCurrency(totalMonthlyExpense)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div className="print-keep-together mt-10 flex items-end justify-between">
+          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
+            <div>
+              <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+            </div>
+          </div>
+          <div className="w-56"></div>
+        </div>
+        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2 mt-4">
+          This expense statement was generated by FINORA on {new Date().toLocaleString('en-GB')} and reflects all recorded outflows for the selected period. For internal and personal use.
+        </p>
+      </div>
     </div>
   );
 };

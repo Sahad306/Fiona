@@ -4,13 +4,12 @@ import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { IncomeView } from './components/IncomeView';
 import { ExpensesView } from './components/ExpensesView';
-import { BudgetsView } from './components/BudgetsView';
-import { SavingsGoalsView } from './components/SavingsGoalsView';
-import { ReportsView } from './components/ReportsView';
-import { AIAdvisorView } from './components/AIAdvisorView';
+import { PlanningView, PlanningTab } from './components/PlanningView';
+import { ReportsAiView, ReportsAiTab } from './components/ReportsAiView';
 import { TransactionModal } from './components/TransactionModal';
 import { AuthModal } from './components/AuthModal';
 import { AuthGateway } from './components/AuthGateway';
+import { SmartImportModal } from './components/SmartImportModal';
 import { Transaction } from './types';
 
 const MainAppContent: React.FC = () => {
@@ -20,9 +19,12 @@ const MainAppContent: React.FC = () => {
   const [txModalType, setTxModalType] = useState<'income' | 'expense'>('expense');
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'login' | 'register' | 'presets'>('login');
+  const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
   const [depositGoalId, setDepositGoalId] = useState<string | null>(null);
+  const [budgetGoalsTab, setBudgetGoalsTab] = useState<PlanningTab>('budgets');
+  const [reportsAiTab, setReportsAiTab] = useState<ReportsAiTab>('reports');
   const [guestPreview, setGuestPreview] = useState(false);
+  const [isSmartImportOpen, setIsSmartImportOpen] = useState(false);
 
   // If user is not authenticated and hasn't selected guest preview, render the Auth Gateway
   if (!isAuthenticated && !currentUser && !guestPreview) {
@@ -43,10 +45,27 @@ const MainAppContent: React.FC = () => {
 
   const handleDepositGoal = (goalId: string) => {
     setDepositGoalId(goalId);
-    setActiveTab('savings');
+    setBudgetGoalsTab('savings');
+    setActiveTab('budget-goals');
   };
 
-  const handleOpenAuth = (tab: 'login' | 'register' | 'presets' = 'login') => {
+  // 'budgets' and 'savings' are merged into one screen; redirect legacy ids
+  // and remember which sub-tab they were asking for.
+  const handleSetActiveTab = (tab: string) => {
+    if (tab === 'budgets' || tab === 'savings') {
+      setBudgetGoalsTab(tab);
+      setActiveTab('budget-goals');
+      return;
+    }
+    if (tab === 'reports' || tab === 'advisor' || tab === 'ai-advisor') {
+      setReportsAiTab(tab === 'reports' ? 'reports' : 'advisor');
+      setActiveTab('reports-ai');
+      return;
+    }
+    setActiveTab(tab);
+  };
+
+  const handleOpenAuth = (tab: 'login' | 'register' = 'login') => {
     setAuthModalTab(tab);
     setIsAuthModalOpen(true);
   };
@@ -56,18 +75,18 @@ const MainAppContent: React.FC = () => {
       {/* Navigation Header */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onOpenTransactionModal={handleOpenTransactionModal}
+        setActiveTab={handleSetActiveTab}
         onOpenAuthModal={handleOpenAuth}
+        onOpenSmartImport={() => setIsSmartImportOpen(true)}
         onSignOut={() => setGuestPreview(false)}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === 'dashboard' && (
           <Dashboard
             onOpenTransactionModal={handleOpenTransactionModal}
-            setActiveTab={setActiveTab}
+            setActiveTab={handleSetActiveTab}
             onDepositGoal={handleDepositGoal}
           />
         )}
@@ -88,24 +107,28 @@ const MainAppContent: React.FC = () => {
           />
         )}
 
-        {activeTab === 'budgets' && <BudgetsView onBackToDashboard={() => setActiveTab('dashboard')} />}
-
-        {activeTab === 'savings' && (
-          <SavingsGoalsView
+        {activeTab === 'budget-goals' && (
+          <PlanningView
+            tab={budgetGoalsTab}
+            onTabChange={setBudgetGoalsTab}
             initialDepositGoalId={depositGoalId}
             onClearInitialDepositGoal={() => setDepositGoalId(null)}
             onBackToDashboard={() => setActiveTab('dashboard')}
           />
         )}
 
-        {activeTab === 'reports' && <ReportsView onBackToDashboard={() => setActiveTab('dashboard')} />}
-
-        {(activeTab === 'advisor' || activeTab === 'ai-advisor') && <AIAdvisorView onBackToDashboard={() => setActiveTab('dashboard')} />}
+        {activeTab === 'reports-ai' && (
+          <ReportsAiView
+            tab={reportsAiTab}
+            onTabChange={setReportsAiTab}
+            onBackToDashboard={() => setActiveTab('dashboard')}
+          />
+        )}
       </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-[1600px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
             <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-wider">
               FINORA
@@ -137,6 +160,11 @@ const MainAppContent: React.FC = () => {
         isOpen={isAuthModalOpen}
         initialTab={authModalTab}
         onClose={() => setIsAuthModalOpen(false)}
+      />
+
+      <SmartImportModal
+        isOpen={isSmartImportOpen}
+        onClose={() => setIsSmartImportOpen(false)}
       />
     </div>
   );

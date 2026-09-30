@@ -59,31 +59,31 @@ interface TransactionModalProps {
 
 // Income source metadata with icons & helper text
 const INCOME_SOURCE_DETAILS: Record<string, { icon: React.ReactNode; label: string; desc: string }> = {
-  Salary: { icon: <Briefcase className="w-4 h-4 text-emerald-400" />, label: 'Salary & Wages (বেতন)', desc: 'Primary monthly employment paycheck' },
-  Freelancing: { icon: <Laptop className="w-4 h-4 text-teal-400" />, label: 'Freelancing & Contracts (ফ্রিল্যান্সিং)', desc: 'Upwork, Fiverr & client milestones' },
-  Business: { icon: <Building2 className="w-4 h-4 text-blue-400" />, label: 'Business & Sales (ব্যবসা)', desc: 'Product revenue & commerce profits' },
-  Investments: { icon: <TrendingUp className="w-4 h-4 text-indigo-400" />, label: 'Investments & DPS (বিনিয়োগ ও ডিপিএস)', desc: 'Stocks, savings certificates & dividends' },
-  Allowances: { icon: <Gift className="w-4 h-4 text-pink-400" />, label: 'Family Allowances (হাতখরচ / সাহায্য)', desc: 'Family support & education grants' },
-  'Rental Income': { icon: <Home className="w-4 h-4 text-amber-400" />, label: 'Rental Income (ভাড়া আয়)', desc: 'Property, sublease & tenant revenue' },
-  'Side Hustle': { icon: <Zap className="w-4 h-4 text-amber-300" />, label: 'Tuition & Side Hustle (টিউশনি ও সাইড কাজ)', desc: 'Coaching, mentoring & extra income' },
-  Gifts: { icon: <Gift className="w-4 h-4 text-purple-400" />, label: 'Awards & Stipends (বৃত্তি ও উপহার)', desc: 'Academic scholarship & gifts' },
-  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Inflows (অন্যান্য জমা)', desc: 'Miscellaneous incoming funds' },
+  Salary: { icon: <Briefcase className="w-4 h-4 text-emerald-400" />, label: 'Salary & Wages', desc: 'Primary monthly employment paycheck' },
+  Freelancing: { icon: <Laptop className="w-4 h-4 text-teal-400" />, label: 'Freelancing & Contracts', desc: 'Upwork, Fiverr & client milestones' },
+  Business: { icon: <Building2 className="w-4 h-4 text-blue-400" />, label: 'Business & Sales', desc: 'Product revenue & commerce profits' },
+  Investments: { icon: <TrendingUp className="w-4 h-4 text-indigo-400" />, label: 'Investments & DPS', desc: 'Stocks, savings certificates & dividends' },
+  Allowances: { icon: <Gift className="w-4 h-4 text-pink-400" />, label: 'Family Allowances', desc: 'Family support & education grants' },
+  'Rental Income': { icon: <Home className="w-4 h-4 text-amber-400" />, label: 'Rental Income', desc: 'Property, sublease & tenant revenue' },
+  'Side Hustle': { icon: <Zap className="w-4 h-4 text-amber-300" />, label: 'Tuition & Side Hustle', desc: 'Coaching, mentoring & extra income' },
+  Gifts: { icon: <Gift className="w-4 h-4 text-purple-400" />, label: 'Awards & Stipends', desc: 'Academic scholarship & gifts' },
+  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Inflows', desc: 'Miscellaneous incoming funds' },
 };
 
 // Expense sectors metadata
 const EXPENSE_SECTOR_DETAILS: Record<string, { icon: React.ReactNode; label: string; desc: string }> = {
-  'Food & Dining': { icon: <Utensils className="w-4 h-4 text-emerald-400" />, label: 'Food & Dining (খাবার ও মেস)', desc: 'Daily meals, mess bill, cafeteria, dining' },
-  'Housing & Rent': { icon: <Home className="w-4 h-4 text-indigo-400" />, label: 'Housing & Rent (বাড়ি / মেস সিট)', desc: 'Apartment rent, hostel, mess seat' },
-  'Household & Living': { icon: <Layers className="w-4 h-4 text-teal-400" />, label: 'Household & Bazaar (বাজার ও সংসার)', desc: 'Supermarket grocery, cleaning, maid' },
-  'Utilities & Bills': { icon: <Zap className="w-4 h-4 text-amber-400" />, label: 'Utilities & Bills (ইউটিলিটি ও বিল)', desc: 'Electricity, gas, water, WiFi, mobile' },
-  Transportation: { icon: <TrendingUp className="w-4 h-4 text-blue-400" />, label: 'Transportation (যাতায়াত ও ভাড়া)', desc: 'Metro rail, rickshaw, bus, fuel, Uber' },
-  Education: { icon: <GraduationCap className="w-4 h-4 text-violet-400" />, label: 'Education & Study (শিক্ষা ও বই)', desc: 'Tuition, books, courses, exam fees' },
-  Shopping: { icon: <ShoppingBag className="w-4 h-4 text-pink-400" />, label: 'Shopping & Apparel (কেনাকাটা)', desc: 'Clothing, gadgets, accessories' },
-  'Healthcare & Medical': { icon: <HeartPulse className="w-4 h-4 text-rose-400" />, label: 'Healthcare & Medical (স্বাস্থ্য ও ওষুধ)', desc: 'Pharmacy medicines, doctor, tests' },
-  Entertainment: { icon: <Film className="w-4 h-4 text-cyan-400" />, label: 'Entertainment (বিনোদন ও সাবস্ক্রিপশন)', desc: 'Streaming, movies, gaming, outings' },
-  'Personal Care': { icon: <HeartPulse className="w-4 h-4 text-teal-300" />, label: 'Personal Care (ব্যক্তিগত যত্ন)', desc: 'Grooming, salon, personal items' },
-  Travel: { icon: <Plane className="w-4 h-4 text-orange-400" />, label: 'Travel & Trips (ভ্রমণ ও ট্যুর)', desc: 'Vacation, train tickets, hotel stays' },
-  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Outflows (অন্যান্য খরচ)', desc: 'Miscellaneous expenses' },
+  'Food & Dining': { icon: <Utensils className="w-4 h-4 text-emerald-400" />, label: 'Food & Dining', desc: 'Daily meals, mess bill, cafeteria, dining' },
+  'Housing & Rent': { icon: <Home className="w-4 h-4 text-indigo-400" />, label: 'Housing & Rent', desc: 'Apartment rent, hostel, mess seat' },
+  'Household & Living': { icon: <Layers className="w-4 h-4 text-teal-400" />, label: 'Household & Bazaar', desc: 'Supermarket grocery, cleaning, maid' },
+  'Utilities & Bills': { icon: <Zap className="w-4 h-4 text-amber-400" />, label: 'Utilities & Bills', desc: 'Electricity, gas, water, WiFi, mobile' },
+  Transportation: { icon: <TrendingUp className="w-4 h-4 text-blue-400" />, label: 'Transportation', desc: 'Metro rail, rickshaw, bus, fuel, Uber' },
+  Education: { icon: <GraduationCap className="w-4 h-4 text-violet-400" />, label: 'Education & Study', desc: 'Tuition, books, courses, exam fees' },
+  Shopping: { icon: <ShoppingBag className="w-4 h-4 text-pink-400" />, label: 'Shopping & Apparel', desc: 'Clothing, gadgets, accessories' },
+  'Healthcare & Medical': { icon: <HeartPulse className="w-4 h-4 text-rose-400" />, label: 'Healthcare & Medical', desc: 'Pharmacy medicines, doctor, tests' },
+  Entertainment: { icon: <Film className="w-4 h-4 text-cyan-400" />, label: 'Entertainment', desc: 'Streaming, movies, gaming, outings' },
+  'Personal Care': { icon: <HeartPulse className="w-4 h-4 text-teal-300" />, label: 'Personal Care', desc: 'Grooming, salon, personal items' },
+  Travel: { icon: <Plane className="w-4 h-4 text-orange-400" />, label: 'Travel & Trips', desc: 'Vacation, train tickets, hotel stays' },
+  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Outflows', desc: 'Miscellaneous expenses' },
 };
 
 // Payment Rail Branding & Colors
@@ -362,8 +362,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 {editingTransaction
                   ? `Edit ${editingTransaction.type === 'income' ? 'Income Deposit' : 'Expense'}`
                   : type === 'income'
-                  ? 'Add Income Inflow (আয় যোগ করুন)'
-                  : 'Add Expense Outflow (খরচ যোগ করুন)'}
+                  ? 'Add Income Inflow'
+                  : 'Add Expense Outflow'}
               </h2>
               <p className="text-[11px] text-slate-400">
                 {type === 'income'
@@ -398,7 +398,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 }`}
               >
                 <ArrowDownRight className="w-4 h-4 text-rose-400" />
-                <span>EXPENSE / ব্যয় (খরচ)</span>
+                <span>EXPENSE</span>
               </button>
 
               <button
@@ -414,13 +414,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 }`}
               >
                 <ArrowUpRight className="w-4 h-4 text-emerald-400" />
-                <span>INCOME / আয় (জমা)</span>
+                <span>INCOME</span>
               </button>
             </div>
           </div>
         )}
 
-        {/* 🌟 USER REQUEST CORE: TWO CLEAR OPTIONS FOR EXPENSE (DAILY vs MONTHLY) */}
+        {/*  USER REQUEST CORE: TWO CLEAR OPTIONS FOR EXPENSE (DAILY vs MONTHLY) */}
         {type === 'expense' && !editingTransaction && (
           <div className="px-6 py-2">
             <div className="bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
@@ -429,7 +429,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   Expense Structure Selection
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium">
-                  {expenseMode === 'daily' ? '☀️ Daily Mode Active' : '📅 Monthly Sectors Active'}
+                  {expenseMode === 'daily' ? ' Daily Mode Active' : ' Monthly Sectors Active'}
                 </span>
               </div>
 
@@ -591,7 +591,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                         {/* Amount Input */}
                         <div className="relative w-28">
                           <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-indigo-400">
-                            {profile.currencySymbol || '৳'}
+                            {profile.currencySymbol || 'Tk'}
                           </span>
                           <input
                             type="number"
@@ -702,13 +702,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   {type === 'income' ? 'Income Amount' : isDailyRoutineEnabled ? 'Daily Rate' : 'Expense Amount'}
                 </label>
                 <span className="text-xs font-black text-emerald-400 font-mono">
-                  {amount ? formatCurrency(parseFloat(amount) || 0) : `${profile.currencySymbol || '৳'}0`}
+                  {amount ? formatCurrency(parseFloat(amount) || 0) : `${profile.currencySymbol || 'Tk'}0`}
                 </span>
               </div>
 
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-black text-slate-400">
-                  {profile.currencySymbol || '৳'}
+                  {profile.currencySymbol || 'Tk'}
                 </span>
                 <input
                   type="number"
@@ -739,7 +739,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               </div>
             </div>
 
-            {/* 🌟 USER REQUEST CORE: DAILY ROUTINE & MONTHLY CALCULATION WITH OFF-DAYS */}
+            {/*  USER REQUEST CORE: DAILY ROUTINE & MONTHLY CALCULATION WITH OFF-DAYS */}
             {type === 'expense' && (
               <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 space-y-3 shadow-sm">
                 <div className="flex items-center justify-between">
@@ -747,7 +747,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     <Calculator className="w-4 h-4 text-amber-400" />
                     <div>
                       <h4 className="text-xs font-bold text-white">
-                        Daily Routine & Monthly Auto-Calculation (মাসিক প্রজেকশন ও অফ-ডে)
+                        Daily Routine & Monthly Auto-Calculation
                       </h4>
                       <p className="text-[10px] text-slate-400">
                         Calculate monthly bill by multiplying daily rate with active days (minus off/missed days).
@@ -779,7 +779,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       {/* Total Days in Month */}
                       <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                         <label className="text-[10px] font-bold text-slate-400 block mb-1">
-                          Total Days in Month (মোট দিন)
+                          Total Days in Month
                         </label>
                         <select
                           value={totalMonthDays}
@@ -797,7 +797,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       {/* Off-Days / Missed Days */}
                       <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                         <label className="text-[10px] font-bold text-amber-400 block mb-1">
-                          Off / Missed Days (বাদ/ছুটির দিন)
+                          Off / Missed Days
                         </label>
                         <div className="flex items-center space-x-1.5">
                           <button
@@ -826,7 +826,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       {/* Reason for Off Days */}
                       <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                         <label className="text-[10px] font-bold text-slate-400 block mb-1">
-                          Off-Day Reason (ছুটির কারণ)
+                          Off-Day Reason
                         </label>
                         <input
                           type="text"
@@ -882,7 +882,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Category / Stream Grid */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-300">
-                {type === 'income' ? 'Income Stream (আয়ের উৎস)' : 'Expense Sector (খরচের খাত)'}
+                {type === 'income' ? 'Income Stream' : 'Expense Sector'}
               </label>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -924,7 +924,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-bold text-slate-300 block mb-1">
-                  Description (বিবরণ)
+                  Description
                 </label>
                 <input
                   type="text"
@@ -953,7 +953,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
-                  <span>Payment Method (লেনদেনের মাধ্যম)</span>
+                  <span>Payment Method</span>
                   <span className="text-[10px] text-pink-400 font-bold">bKash • Nagad • Rocket</span>
                 </label>
                 <select
@@ -971,7 +971,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
               <div>
                 <label className="text-xs font-bold text-slate-300 block mb-1">
-                  Date (তারিখ)
+                  Date
                 </label>
                 <input
                   type="date"
@@ -985,7 +985,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Recurring Schedule */}
             <div>
               <label className="text-xs font-bold text-slate-300 block mb-1">
-                Recurring Frequency (পুনরাবৃত্তি)
+                Recurring Frequency
               </label>
               <div className="grid grid-cols-4 gap-2">
                 {[
@@ -1081,10 +1081,10 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   {editingTransaction
                     ? 'Save Changes'
                     : type === 'income'
-                    ? `Deposit Income (${amount ? formatCurrency(parseFloat(amount)) : '৳0'})`
+                    ? `Deposit Income (${amount ? formatCurrency(parseFloat(amount)) : 'Tk0'})`
                     : isDailyRoutineEnabled && saveAsRoutineMonthlyTotal
                     ? `Save Monthly Routine (${formatCurrency(calculatedRoutine.monthlyTotal)})`
-                    : `Log Expense (${amount ? formatCurrency(parseFloat(amount)) : '৳0'})`}
+                    : `Log Expense (${amount ? formatCurrency(parseFloat(amount)) : 'Tk0'})`}
                 </span>
               </button>
             </div>

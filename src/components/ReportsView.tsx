@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Share2,
   ArrowLeft,
+  Sparkles,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -60,6 +61,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
     exportCSV,
     exportJSON,
     summary,
+    authToken,
   } = useFinance();
 
   const [reportPeriod, setReportPeriod] = useState<'month' | 'ytd'>('month');
@@ -125,8 +127,51 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
     window.print();
   };
 
+  const [advisorNote, setAdvisorNote] = useState<string>('');
+  const [isGeneratingNote, setIsGeneratingNote] = useState(false);
+
+  const generateAdvisorNote = async () => {
+    setIsGeneratingNote(true);
+    const fallbackNote = `This period recorded ${reportTransactions.length} transactions with ${formatCurrency(totalIncome)} inflow against ${formatCurrency(totalExpense)} outflow, leaving ${formatCurrency(netSavings)} net cash flow (${savingsRate}% savings rate). ${savingsRate >= 20 ? 'Your savings velocity is strong — stay the course.' : 'Trimming your top spending category would lift your savings rate meaningfully.'}`;
+    try {
+      const res = await fetch('/api/ai/advisor', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+        },
+        body: JSON.stringify({
+          profile,
+          summary,
+          transactions: reportTransactions.slice(0, 25),
+          budgets,
+          savingsGoals,
+          month: selectedMonth,
+          query: "Write an advisor's note for the client's financial statement. Requirements: plain flowing prose only — NO bullet points, NO lists, NO markdown, NO headings, NO bold. Exactly 3 sentences: one on overall financial health this period, then two specific actionable recommendations woven naturally into the text. Professional, formal, written like a bank statement remark.",
+        }),
+      });
+      const data = await res.json();
+      let note = '';
+      if (data.reply) {
+        note = data.reply;
+      } else if (data.analysis) {
+        note = [
+          data.analysis.executiveSummary,
+          ...(data.analysis.actionableRecommendations || []).slice(0, 2).map((r: string) => `• ${r}`),
+        ].filter(Boolean).join('\n');
+      }
+      setAdvisorNote(note.trim() || fallbackNote);
+    } catch {
+      setAdvisorNote(fallbackNote);
+    } finally {
+      setIsGeneratingNote(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in duration-200" id="finora-reports-view">
+      {/* Everything interactive is screen-only; the print document renders below. */}
+      <div className="print:hidden">
       {onBackToDashboard && (
         <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
@@ -168,6 +213,15 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
           >
             <FileSpreadsheet className="w-4 h-4" />
             <span className="hidden sm:inline">Export CSV</span>
+          </button>
+
+          <button
+            onClick={generateAdvisorNote}
+            disabled={isGeneratingNote}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-400 border border-cyan-500/30 text-xs font-bold transition-all cursor-pointer disabled:opacity-50"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>{isGeneratingNote ? 'Generating…' : advisorNote ? 'Regenerate Note' : 'AI Advisor Note'}</span>
           </button>
 
           <button
@@ -285,6 +339,119 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
             </tbody>
           </table>
         </div>
+      </div>
+      </div>
+
+      {/* ══════════ PRINT-ONLY PROFESSIONAL STATEMENT ══════════ */}
+      <div className="hidden print:block text-slate-900">
+        {/* Letterhead — emerald accent bar keeps it branded but light */}
+        <div className="border-t-4 border-emerald-600 pt-3 mb-6">
+          <div className="flex items-start justify-between pb-3 border-b border-slate-300">
+            <div>
+              <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+            </div>
+            <div className="text-right text-xs">
+              <p className="font-bold text-sm text-slate-900">FINANCIAL STATEMENT</p>
+              <p className="text-slate-500">Period: {selectedMonth}</p>
+              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Client block */}
+        <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
+          <div>
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="font-bold text-base">{profile.name}</p>
+            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+          </div>
+          <div className="text-right">
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Net Cash Flow</p>
+            <p className={`font-black text-2xl ${netSavings >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>{formatCurrency(netSavings)}</p>
+          </div>
+        </div>
+
+        {/* Summary metrics */}
+        <div className="grid grid-cols-4 gap-3 mb-6 mt-6">
+          <div className="border border-slate-300 rounded p-3">
+            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Income</p>
+            <p className="text-lg font-black text-emerald-700">{formatCurrency(totalIncome)}</p>
+          </div>
+          <div className="border border-slate-300 rounded p-3">
+            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Expenses</p>
+            <p className="text-lg font-black text-red-700">{formatCurrency(totalExpense)}</p>
+          </div>
+          <div className="border border-slate-300 rounded p-3">
+            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Savings Rate</p>
+            <p className="text-lg font-black text-slate-900">{savingsRate}%</p>
+          </div>
+          <div className="border border-slate-300 rounded p-3">
+            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Transactions</p>
+            <p className="text-lg font-black text-slate-900">{reportTransactions.length}</p>
+          </div>
+        </div>
+
+        {/* Category audit table */}
+        <p className="text-sm font-black uppercase tracking-wider text-slate-800 mb-2">Category Spending Audit &amp; Variance</p>
+        <table className="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Category</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Entries</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Spent</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Share</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Budget</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Variance</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categoryBreakdown.map((row, i) => (
+              <tr key={row.category} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{row.category}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.count}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right font-bold text-slate-900">{formatCurrency(row.spent)}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.percentage}%</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.budget > 0 ? formatCurrency(row.budget) : '—'}</td>
+                <td className={`border-b border-slate-200 px-2.5 py-1.5 text-right font-bold ${row.budget > 0 ? (row.variance >= 0 ? 'text-emerald-700' : 'text-red-600') : 'text-slate-400'}`}>
+                  {row.budget > 0 ? (row.variance >= 0 ? `+${formatCurrency(row.variance)}` : `−${formatCurrency(Math.abs(row.variance))}`) : 'No limit'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={2}>Total</td>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-slate-900">{formatCurrency(totalExpense)}</td>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2" colSpan={3}></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        {/* Signature + Produced-by brand block */}
+        {advisorNote && (
+          <div className="print-keep-together mt-8 border-t border-slate-300 pt-4">
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500 mb-2">Advisor's Note</p>
+            <p className="text-[11.5px] text-slate-800 leading-relaxed text-justify" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
+              {advisorNote.replace(/\*\*/g, '').replace(/^[•\-\u2022\u2013\u2014]\s*/gm, '').trim()}
+            </p>
+          </div>
+        )}
+
+        <div className="print-keep-together mt-10 flex items-end justify-between">
+          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
+            <div>
+              <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+            </div>
+          </div>
+          <div className="w-56"></div>
+        </div>
+        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2">
+          This statement was generated by FINORA on {new Date().toLocaleString('en-GB')} and reflects transactions recorded for the selected period. For internal and personal use.
+        </p>
       </div>
     </div>
   );

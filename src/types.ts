@@ -17,6 +17,26 @@ export interface UserProfile {
   monthlyIncomeTarget?: number;
   monthlyExpenseBudget?: number;
   joinedDate: string;
+  // Extended profile fields
+  phone?: string;
+  bio?: string;
+  location?: string;
+  occupation?: string;
+  financialGoal?: string;
+  // Academic fields (University Student role)
+  university?: string;
+  program?: string;
+  degree?: string;
+  year?: string;
+  semester?: string;
+  studentId?: string;
+  riskTolerance?: 'conservative' | 'moderate' | 'aggressive';
+  preferredCategories?: ExpenseCategory[];
+  notificationsEnabled?: boolean;
+  darkMode?: boolean;
+  weeklyReportEmail?: boolean;
+  budgetAlertThreshold?: number;
+  savingsTargetPercent?: number;
 }
 
 export type IncomeSource =
@@ -84,6 +104,8 @@ export interface Transaction {
   sectorSplits?: SectorSplit[];
   dailyConfig?: DailyRoutineConfig;
   expenseMode?: 'daily' | 'monthly';
+  /** Marks a cash<->savings-goal transfer: excluded from income/expense totals. */
+  savingsTransfer?: boolean;
   createdAt: string;
 }
 
@@ -143,6 +165,8 @@ export interface FinancialSummary {
   remainingBalance: number;
   monthlySavings: number;
   savingsRate: number;
+  financialHealthScore: number;
+  financialHealthBreakdown: { label: string; points: number; max: number; note: string }[];
   topExpenseCategories: { category: string; amount: number; percentage: number }[];
   incomeSourcesBreakdown: { source: string; amount: number; percentage: number }[];
   budgetUtilization: {

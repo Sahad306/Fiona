@@ -71,13 +71,13 @@ const SOURCE_ICONS: Record<string, React.ReactNode> = {
   Other: <Wallet className="w-4 h-4 text-slate-400" />,
 };
 
-// 1-Click Fast Inflow Presets in Bangladeshi Taka (৳)
+// 1-Click Fast Inflow Presets in Bangladeshi Taka (Tk)
 const INCOME_QUICK_PRESETS = [
-  { label: '💼 Tech Salary', amount: 65000, source: 'Salary', desc: 'Monthly Salary Paycheck', payer: 'Primary Employer' },
-  { label: '💻 Freelance Milestone', amount: 18000, source: 'Freelancing', desc: 'Web Dev & Cloud Delivery', payer: 'Client Milestone' },
-  { label: '⚡ Tuition & Mentoring', amount: 8000, source: 'Side Hustle', desc: 'Student Tutoring / Mentoring', payer: 'Student Parent' },
-  { label: '🎁 Family Allowance', amount: 12000, source: 'Allowances', desc: 'Family Support & Study Grant', payer: 'Family / Support' },
-  { label: '📈 DPS & Investment', amount: 5000, source: 'Investments', desc: 'DPS / Savings Certificate Yield', payer: 'Bank / Post Office' },
+  { label: ' Tech Salary', amount: 65000, source: 'Salary', desc: 'Monthly Salary Paycheck', payer: 'Primary Employer' },
+  { label: ' Freelance Milestone', amount: 18000, source: 'Freelancing', desc: 'Web Dev & Cloud Delivery', payer: 'Client Milestone' },
+  { label: ' Tuition & Mentoring', amount: 8000, source: 'Side Hustle', desc: 'Student Tutoring / Mentoring', payer: 'Student Parent' },
+  { label: ' Family Allowance', amount: 12000, source: 'Allowances', desc: 'Family Support & Study Grant', payer: 'Family / Support' },
+  { label: ' DPS & Investment', amount: 5000, source: 'Investments', desc: 'DPS / Savings Certificate Yield', payer: 'Bank / Post Office' },
 ];
 
 export const IncomeView: React.FC<IncomeViewProps> = ({
@@ -102,7 +102,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
 
   // Filter income transactions
   const incomeTransactions = useMemo(() => {
-    return transactions.filter((tx) => tx.type === 'income');
+    return transactions.filter((tx) => tx.type === 'income' && !tx.savingsTransfer);
   }, [transactions]);
 
   // Monthly income list

@@ -1,1 +1,86 @@
 @import "tailwindcss";
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* ── Professional print output (Print Report / PDF) ── */
+@media print {
+  @page {
+    margin: 1.2cm;
+    size: A4;
+  }
+  /* White-out EVERY ancestor so no dark app slabs leak onto the paper */
+  html,
+  body,
+  #root,
+  #root > div,
+  main,
+  main > div {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+  /* App chrome never belongs on a customer document */
+  header,
+  footer {
+    display: none !important;
+  }
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  /* Kill layout gap utilities so the statement is one continuous sheet */
+  .space-y-6 > * + * {
+    margin-top: 0 !important;
+  }
+  /* Multi-page polish: repeat table headers, never slice rows or blocks */
+  table thead {
+    display: table-header-group;
+  }
+  table tr,
+  table td,
+  table th {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Signature / brand blocks should never dangle alone on a page */
+  .print-keep-together {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* Force browsers to print the statement's intentional light fills */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Hide native number-input spinners (up/down arrows) globally */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+#root {
+  max-width: 100%;
+}
+
+/* Hide scrollbar on horizontally scrollable nav without losing scrollability */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}

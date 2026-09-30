@@ -17,6 +17,12 @@ import {
   Sparkles,
   TrendingUp,
   Target,
+  Briefcase,
+  GraduationCap,
+  Phone,
+  MapPin,
+  Calendar,
+  Camera,
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 import { UserRole } from '../types';
@@ -26,7 +32,7 @@ interface AuthGatewayProps {
 }
 
 export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
-  const { login, register, switchProfile, isDbConnected } = useFinance();
+  const { login, register, isDbConnected } = useFinance();
 
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
@@ -45,11 +51,46 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
   const [regCurrency, setRegCurrency] = useState('USD');
   const [regIncomeTarget, setRegIncomeTarget] = useState('1800');
   const [regExpenseBudget, setRegExpenseBudget] = useState('1200');
+  const [regProfession, setRegProfession] = useState('');
+  const [regUniversity, setRegUniversity] = useState('');
+  const [regPhone, setRegPhone] = useState('');
+  const [regCity, setRegCity] = useState('');
+  const [regDob, setRegDob] = useState('');
+  const [regAvatar, setRegAvatar] = useState('');
+
+  // Auto-crop the picked image to a 256px circle preview for registration.
+  const handleRegAvatarPick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file || !file.type.startsWith('image/')) return;
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const size = 256;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      const scale = Math.max(size / img.width, size / img.height);
+      ctx.drawImage(img, (size - img.width * scale) / 2, (size - img.height * scale) / 2, img.width * scale, img.height * scale);
+      URL.revokeObjectURL(url);
+      setRegAvatar(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.src = url;
+  };
 
   // Status feedback
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Forgot-password flow states
+  const [forgotMode, setForgotMode] = useState(false);
+  const [forgotStep, setForgotStep] = useState<'email' | 'reset'>('email');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [resetCode, setResetCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [devCode, setDevCode] = useState<string | null>(null);
 
   // Handle User Login
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -70,6 +111,77 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
       setSuccessMessage('Authentication successful! Loading your financial vault...');
     } else {
       setErrorMessage(result.error || 'Invalid credentials. Please verify your email/ID and password.');
+    }
+  };
+
+  const exitForgotMode = () => {
+    setForgotMode(false);
+    setForgotStep('email');
+    setForgotEmail('');
+    setResetCode('');
+    setNewPassword('');
+    setDevCode(null);
+    setErrorMessage(null);
+  };
+
+  const handleForgotRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    if (!forgotEmail.trim() || !forgotEmail.includes('@')) {
+      setErrorMessage('Please enter a valid email address.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail.trim() }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok) {
+        setErrorMessage(data.error || 'Something went wrong.');
+        return;
+      }
+      if (data.devCode) setDevCode(data.devCode);
+      setForgotStep('reset');
+    } catch (err: any) {
+      setLoading(false);
+      setErrorMessage(err.message || 'Network error.');
+    }
+  };
+
+  const handleResetSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+    if (!resetCode.trim() || !newPassword) {
+      setErrorMessage('Please enter the reset code and a new password.');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setErrorMessage('New password must be at least 6 characters.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: forgotEmail.trim(), code: resetCode.trim(), password: newPassword }),
+      });
+      const data = await res.json();
+      setLoading(false);
+      if (!res.ok) {
+        setErrorMessage(data.error || 'Reset failed.');
+        return;
+      }
+      setLoginEmail(forgotEmail.trim());
+      exitForgotMode();
+      setSuccessMessage('Password updated! Sign in with your new password.');
+    } catch (err: any) {
+      setLoading(false);
+      setErrorMessage(err.message || 'Network error.');
     }
   };
 
@@ -107,6 +219,10 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
       setErrorMessage('Passwords do not match. Please confirm your password.');
       return;
     }
+    if (regRole === 'University Student' && !regUniversity.trim()) {
+      setErrorMessage('Please enter your University / College name.');
+      return;
+    }
 
     setLoading(true);
     // register with autoLogin = false so user comes back to log in with ID and password as requested
@@ -119,19 +235,19 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
         currency: regCurrency,
         monthlyIncomeTarget: parseFloat(regIncomeTarget) || 1800,
         monthlyExpenseBudget: parseFloat(regExpenseBudget) || 1200,
+        university: regUniversity.trim() || undefined,
+        location: regCity.trim() || undefined,
+        phone: regPhone.trim() || undefined,
+        occupation: regProfession.trim() || undefined,
+        avatarUrl: regAvatar || undefined,
       },
-      false
+      true // auto-login — registration goes straight into the profile/dashboard
     );
     setLoading(false);
 
     if (result.success) {
-      // Prepopulate login email and switch to login tab with triumphant success feedback
-      setLoginEmail(regEmail.trim());
-      setLoginPassword('');
-      setActiveTab('login');
-      setSuccessMessage(
-        `🎉 Account registered successfully for ${regName.trim()}! Please sign in with your password below.`
-      );
+      // Auto-logged in: AuthGateway unmounts and FINORA renders the dashboard directly.
+      return;
     } else {
       setErrorMessage(result.error || 'Failed to create account. Please try again.');
     }
@@ -325,7 +441,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               )}
 
               {/* TAB 1: SIGN IN FORM */}
-              {activeTab === 'login' && (
+              {activeTab === 'login' && !forgotMode && (
                 <form id="form_gateway_login" onSubmit={handleLoginSubmit} className="space-y-4">
                   <div className="text-left">
                     <h2 className="text-lg font-bold text-white">Sign In to Your Vault</h2>
@@ -377,6 +493,21 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     </div>
                   </div>
 
+                  <div className="flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setForgotMode(true);
+                        setForgotEmail(loginEmail);
+                        setErrorMessage(null);
+                        setSuccessMessage(null);
+                      }}
+                      className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
                   <button
                     id="btn_gateway_submit_login"
                     type="submit"
@@ -412,14 +543,140 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                 </form>
               )}
 
+              {/* FORGOT PASSWORD FLOW */}
+              {activeTab === 'login' && forgotMode && (
+                <div className="space-y-4">
+                  <div className="text-left">
+                    <h2 className="text-lg font-bold text-white">Reset Your Password</h2>
+                    <p className="text-xs text-slate-400">
+                      Verify your email with a 6-digit code and choose a new password.
+                    </p>
+                  </div>
+
+                  {forgotStep === 'email' && (
+                    <form onSubmit={handleForgotRequest} className="space-y-4">
+                      <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-300 text-[11px] flex items-start gap-2.5">
+                        <ShieldCheck className="w-4 h-4 shrink-0 mt-0.5" />
+                        <span>Enter your registered email and we'll send you a 6-digit reset code, valid for 15 minutes.</span>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">Email Address</label>
+                        <div className="relative">
+                          <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="email"
+                            required
+                            autoFocus
+                            value={forgotEmail}
+                            onChange={(e) => setForgotEmail(e.target.value)}
+                            placeholder="your@email.com"
+                            className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
+                        {loading ? 'Sending…' : 'Send Reset Code'}
+                      </button>
+                    </form>
+                  )}
+
+                  {forgotStep === 'reset' && (
+                    <form onSubmit={handleResetSubmit} className="space-y-4">
+                      {devCode && (
+                        <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[11px]">
+                          <p className="font-bold">Development mode — no email server configured</p>
+                          <p className="mt-1">Your reset code is: <span className="font-black tracking-[0.3em] text-base">{devCode}</span></p>
+                          <p className="mt-1 opacity-70">Once SMTP email is configured, this code will be delivered to your inbox instead.</p>
+                        </div>
+                      )}
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">Reset Code</label>
+                        <input
+                          type="text"
+                          required
+                          autoFocus
+                          inputMode="numeric"
+                          maxLength={6}
+                          value={resetCode}
+                          onChange={(e) => setResetCode(e.target.value.replace(/\D/g, ''))}
+                          placeholder="6-digit code"
+                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white text-center tracking-[0.4em] placeholder-slate-500 placeholder:tracking-normal focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">New Password</label>
+                        <div className="relative">
+                          <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <input
+                            type="password"
+                            required
+                            minLength={6}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="At least 6 characters"
+                            className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                      >
+                        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
+                        {loading ? 'Resetting…' : 'Reset Password'}
+                      </button>
+                    </form>
+                  )}
+
+                  <button
+                    type="button"
+                    onClick={exitForgotMode}
+                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition-colors cursor-pointer"
+                  >
+                    ← Back to Sign In
+                  </button>
+                </div>
+              )}
+
               {/* TAB 2: REGISTRATION FORM */}
               {activeTab === 'register' && (
                 <form id="form_gateway_register" onSubmit={handleRegisterSubmit} className="space-y-3.5">
                   <div className="text-left">
                     <h2 className="text-lg font-bold text-white">Create Your Account</h2>
                     <p className="text-xs text-slate-400">
-                      Register your profile, then return to the sign in page to log in.
+                      Register once — you'll land directly in your FINORA dashboard.
                     </p>
+                  </div>
+
+                  {/* Profile photo picker */}
+                  <div className="flex items-center gap-4 pt-1">
+                    <div className="relative shrink-0">
+                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 p-[2px] shadow-[0_0_14px_rgba(16,185,129,0.3)]">
+                        <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
+                          {regAvatar ? (
+                            <img src={regAvatar} alt="Profile preview" className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-xl font-black text-emerald-400">
+                              {regName.trim() ? regName.trim().charAt(0).toUpperCase() : '?'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <label className="absolute -bottom-0.5 -right-0.5 w-6 h-6 bg-emerald-500 hover:bg-emerald-400 rounded-full flex items-center justify-center text-slate-950 cursor-pointer shadow-md transition-colors">
+                        <Camera className="w-3 h-3" />
+                        <input type="file" accept="image/*" className="hidden" onChange={handleRegAvatarPick} />
+                      </label>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold text-white">Profile Photo</p>
+                      <p className="text-[10px] text-slate-400">Optional — auto-cropped to a circle. Change it anytime in Profile Center.</p>
+                    </div>
                   </div>
 
                   <div>
@@ -508,10 +765,101 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     </div>
                   </div>
 
+                  {/* Profession */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Profession / Occupation
+                    </label>
+                    <div className="relative">
+                      <Briefcase className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_register_profession"
+                        type="text"
+                        value={regProfession}
+                        onChange={(e) => setRegProfession(e.target.value)}
+                        placeholder="e.g. Software Engineer, Student, Doctor"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* University/College — conditional on Student role */}
+                  {regRole === 'University Student' && (
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                        University / College *
+                      </label>
+                      <div className="relative">
+                        <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          id="input_gateway_register_university"
+                          type="text"
+                          value={regUniversity}
+                          onChange={(e) => setRegUniversity(e.target.value)}
+                          placeholder="e.g. RUET, MIT, Dhaka University"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Phone + City row */}
                   <div className="grid grid-cols-2 gap-3 text-left">
                     <div>
                       <label className="block text-xs font-semibold text-slate-300 mb-1">
-                        Archetype
+                        Phone Number
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          id="input_gateway_register_phone"
+                          type="tel"
+                          value={regPhone}
+                          onChange={(e) => setRegPhone(e.target.value)}
+                          placeholder="+880 1XXX-XXXXXX"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        City / Location
+                      </label>
+                      <div className="relative">
+                        <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <input
+                          id="input_gateway_register_city"
+                          type="text"
+                          value={regCity}
+                          onChange={(e) => setRegCity(e.target.value)}
+                          placeholder="e.g. Dhaka, New York"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Date of Birth */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      Date of Birth
+                    </label>
+                    <div className="relative">
+                      <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <input
+                        id="input_gateway_register_dob"
+                        type="date"
+                        value={regDob}
+                        onChange={(e) => setRegDob(e.target.value)}
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 text-left">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Account Type
                       </label>
                       <select
                         id="select_gateway_role"
@@ -519,12 +867,12 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         onChange={(e) => setRegRole(e.target.value as UserRole)}
                         className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                       >
-                        <option value="University Student">University Student (CSE / Engr)</option>
-                        <option value="Salaried Employee">Salaried Tech Employee</option>
-                        <option value="Freelancer">Freelance Developer / Creator</option>
-                        <option value="Small Business Owner">Small Business Owner</option>
-                        <option value="Family Household">Family Household</option>
-                        <option value="Individual">Individual</option>
+                        <option value="University Student"> Student (University / College)</option>
+                        <option value="Salaried Employee"> Salaried Employee</option>
+                        <option value="Freelancer"> Freelancer / Self-employed</option>
+                        <option value="Small Business Owner"> Business Owner</option>
+                        <option value="Family Household"> Family / Household</option>
+                        <option value="Individual"> Individual / Other</option>
                       </select>
                     </div>
 
@@ -541,7 +889,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
-                        <option value="BDT">BDT (৳)</option>
+                        <option value="BDT">BDT (Tk)</option>
                         <option value="INR">INR (₹)</option>
                         <option value="CAD">CAD ($)</option>
                         <option value="AUD">AUD ($)</option>

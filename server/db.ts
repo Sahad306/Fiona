@@ -25,6 +25,12 @@ export interface DBSession {
   expiresAt: string;
 }
 
+export interface ResetCode {
+  email: string;
+  code: string;
+  expiresAt: string;
+}
+
 export interface UserDataStore {
   profile: UserProfile;
   transactions: Transaction[];
@@ -38,6 +44,7 @@ export interface DatabaseSchema {
   version: number;
   users: DBUser[];
   sessions: DBSession[];
+  resetCodes: ResetCode[];
   userData: { [userId: string]: UserDataStore };
   lastBackup: string;
 }
@@ -61,11 +68,49 @@ export function generateSessionToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
+/**
+ * Sanitize a loaded database object by stripping non-ASCII characters from
+ * every string field. This removes corrupted/garbled text (e.g. mojibake from
+ * mis-encoded UTF-8) and Bangla/Taka glyphs so the persisted JSON stays pure
+ * ASCII. Returns true if anything was changed.
+ */
+function sanitizeDatabase(data: DatabaseSchema): boolean {
+  const TAKA = '\u09F3';
+  const NON_ASCII = /[^\u0000-\u007F]/g;
+  let changed = false;
+
+  const clean = (value: string): string => {
+    let out = value.split(TAKA).join('Tk');
+    if (NON_ASCII.test(out)) {
+      out = out.replace(NON_ASCII, '');
+    }
+    if (out !== value) changed = true;
+    return out;
+  };
+
+  const walk = (node: unknown): unknown => {
+    if (typeof node === 'string') return clean(node);
+    if (Array.isArray(node)) return node.map(walk);
+    if (node && typeof node === 'object') {
+      const obj = node as Record<string, unknown>;
+      for (const key of Object.keys(obj)) {
+        obj[key] = walk(obj[key]);
+      }
+      return obj;
+    }
+    return node;
+  };
+
+  walk(data);
+  return changed;
+}
+
 class Database {
   private data: DatabaseSchema = {
     version: 1,
     users: [],
     sessions: [],
+    resetCodes: [],
     userData: {},
     lastBackup: new Date().toISOString(),
   };
@@ -83,6 +128,13 @@ class Database {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         this.data = JSON.parse(raw);
+        // Backfill fields added after initial schema release
+        this.data.resetCodes = this.data.resetCodes || [];
+        // Strip any corrupted/non-ASCII text so it can never be re-persisted.
+        if (sanitizeDatabase(this.data)) {
+          console.warn('[Database] Sanitized non-ASCII text from loaded data; rewriting file.');
+          this.save();
+        }
         console.log(`[Database] Loaded ${this.data.users.length} users and ${Object.keys(this.data.userData).length} user datasets.`);
       } else {
         console.log('[Database] Creating new empty database. Register an account to get started.');
@@ -128,6 +180,18 @@ class Database {
     currencySymbol?: string;
     monthlyIncomeTarget?: number;
     monthlyExpenseBudget?: number;
+    university?: string;
+    program?: string;
+    degree?: string;
+    year?: string;
+    semester?: string;
+    studentId?: string;
+    bio?: string;
+    location?: string;
+    financialGoal?: string;
+    phone?: string;
+    occupation?: string;
+    avatarUrl?: string;
   }): { user: DBUser; userData: UserDataStore } {
     const existing = this.findUserByEmail(params.email);
     if (existing) {
@@ -163,12 +227,23 @@ class Database {
         name: params.name.trim(),
         email: params.email.trim().toLowerCase(),
         role: params.role,
-        avatarUrl: '',
+        avatarUrl: params.avatarUrl || '',
         currency,
         currencySymbol,
         monthlyIncomeTarget: params.monthlyIncomeTarget || 4000,
         monthlyExpenseBudget: params.monthlyExpenseBudget || 2500,
         joinedDate: now.split('T')[0],
+        ...(params.university && { university: params.university }),
+        ...(params.program && { program: params.program }),
+        ...(params.degree && { degree: params.degree }),
+        ...(params.year && { year: params.year }),
+        ...(params.semester && { semester: params.semester }),
+        ...(params.studentId && { studentId: params.studentId }),
+        ...(params.bio && { bio: params.bio }),
+        ...(params.location && { location: params.location }),
+        ...(params.financialGoal && { financialGoal: params.financialGoal }),
+        ...(params.phone && { phone: params.phone }),
+        ...(params.occupation && { occupation: params.occupation }),
       },
       transactions: [],
       budgets: [],
@@ -296,6 +371,61 @@ class Database {
 
     this.save();
     return updated;
+  }
+
+  // Password Reset Codes
+  public createResetCode(email: string): string {
+    const normalized = email.trim().toLowerCase();
+    this.data.resetCodes = this.data.resetCodes.filter((c) => c.email !== normalized);
+    const code = crypto.randomInt(100000, 999999).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000).toISOString(); // 15 minutes
+    this.data.resetCodes.push({ email: normalized, code, expiresAt });
+    this.save();
+    return code;
+  }
+
+  public consumeResetCode(email: string, code: string): boolean {
+    const normalized = email.trim().toLowerCase();
+    const entry = this.data.resetCodes.find((c) => c.email === normalized);
+    if (!entry) return false;
+    if (new Date(entry.expiresAt) < new Date()) {
+      this.data.resetCodes = this.data.resetCodes.filter((c) => c.email !== normalized);
+      this.save();
+      return false;
+    }
+    if (entry.code !== code.trim()) return false;
+    this.data.resetCodes = this.data.resetCodes.filter((c) => c.email !== normalized);
+    this.save();
+    return true;
+  }
+
+  public updateUserPassword(userId: string, newPassword: string, preserveSessionToken?: string): boolean {
+    const user = this.findUserById(userId);
+    if (!user) return false;
+    const { hash, salt } = hashPassword(newPassword);
+    user.passwordHash = hash;
+    user.salt = salt;
+    // Invalidate all sessions for this user (except the caller's own, if given) and any pending reset codes
+    this.data.sessions = this.data.sessions.filter(
+      (s) => s.userId !== userId || (!!preserveSessionToken && s.token === preserveSessionToken)
+    );
+    this.data.resetCodes = this.data.resetCodes.filter((c) => c.email !== user.email.toLowerCase());
+    this.save();
+    return true;
+  }
+
+  public updateUserEmail(userId: string, newEmail: string): { ok: boolean; error?: string } {
+    const normalized = newEmail.trim().toLowerCase();
+    if (this.findUserByEmail(normalized)) {
+      return { ok: false, error: 'That email is already registered.' };
+    }
+    const user = this.findUserById(userId);
+    if (!user) return { ok: false, error: 'User not found.' };
+    user.email = normalized;
+    const userData = this.data.userData[userId];
+    if (userData) userData.profile.email = normalized;
+    this.save();
+    return { ok: true };
   }
 
   public getStats() {

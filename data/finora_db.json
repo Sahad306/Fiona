@@ -2,656 +2,280 @@
   "version": 1,
   "users": [
     {
-      "id": "user_employee_1787820868263",
-      "email": "sarah@finora.io",
-      "name": "Tanvir Ahmed",
-      "passwordHash": "139da7c7001d9ae8836c3bc7e4f52eb4dac6b7fa4190a908951ad5c0b43048746ef1dfd8b9d7c804feb09db8159506b87d6e94efee5812a20e757e787656971a",
-      "salt": "b695f5fffe5f4a42a5db656bc5dfc390",
+      "id": "usr_a95eec990770e6c1",
+      "email": "mdtausifalsahad@gmail.com",
+      "name": "Md Tausif Al Sahad",
+      "passwordHash": "1bd5efe925ac11fc01e4d7c4fdd152f68652f99e8a8387d7a53711a1ef309b622da95310333d6fe58e7dd6286d470990585f5950745889edaa205531d8651dcf",
+      "salt": "edf45dbcedb081d3826c326f5863e475",
+      "role": "University Student",
+      "currency": "BDT",
+      "currencySymbol": "Tk",
+      "monthlyIncomeTarget": 300000,
+      "monthlyExpenseBudget": 150000,
+      "createdAt": "2026-09-08T18:12:03.063Z",
+      "lastLoginAt": "2026-09-30T12:51:46.689Z"
+    },
+    {
+      "id": "usr_ab508d2de0abd7c9",
+      "email": "aminul.i.sifat@gmail.com",
+      "name": "Aminul Islam Sifat",
+      "passwordHash": "c2d216e4c299a856f622cdd749a0e7f7c97e940e00bc60aa9a3ee9312cca3254c21777ac470724687de795736f64b7fdc031598a934b305004bc065b3abcd996",
+      "salt": "f5f0f155def51cdd59e7b50d33866c25",
+      "role": "University Student",
+      "currency": "BDT",
+      "currencySymbol": "Tk",
+      "monthlyIncomeTarget": 200000,
+      "monthlyExpenseBudget": 50000,
+      "createdAt": "2026-09-21T19:20:53.024Z",
+      "lastLoginAt": "2026-09-21T19:21:02.139Z"
+    },
+    {
+      "id": "usr_e457762ade93669c",
+      "email": "diag_1790065995876@test.local",
+      "name": "Diag User",
+      "passwordHash": "62a4748365d3f5e45b6f2c8b05afd9e48433b0e93913bded22000ae3001817dc9f80923419cd7d415ffcbb1cd5cbb033a26b3fcecf0ab22c4b0fdcde6c99ef88",
+      "salt": "bdf4bc1f2983c5f5246069cc3fe17fa1",
+      "role": "Individual",
+      "currency": "BDT",
+      "currencySymbol": "$",
+      "monthlyIncomeTarget": 4000,
+      "monthlyExpenseBudget": 2500,
+      "createdAt": "2026-09-22T08:33:15.986Z",
+      "lastLoginAt": "2026-09-22T08:33:15.991Z"
+    },
+    {
+      "id": "usr_dcb22317a3c7b101",
+      "email": "diag_1790066720250@test.local",
+      "name": "Diag User",
+      "passwordHash": "ee32e639d162c5813663e9d5149a924a68e3e920b3b3c6856371e116d803d5da378d43f23276a11f5878579359b94fb23c1d229c2684c3fb9e58be80c7852f9b",
+      "salt": "853673bdd95f023315e5ab7a5284b8e4",
+      "role": "Individual",
+      "currency": "BDT",
+      "currencySymbol": "$",
+      "monthlyIncomeTarget": 4000,
+      "monthlyExpenseBudget": 2500,
+      "createdAt": "2026-09-22T08:45:20.813Z",
+      "lastLoginAt": "2026-09-22T08:45:20.819Z"
+    },
+    {
+      "id": "usr_ea2474ef4c42043f",
+      "email": "diag2_1790068060379@test.local",
+      "name": "Form Test",
+      "passwordHash": "16b0c997425151df8d4ef9fc2240f1ef62b2ceb66cd2ae668913302f48e302e2dabaa2c3e47dc757d7cbb1ee071a12ae75f5c1df34bb4b992c1ca35e98851027",
+      "salt": "569594401419eb8d9e037902f482707b",
+      "role": "University Student",
+      "currency": "BDT",
+      "currencySymbol": "$",
+      "monthlyIncomeTarget": 4000,
+      "monthlyExpenseBudget": 2500,
+      "createdAt": "2026-09-22T09:07:40.854Z",
+      "lastLoginAt": "2026-09-22T09:07:40.859Z"
+    },
+    {
+      "id": "usr_fefa064345f7da09",
+      "email": "prantik123@gamil.com",
+      "name": "Prantik",
+      "passwordHash": "9209deec503d5fc59e9f5b1ccb03aae4976405f3718871d0a36f7963e8d828f4189e27ec366c9674bb3ae7cb58b544efeb0e1c024f7da359c9a07e3ae449c08e",
+      "salt": "0eaaf143fe6d57e60e08517f8afc357f",
       "role": "Salaried Employee",
       "currency": "BDT",
-      "currencySymbol": "৳",
-      "monthlyIncomeTarget": 85000,
-      "monthlyExpenseBudget": 55000,
-      "createdAt": "2026-08-27T08:54:28.263Z",
-      "lastLoginAt": "2026-09-08T08:15:30.417Z"
+      "currencySymbol": "Tk",
+      "monthlyIncomeTarget": 180000,
+      "monthlyExpenseBudget": 600000,
+      "createdAt": "2026-09-22T09:12:12.498Z",
+      "lastLoginAt": "2026-09-22T09:12:12.501Z"
     },
     {
-      "id": "user_student_1787820868274",
-      "email": "alex@finora.io",
-      "name": "Alex Turner",
-      "passwordHash": "c6701c6b016dbaf9d998a09f0a25ef4fc7ccaaa39f4f9f207883de7d2974801351c297f2c683a735954835c8be6aacb5b2974c13512c89902591ccb9049d4999",
-      "salt": "30421c1b4573410c35d7734d64f4ca9a",
-      "role": "University Student",
+      "id": "usr_10eda072193889f5",
+      "email": "prantik1234@gmail.com",
+      "name": "Prantik",
+      "passwordHash": "b66c42d1c9739bb8ee255c186d745466ea1232e610f711a64a5a163b32edbe5a6bbd94a84b50196c22b23f3cd28474723df522c377af5ef36906256f87a55aec",
+      "salt": "cd44122c7a69d4cf5bfd301555edf160",
+      "role": "Salaried Employee",
       "currency": "BDT",
-      "currencySymbol": "৳",
-      "monthlyIncomeTarget": 22000,
-      "monthlyExpenseBudget": 16500,
-      "createdAt": "2026-08-27T08:54:28.274Z",
-      "lastLoginAt": "2026-08-27T08:54:28.274Z"
-    },
-    {
-      "id": "usr_29818f3391ef4947",
-      "email": "mdtausifalsahad@gmail.com",
-      "name": "MD Tausif Al Sahad",
-      "passwordHash": "290a04e34e40c4a503242b10a6b38a962eb2a5c3499150badcaaa9519d270d42dbb6bf6c4768e8d006ae90a9ce306ae930baac3409d588f85d677a8dcf08b155",
-      "salt": "20d9de23adb57e02f260e1ba498ebb54",
-      "role": "University Student",
-      "currency": "USD",
-      "currencySymbol": "$",
-      "monthlyIncomeTarget": 30000,
-      "monthlyExpenseBudget": 12000,
-      "createdAt": "2026-09-08T08:16:42.249Z",
-      "lastLoginAt": "2026-09-08T09:28:32.210Z"
+      "currencySymbol": "Tk",
+      "monthlyIncomeTarget": 1800000,
+      "monthlyExpenseBudget": 600000,
+      "createdAt": "2026-09-22T09:30:53.501Z",
+      "lastLoginAt": "2026-09-22T09:30:53.506Z"
     }
   ],
   "sessions": [
     {
-      "token": "c4203539fcc67fc8b2fa6754488003ff7185f570bba75b2f18319e9877cfc1e8",
-      "userId": "user_employee_1787820868263",
-      "createdAt": "2026-09-08T07:22:18.705Z",
-      "expiresAt": "2026-10-08T07:22:18.705Z"
+      "token": "18fff4ed0d5ea4387ba4d7d2733713e820935e6dadef6e0cfb6eac88f8830c7c",
+      "userId": "usr_a95eec990770e6c1",
+      "createdAt": "2026-09-08T18:12:03.070Z",
+      "expiresAt": "2026-10-08T18:12:03.070Z"
     },
     {
-      "token": "339ae8baea24a5cfbd2d812632aee186e614d7d89ad3ef2bedd5088e8a29b6c3",
-      "userId": "user_employee_1787820868263",
-      "createdAt": "2026-09-08T08:15:30.417Z",
-      "expiresAt": "2026-10-08T08:15:30.417Z"
+      "token": "14965e2700186c8bad33f2ac9d2381f6a1b8eea0646248f06dd833d43cf05c90",
+      "userId": "usr_a95eec990770e6c1",
+      "createdAt": "2026-09-21T18:03:57.152Z",
+      "expiresAt": "2026-10-21T18:03:57.152Z"
     },
     {
-      "token": "945ae6542efe5f790df9582a8e452dc5c38d6c684673b1a143ee36467656e977",
-      "userId": "usr_29818f3391ef4947",
-      "createdAt": "2026-09-08T08:16:42.254Z",
-      "expiresAt": "2026-10-08T08:16:42.254Z"
+      "token": "541d3fa40f4bc8690714c19ee962fd766f8fd4bb7b0dd364c6feb971a24604fb",
+      "userId": "usr_ab508d2de0abd7c9",
+      "createdAt": "2026-09-21T19:20:53.028Z",
+      "expiresAt": "2026-10-21T19:20:53.028Z"
     },
     {
-      "token": "6a7bf48478eee036bd84d5cd2ce5b18e92111f74957cb5e57f0c051594b2cc73",
-      "userId": "usr_29818f3391ef4947",
-      "createdAt": "2026-09-08T09:28:32.210Z",
-      "expiresAt": "2026-10-08T09:28:32.210Z"
+      "token": "4eb25229abaa041ac54453302bb62c058fe965457ba98b57cb2113179d71b61e",
+      "userId": "usr_a95eec990770e6c1",
+      "createdAt": "2026-09-21T19:36:45.212Z",
+      "expiresAt": "2026-10-21T19:36:45.212Z"
+    },
+    {
+      "token": "87ca3885e8297e8801a5b5fcc677f20ca7c391634fafd89bdce19e7ed3d1f52d",
+      "userId": "usr_e457762ade93669c",
+      "createdAt": "2026-09-22T08:33:15.991Z",
+      "expiresAt": "2026-10-22T08:33:15.991Z"
+    },
+    {
+      "token": "f37f1a1e8d1de9794d176cbd639379b0faffbd6df68c5de4e2f349406f39bd8c",
+      "userId": "usr_dcb22317a3c7b101",
+      "createdAt": "2026-09-22T08:45:20.819Z",
+      "expiresAt": "2026-10-22T08:45:20.819Z"
+    },
+    {
+      "token": "8e870a2874af3741c36e13614ffc6ce89c2e72ed1ae73dffa8f647df5e9cf2d1",
+      "userId": "usr_ea2474ef4c42043f",
+      "createdAt": "2026-09-22T09:07:40.859Z",
+      "expiresAt": "2026-10-22T09:07:40.859Z"
+    },
+    {
+      "token": "ec711f9d91465fd583eed028ac512f80e769b3581942873cbd24f4f438e95708",
+      "userId": "usr_a95eec990770e6c1",
+      "createdAt": "2026-09-30T12:51:46.689Z",
+      "expiresAt": "2026-10-30T12:51:46.689Z"
     }
   ],
   "userData": {
-    "user_employee_1787820868263": {
+    "usr_a95eec990770e6c1": {
       "profile": {
-        "id": "usr_salaried_1",
-        "name": "Tanvir Ahmed",
-        "email": "tanvir.ahmed@example.com",
-        "role": "Salaried Employee",
-        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        "id": "usr_a95eec990770e6c1",
+        "name": "Md Tausif Al Sahad",
+        "email": "mdtausifalsahad@gmail.com",
+        "role": "University Student",
+        "avatarUrl": "data:image/jpeg;base64,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",
         "currency": "BDT",
-        "currencySymbol": "৳",
-        "monthlyIncomeTarget": 85000,
-        "monthlyExpenseBudget": 55000,
-        "joinedDate": "2025-01-15"
+        "currencySymbol": "Tk",
+        "monthlyIncomeTarget": 300000,
+        "monthlyExpenseBudget": 150000,
+        "joinedDate": "2026-09-21",
+        "university": "Rajshahi University of Engineering & Technology (RUET)",
+        "program": "Computer Science & Engineering",
+        "degree": "B.Sc.",
+        "year": "1st Year",
+        "semester": "1st Semester",
+        "studentId": "",
+        "bio": "Better Code - Better Ideas - A Brighter Future",
+        "location": "RUET, Rajshahi",
+        "occupation": "Student",
+        "financialGoal": "MIT PhD (AI / CSE Research)",
+        "riskTolerance": "moderate",
+        "phone": "01753066604"
       },
       "transactions": [
         {
-          "id": "tx_emp_inc_1",
-          "type": "income",
-          "amount": 70000,
-          "category": "Salary",
-          "description": "Monthly Senior Software Engineer Paycheck",
-          "date": "2025-08-01",
-          "paymentMethod": "Bank Transfer",
-          "recurring": "monthly",
-          "payerOrClient": "Tech Global Solutions Ltd.",
-          "tags": [
-            "Direct Deposit",
-            "Primary Salary"
-          ],
-          "createdAt": "2025-08-01T09:00:00Z"
-        },
-        {
-          "id": "tx_emp_inc_2",
-          "type": "income",
-          "amount": 22000,
-          "category": "Freelancing",
-          "description": "Full-Stack React & Cloud Backend Milestone",
-          "date": "2025-08-12",
-          "paymentMethod": "bKash",
-          "recurring": "none",
-          "payerOrClient": "International Client / Upwork",
-          "tags": [
-            "Freelance",
-            "Consulting"
-          ],
-          "createdAt": "2025-08-12T14:30:00Z"
-        },
-        {
-          "id": "tx_emp_exp_1",
           "type": "expense",
-          "amount": 22000,
-          "category": "Housing & Rent",
-          "description": "Monthly Apartment Rent & Service Charge",
-          "date": "2025-08-02",
-          "paymentMethod": "Bank Transfer",
-          "recurring": "monthly",
-          "tags": [
-            "Apartment Rent",
-            "Fixed Outflow"
-          ],
-          "createdAt": "2025-08-02T10:00:00Z"
-        },
-        {
-          "id": "tx_emp_exp_2",
-          "type": "expense",
-          "amount": 3200,
-          "category": "Utilities & Bills",
-          "description": "DESCO Electricity, Titas Gas & WASA Bill",
-          "date": "2025-08-04",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Utilities",
-            "DESCO & Gas"
-          ],
-          "createdAt": "2025-08-04T11:15:00Z"
-        },
-        {
-          "id": "tx_emp_exp_3",
-          "type": "expense",
-          "amount": 1200,
-          "category": "Utilities & Bills",
-          "description": "Gigabit Fiber Broadband WiFi Internet Bill",
-          "date": "2025-08-05",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Internet",
-            "WiFi"
-          ],
-          "createdAt": "2025-08-05T12:00:00Z"
-        },
-        {
-          "id": "tx_emp_exp_4",
-          "type": "expense",
-          "amount": 14500,
-          "category": "Household & Living",
-          "description": "Monthly Family Grocery & Supermarket Bazaar (কাঁচাবাজার)",
-          "date": "2025-08-08",
-          "paymentMethod": "Nagad",
-          "recurring": "none",
-          "tags": [
-            "Groceries",
-            "Bazaar"
-          ],
-          "createdAt": "2025-08-08T18:20:00Z"
-        },
-        {
-          "id": "tx_emp_exp_5",
-          "type": "expense",
-          "amount": 4200,
+          "amount": 40,
           "category": "Food & Dining",
-          "description": "Family Weekend Dining & Restaurant",
-          "date": "2025-08-14",
+          "description": " Tea & Biscuit",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "none",
+          "expenseMode": "daily",
+          "id": "tx_6e5eb01d-a488-4dfc-909a-d4a72d4f1415",
+          "createdAt": "2026-09-22T16:17:02.823Z"
+        },
+        {
+          "type": "expense",
+          "amount": 40,
+          "category": "Food & Dining",
+          "description": "Street Tea Stall & Biscuit",
+          "date": "2026-09-22",
           "paymentMethod": "Credit Card",
           "recurring": "none",
           "tags": [
-            "Dining Out",
-            "Weekend"
+            "DailyExpense",
+            "Food"
           ],
-          "createdAt": "2025-08-14T20:45:00Z"
+          "id": "tx_c10b27e6-40eb-40c3-b1ec-0f8920bfaff3",
+          "createdAt": "2026-09-22T16:16:53.894Z"
         },
         {
-          "id": "tx_emp_exp_6",
           "type": "expense",
-          "amount": 3200,
-          "category": "Transportation",
-          "description": "Metro Rail MRT Pass, Rickshaw & Fuel Commute",
-          "date": "2025-08-06",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Metro Rail",
-            "Rickshaw"
-          ],
-          "createdAt": "2025-08-06T08:30:00Z"
-        },
-        {
-          "id": "tx_emp_exp_7",
-          "type": "expense",
-          "amount": 4000,
-          "category": "Household & Living",
-          "description": "Monthly Cook & Housekeeping Maid Salary (কাজের খালা)",
-          "date": "2025-08-07",
+          "amount": 26000,
+          "category": "Healthcare & Medical",
+          "description": "26000 for medicals",
+          "date": "2026-09-22",
           "paymentMethod": "Cash",
-          "recurring": "monthly",
           "tags": [
-            "Maid Salary",
-            "Cook"
+            "Other",
+            "Smart Import"
           ],
-          "createdAt": "2025-08-07T10:00:00Z"
+          "id": "tx_f0273f43-7387-40f4-bc57-45a64233d5ff",
+          "createdAt": "2026-09-22T10:11:37.130Z"
         },
         {
-          "id": "tx_emp_exp_8",
           "type": "expense",
-          "amount": 2100,
-          "category": "Healthcare & Medical",
-          "description": "Pharmacy Prescriptions & Regular Family Medicine",
-          "date": "2025-08-18",
-          "paymentMethod": "Debit Card",
-          "recurring": "none",
-          "tags": [
-            "Pharmacy",
-            "Health"
-          ],
-          "createdAt": "2025-08-18T16:00:00Z"
-        },
-        {
-          "id": "tx_emp_exp_9",
-          "type": "expense",
-          "amount": 750,
-          "category": "Utilities & Bills",
-          "description": "Monthly Mobile Recharge & 4G/5G Internet Pack",
-          "date": "2025-08-03",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Mobile Recharge",
-            "Data Pack"
-          ],
-          "createdAt": "2025-08-03T14:00:00Z"
-        }
-      ],
-      "budgets": [
-        {
-          "id": "b_emp_overall",
-          "category": "Overall",
-          "limitAmount": 55000,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_emp_housing",
-          "category": "Housing & Rent",
-          "limitAmount": 24000,
-          "period": "monthly",
-          "alertThreshold": 90
-        },
-        {
-          "id": "b_emp_household",
-          "category": "Household & Living",
-          "limitAmount": 18000,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_emp_food",
-          "category": "Food & Dining",
-          "limitAmount": 7000,
-          "period": "monthly",
-          "alertThreshold": 75
-        },
-        {
-          "id": "b_emp_util",
-          "category": "Utilities & Bills",
-          "limitAmount": 6000,
-          "period": "monthly",
-          "alertThreshold": 85
-        },
-        {
-          "id": "b_emp_trans",
-          "category": "Transportation",
-          "limitAmount": 4500,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_emp_health",
-          "category": "Healthcare & Medical",
-          "limitAmount": 3500,
-          "period": "monthly",
-          "alertThreshold": 80
-        }
-      ],
-      "savingsGoals": [
-        {
-          "id": "sg_emp_1",
-          "name": "Emergency Fund (৬ মাসের আপদকালীন তহবিল)",
-          "targetAmount": 300000,
-          "currentAmount": 185000,
-          "targetDate": "2025-12-31",
-          "category": "Safety Net",
-          "color": "#10b981",
-          "icon": "ShieldCheck",
-          "monthlyContribution": 15000,
-          "contributions": [
-            {
-              "id": "c1",
-              "amount": 15000,
-              "date": "2025-08-01",
-              "note": "Monthly auto-save allocation"
-            },
-            {
-              "id": "c2",
-              "amount": 15000,
-              "date": "2025-07-01",
-              "note": "Monthly auto-save allocation"
-            }
-          ]
-        },
-        {
-          "id": "sg_emp_2",
-          "name": "MacBook Pro M3 Workstation",
-          "targetAmount": 160000,
-          "currentAmount": 95000,
-          "targetDate": "2025-11-15",
-          "category": "Hardware",
-          "color": "#6366f1",
-          "icon": "Laptop",
-          "monthlyContribution": 12000,
-          "contributions": [
-            {
-              "id": "c3",
-              "amount": 12000,
-              "date": "2025-08-05",
-              "note": "Freelance revenue allocation"
-            }
-          ]
-        },
-        {
-          "id": "sg_emp_3",
-          "name": "Cox’s Bazar & Sajek Family Tour",
-          "targetAmount": 45000,
-          "currentAmount": 28000,
-          "targetDate": "2025-10-30",
+          "amount": 25000,
           "category": "Travel",
-          "color": "#06b6d4",
-          "icon": "Plane",
-          "monthlyContribution": 5000,
-          "contributions": [
-            {
-              "id": "c4",
-              "amount": 5000,
-              "date": "2025-08-10",
-              "note": "Vacation tour pool"
-            }
-          ]
-        }
-      ],
-      "notifications": [
-        {
-          "id": "notif_2",
-          "type": "budget_limit_close",
-          "title": "Household & Living Budget Notice",
-          "message": "You have used 80% of your monthly Household & Grocery budget (৳14,500 of ৳18,000).",
-          "timestamp": "2025-08-14T21:00:00Z",
-          "read": true,
-          "severity": "warning",
-          "relatedCategory": "Household & Living"
-        }
-      ],
-      "updatedAt": "2026-09-08T08:15:56.834Z"
-    },
-    "user_student_1787820868274": {
-      "profile": {
-        "id": "user_student_1787820868274",
-        "name": "Alex Turner",
-        "email": "alex@finora.io",
-        "role": "University Student",
-        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-        "currency": "BDT",
-        "currencySymbol": "৳",
-        "monthlyIncomeTarget": 22000,
-        "monthlyExpenseBudget": 16500,
-        "joinedDate": "2025-02-01"
-      },
-      "transactions": [
-        {
-          "id": "tx_stu_inc_1",
-          "type": "income",
-          "amount": 12000,
-          "category": "Allowances",
-          "description": "Monthly Family Educational Allowance & Mess Cost",
-          "date": "2025-08-01",
+          "description": "Travel Expense",
+          "date": "2026-09-22",
           "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "payerOrClient": "Family / Support",
-          "tags": [
-            "Allowance",
-            "Family Support"
-          ],
-          "createdAt": "2025-08-01T10:00:00Z"
-        },
-        {
-          "id": "tx_stu_inc_2",
-          "type": "income",
-          "amount": 10000,
-          "category": "Side Hustle",
-          "description": "Python & Web Development Tuition / Stipend",
-          "date": "2025-08-10",
-          "paymentMethod": "Nagad",
-          "recurring": "monthly",
-          "payerOrClient": "Tuition / Student Mentoring",
-          "tags": [
-            "Tuition",
-            "Teaching"
-          ],
-          "createdAt": "2025-08-10T17:00:00Z"
-        },
-        {
-          "id": "tx_stu_exp_1",
-          "type": "expense",
-          "amount": 5500,
-          "category": "Housing & Rent",
-          "description": "Student Mess Seat Rent & Shared Room",
-          "date": "2025-08-02",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Mess Rent",
-            "Seat Rent"
-          ],
-          "createdAt": "2025-08-02T11:00:00Z"
-        },
-        {
-          "id": "tx_stu_exp_2",
-          "type": "expense",
-          "amount": 3900,
-          "category": "Food & Dining",
-          "description": "Mess Daily Meal Plan (30 Days - 4 Off Days = 26 Days @ ৳150)",
-          "date": "2025-08-05",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "dailyConfig": {
-            "dailyRate": 150,
-            "totalDaysInMonth": 30,
-            "offDaysCount": 4,
-            "offDaysReason": "Visited home for 4 days",
-            "calculatedMonthlyTotal": 3900
-          },
+          "recurring": "none",
           "expenseMode": "daily",
-          "tags": [
-            "Mess Meal",
-            "Dining"
-          ],
-          "createdAt": "2025-08-05T14:30:00Z"
+          "id": "tx_d1af806f-5c19-4a59-9680-2fee7178cb3c",
+          "createdAt": "2026-09-22T10:11:02.691Z"
         },
         {
-          "id": "tx_stu_exp_3",
           "type": "expense",
-          "amount": 1400,
-          "category": "Education",
-          "description": "Semester Reference Books, Printing & Stationary",
-          "date": "2025-08-11",
-          "paymentMethod": "Cash",
-          "recurring": "none",
+          "amount": 20000,
+          "category": "Housing & Rent",
+          "description": "20000 of rent transfer from your account 2345",
+          "date": "2026-09-22",
+          "paymentMethod": "Bank Transfer",
           "tags": [
-            "Books",
-            "Stationary"
+            "Bank",
+            "Smart Import"
           ],
-          "createdAt": "2025-08-11T12:30:00Z"
+          "id": "tx_583065d9-9e23-451b-bcbd-bde5d5751281",
+          "createdAt": "2026-09-22T09:59:06.754Z"
         },
         {
-          "id": "tx_stu_exp_4",
           "type": "expense",
-          "amount": 650,
-          "category": "Utilities & Bills",
-          "description": "Shared Mess WiFi & Mobile Recharge",
-          "date": "2025-08-03",
+          "amount": 40000,
+          "category": "Healthcare & Medical",
+          "description": "Transer 40000 to Bank 2345 for Medical",
+          "date": "2026-09-21",
+          "paymentMethod": "Bank Transfer",
+          "tags": [
+            "Bank",
+            "Smart Import"
+          ],
+          "id": "tx_1bc957a9-c0e6-40fa-af1c-6b89eb18c911",
+          "createdAt": "2026-09-21T20:34:58.424Z"
+        },
+        {
+          "type": "expense",
+          "amount": 35000,
+          "category": "Household & Living",
+          "description": " Bazaar",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "WiFi",
-            "Mobile"
-          ],
-          "createdAt": "2025-08-03T09:15:00Z"
-        },
-        {
-          "id": "tx_stu_exp_5",
-          "type": "expense",
-          "amount": 1200,
-          "category": "Transportation",
-          "description": "Campus Bus Pass, Rickshaw & Local Commute",
-          "date": "2025-08-16",
-          "paymentMethod": "Cash",
-          "recurring": "monthly",
-          "tags": [
-            "Rickshaw",
-            "Bus Commute"
-          ],
-          "createdAt": "2025-08-16T21:00:00Z"
-        },
-        {
-          "id": "tx_stu_exp_6",
-          "type": "expense",
-          "amount": 850,
-          "category": "Food & Dining",
-          "description": "Tong er Cha, Singara & Evening Study Snacks",
-          "date": "2025-08-15",
-          "paymentMethod": "Cash",
           "recurring": "none",
-          "tags": [
-            "Cha & Snacks",
-            "Tong"
-          ],
-          "createdAt": "2025-08-15T18:00:00Z"
-        }
-      ],
-      "budgets": [
-        {
-          "id": "b_stu_overall",
-          "category": "Overall",
-          "limitAmount": 16500,
-          "period": "monthly",
-          "alertThreshold": 80
+          "expenseMode": "daily",
+          "id": "tx_deabac11-2567-40df-be61-279e39e99429",
+          "createdAt": "2026-09-21T20:33:39.123Z"
         },
-        {
-          "id": "b_stu_housing",
-          "category": "Housing & Rent",
-          "limitAmount": 6000,
-          "period": "monthly",
-          "alertThreshold": 90
-        },
-        {
-          "id": "b_stu_food",
-          "category": "Food & Dining",
-          "limitAmount": 5500,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_stu_edu",
-          "category": "Education",
-          "limitAmount": 2000,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_stu_trans",
-          "category": "Transportation",
-          "limitAmount": 1500,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_stu_util",
-          "category": "Utilities & Bills",
-          "limitAmount": 1000,
-          "period": "monthly",
-          "alertThreshold": 80
-        }
-      ],
-      "savingsGoals": [
-        {
-          "id": "sg_stu_1",
-          "name": "AI & GPU Workstation Build",
-          "targetAmount": 85000,
-          "currentAmount": 48000,
-          "targetDate": "2025-11-30",
-          "category": "Technology",
-          "color": "#10b981",
-          "icon": "Laptop",
-          "monthlyContribution": 3000,
-          "contributions": [
-            {
-              "id": "sc1",
-              "amount": 3000,
-              "date": "2025-08-01",
-              "note": "Tuition savings"
-            },
-            {
-              "id": "sc2",
-              "amount": 3000,
-              "date": "2025-07-01",
-              "note": "Tuition savings"
-            }
-          ]
-        },
-        {
-          "id": "sg_stu_2",
-          "name": "National Hackathon & Tech Fest Tour",
-          "targetAmount": 15000,
-          "currentAmount": 9500,
-          "targetDate": "2025-10-15",
-          "category": "Contests",
-          "color": "#6366f1",
-          "icon": "Trophy",
-          "monthlyContribution": 1500,
-          "contributions": [
-            {
-              "id": "sc3",
-              "amount": 1500,
-              "date": "2025-08-05",
-              "note": "Contest savings pool"
-            }
-          ]
-        }
-      ],
-      "notifications": [
-        {
-          "id": "notif_stu_1",
-          "type": "savings_milestone",
-          "title": "GPU Workstation is 56% Funded! 💻",
-          "message": "You have saved ৳48,000 toward your workstation target of ৳85,000.",
-          "timestamp": "2025-08-05T12:00:00Z",
-          "read": false,
-          "severity": "success",
-          "relatedGoalId": "sg_stu_1"
-        }
-      ],
-      "updatedAt": "2026-08-27T08:54:28.274Z"
-    },
-    "usr_29818f3391ef4947": {
-      "profile": {
-        "id": "usr_29818f3391ef4947",
-        "name": "MD Tausif Al Sahad",
-        "email": "mdtausifalsahad@gmail.com",
-        "role": "University Student",
-        "avatarUrl": "",
-        "currency": "USD",
-        "currencySymbol": "$",
-        "monthlyIncomeTarget": 30000,
-        "monthlyExpenseBudget": 12000,
-        "joinedDate": "2026-09-08"
-      },
-      "transactions": [
         {
           "type": "expense",
-          "amount": 1800,
+          "amount": 18000,
           "category": "Housing & Rent",
-          "description": "House Rent / Apartment Lease (বাড়ি ভাড়া / মেস সিট)",
-          "date": "2026-09-08",
+          "description": "House Rent / Apartment Lease",
+          "date": "2026-09-21",
           "paymentMethod": "Bank Transfer",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -659,15 +283,15 @@
             "MonthlyCost",
             "Housing&Rent"
           ],
-          "id": "tx_9baae321-5398-482f-8af1-f9f16257328b",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_6a1a2d15-f819-48cb-a8fc-f4268f2240ad",
+          "createdAt": "2026-09-21T20:00:14.026Z"
         },
         {
           "type": "expense",
           "amount": 12000,
           "category": "Household & Living",
-          "description": "Monthly Grocery & Bazaar (মাসিক কাঁচাবাজার ও খাদ্যদ্রব্য)",
-          "date": "2026-09-08",
+          "description": "Monthly Grocery & Bazaar",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -675,15 +299,15 @@
             "MonthlyCost",
             "Household&Living"
           ],
-          "id": "tx_6725775f-9b40-4c65-96a4-6c3351b7145b",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_4a9e104e-8789-4c32-9a9e-994a32e1238d",
+          "createdAt": "2026-09-21T20:00:14.026Z"
         },
         {
           "type": "expense",
           "amount": 3200,
           "category": "Utilities & Bills",
-          "description": "Electricity, Gas & Water (ডেসকো/ডিপিডিসি বিদ্যুৎ, গ্যাস ও পানি)",
-          "date": "2026-09-08",
+          "description": "Electricity, Gas & Water",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -691,15 +315,15 @@
             "MonthlyCost",
             "Utilities&Bills"
           ],
-          "id": "tx_9e691eee-6b32-4791-82db-a6172bdab40b",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_62e6ae54-adeb-4274-aef4-9c380bf41f44",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
           "amount": 1000,
           "category": "Utilities & Bills",
-          "description": "High-Speed Broadband WiFi (ব্রডব্যান্ড ইন্টারনেট বিল)",
-          "date": "2026-09-08",
+          "description": "High-Speed Broadband WiFi",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -707,15 +331,15 @@
             "MonthlyCost",
             "Utilities&Bills"
           ],
-          "id": "tx_456caa23-db2a-407b-8470-af46673d5404",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_9a30119f-0c51-45fe-a31b-2d8634c72da6",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
           "amount": 3500,
           "category": "Household & Living",
-          "description": "Home Maid / Cook Salary (কাজের খালা / বুয়ার বেতন)",
-          "date": "2026-09-08",
+          "description": "Home Maid / Cook Salary",
+          "date": "2026-09-21",
           "paymentMethod": "Cash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -723,15 +347,15 @@
             "MonthlyCost",
             "Household&Living"
           ],
-          "id": "tx_de9eb29d-ea63-4105-8015-5ea07576de3f",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_a3048c57-789d-4081-bba9-ca83f6e9d4af",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
           "amount": 600,
           "category": "Utilities & Bills",
-          "description": "Mobile Phone & 4G/5G Pack (মোবাইল রিচার্জ ও ডাটা প্যাক)",
-          "date": "2026-09-08",
+          "description": "Mobile Phone & 4G/5G Pack",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -739,15 +363,15 @@
             "MonthlyCost",
             "Utilities&Bills"
           ],
-          "id": "tx_fba6046f-5281-4f3c-b5b2-82f821f21335",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_100d1ca6-8c82-4c03-bd0e-cc8895e79d5a",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
           "amount": 3000,
           "category": "Education",
-          "description": "Tuition, Courses & Study Materials (টিউশন ও পড়াশোনার খরচ)",
-          "date": "2026-09-08",
+          "description": "Tuition, Courses & Study Materials",
+          "date": "2026-09-21",
           "paymentMethod": "bKash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -755,15 +379,15 @@
             "MonthlyCost",
             "Education"
           ],
-          "id": "tx_14fcb5f3-1dd5-43c8-9732-d8e88c0f3870",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_d1eec081-a79b-4196-8985-d5b3a5bcc9cc",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
-          "amount": 2500,
+          "amount": 3500,
           "category": "Transportation",
-          "description": "Monthly Commute & Metro Pass (মেট্রোরেল, বাস ও রিকশা ভাড়া)",
-          "date": "2026-09-08",
+          "description": "Monthly Commute & Metro Pass",
+          "date": "2026-09-21",
           "paymentMethod": "Nagad",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -771,15 +395,15 @@
             "MonthlyCost",
             "Transportation"
           ],
-          "id": "tx_63cc2e6c-d0e0-439f-bb5c-887ac4192694",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_e0ec1543-051c-4c29-9414-3a2e4995697b",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
-          "amount": 1800,
+          "amount": 2300,
           "category": "Healthcare & Medical",
-          "description": "Pharmacy & Regular Medicine (ফার্মেসি ও স্বাস্থ্য ওষুধ)",
-          "date": "2026-09-08",
+          "description": "Pharmacy & Regular Medicine",
+          "date": "2026-09-21",
           "paymentMethod": "Cash",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -787,15 +411,15 @@
             "MonthlyCost",
             "Healthcare&Medical"
           ],
-          "id": "tx_62d38626-09f9-43de-91f8-2952b99d9f59",
-          "createdAt": "2026-09-08T08:22:21.622Z"
+          "id": "tx_3267e23d-ba79-4362-a15d-3098cf4d16ef",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "expense",
           "amount": 1200,
           "category": "Entertainment",
-          "description": "Streaming & Digital Tools (ডিজিটাল সার্ভিস ও বিনোদন)",
-          "date": "2026-09-08",
+          "description": "Streaming & Digital Tools",
+          "date": "2026-09-21",
           "paymentMethod": "Credit Card",
           "recurring": "monthly",
           "expenseMode": "monthly",
@@ -803,326 +427,621 @@
             "MonthlyCost",
             "Entertainment"
           ],
-          "id": "tx_43912e8f-8bda-4861-ba5d-4c472ab8d54a",
-          "createdAt": "2026-09-08T08:22:21.622Z"
-        },
-        {
-          "type": "expense",
-          "amount": 50000,
-          "category": "Food & Dining",
-          "description": "Food & Dining Expense",
-          "date": "2026-09-08",
-          "paymentMethod": "bKash",
-          "recurring": "none",
-          "expenseMode": "daily",
-          "id": "tx_abdeb74b-ce7c-4381-be81-4815300a7017",
-          "createdAt": "2026-09-08T08:21:12.655Z"
+          "id": "tx_c7ca9d61-7c62-4fb4-9380-bc67e9288e34",
+          "createdAt": "2026-09-21T20:00:14.027Z"
         },
         {
           "type": "income",
           "amount": 300000,
           "category": "Salary",
           "description": "Salary Income",
-          "date": "2026-09-08",
+          "date": "2026-09-21",
           "paymentMethod": "Bank Transfer",
           "recurring": "none",
-          "id": "tx_fbe66784-f7d5-4b54-aa2a-3ea5c9f2feca",
-          "createdAt": "2026-09-08T08:20:28.054Z"
+          "id": "tx_50b4544d-86f1-4013-b216-d7b20f14c73d",
+          "createdAt": "2026-09-21T19:56:05.818Z"
         },
         {
-          "id": "tx_e748ad74b8a2",
-          "type": "income",
-          "amount": 12000,
-          "category": "Allowances",
-          "description": "Monthly Family Educational Allowance & Mess Cost",
-          "date": "2025-08-01",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "payerOrClient": "Family / Support",
-          "tags": [
-            "Allowance",
-            "Family Support"
-          ],
-          "createdAt": "2025-08-01T10:00:00Z"
-        },
-        {
-          "id": "tx_655db8ef6386",
-          "type": "income",
-          "amount": 10000,
-          "category": "Side Hustle",
-          "description": "Python & Web Development Tuition / Stipend",
-          "date": "2025-08-10",
-          "paymentMethod": "Nagad",
-          "recurring": "monthly",
-          "payerOrClient": "Tuition / Student Mentoring",
-          "tags": [
-            "Tuition",
-            "Teaching"
-          ],
-          "createdAt": "2025-08-10T17:00:00Z"
-        },
-        {
-          "id": "tx_dacb085dc144",
           "type": "expense",
-          "amount": 5500,
-          "category": "Housing & Rent",
-          "description": "Student Mess Seat Rent & Shared Room",
-          "date": "2025-08-02",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "tags": [
-            "Mess Rent",
-            "Seat Rent"
-          ],
-          "createdAt": "2025-08-02T11:00:00Z"
-        },
-        {
-          "id": "tx_992c915f27ed",
-          "type": "expense",
-          "amount": 3900,
+          "amount": 60,
           "category": "Food & Dining",
-          "description": "Mess Daily Meal Plan (30 Days - 4 Off Days = 26 Days @ ৳150)",
-          "date": "2025-08-05",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
-          "dailyConfig": {
-            "dailyRate": 150,
-            "totalDaysInMonth": 30,
-            "offDaysCount": 4,
-            "offDaysReason": "Visited home for 4 days",
-            "calculatedMonthlyTotal": 3900
-          },
-          "expenseMode": "daily",
-          "tags": [
-            "Mess Meal",
-            "Dining"
-          ],
-          "createdAt": "2025-08-05T14:30:00Z"
-        },
-        {
-          "id": "tx_2ea52098f2e3",
-          "type": "expense",
-          "amount": 1400,
-          "category": "Education",
-          "description": "Semester Reference Books, Printing & Stationary",
-          "date": "2025-08-11",
-          "paymentMethod": "Cash",
+          "description": "Singara, Samucha & Snack",
+          "date": "2026-09-21",
+          "paymentMethod": "Credit Card",
           "recurring": "none",
           "tags": [
-            "Books",
-            "Stationary"
+            "DailyExpense",
+            "Food"
           ],
-          "createdAt": "2025-08-11T12:30:00Z"
+          "id": "tx_1535cc42-c8ae-498c-af9c-f470aa2f2fec",
+          "createdAt": "2026-09-21T19:49:48.440Z"
         },
         {
-          "id": "tx_24dd7a5b24f1",
           "type": "expense",
-          "amount": 650,
-          "category": "Utilities & Bills",
-          "description": "Shared Mess WiFi & Mobile Recharge",
-          "date": "2025-08-03",
-          "paymentMethod": "bKash",
-          "recurring": "monthly",
+          "amount": 350,
+          "category": "Household & Living",
+          "description": "Vegetables, Milk & Eggs",
+          "date": "2026-09-21",
+          "paymentMethod": "Credit Card",
+          "recurring": "none",
           "tags": [
-            "WiFi",
-            "Mobile"
+            "DailyExpense",
+            "Household"
           ],
-          "createdAt": "2025-08-03T09:15:00Z"
+          "id": "tx_0290cb42-ec98-4e74-b0b9-bf82cc4c3a5d",
+          "createdAt": "2026-09-21T19:49:47.328Z"
         },
         {
-          "id": "tx_fa12f003d0e6",
           "type": "expense",
-          "amount": 1200,
+          "amount": 50,
           "category": "Transportation",
-          "description": "Campus Bus Pass, Rickshaw & Local Commute",
-          "date": "2025-08-16",
-          "paymentMethod": "Cash",
-          "recurring": "monthly",
-          "tags": [
-            "Rickshaw",
-            "Bus Commute"
-          ],
-          "createdAt": "2025-08-16T21:00:00Z"
-        },
-        {
-          "id": "tx_07a260696f42",
-          "type": "expense",
-          "amount": 850,
-          "category": "Food & Dining",
-          "description": "Tong er Cha, Singara & Evening Study Snacks",
-          "date": "2025-08-15",
-          "paymentMethod": "Cash",
+          "description": "Rickshaw, Metro MRT & Bus",
+          "date": "2026-09-21",
+          "paymentMethod": "Credit Card",
           "recurring": "none",
           "tags": [
-            "Cha & Snacks",
-            "Tong"
+            "DailyExpense",
+            "Transportation"
           ],
-          "createdAt": "2025-08-15T18:00:00Z"
+          "id": "tx_5dc24444-e17f-4b7b-9bf3-a7cecf4d113c",
+          "createdAt": "2026-09-21T19:49:44.824Z"
+        },
+        {
+          "type": "expense",
+          "amount": 150,
+          "category": "Food & Dining",
+          "description": "Mess / Office Meal",
+          "date": "2026-09-21",
+          "paymentMethod": "Credit Card",
+          "recurring": "none",
+          "tags": [
+            "DailyExpense",
+            "Food"
+          ],
+          "id": "tx_6553a64e-fff1-4a3e-b810-6a68a73d0587",
+          "createdAt": "2026-09-21T19:49:38.096Z"
+        },
+        {
+          "type": "expense",
+          "amount": 40,
+          "category": "Food & Dining",
+          "description": "Street Tea Stall & Biscuit",
+          "date": "2026-09-21",
+          "paymentMethod": "Credit Card",
+          "recurring": "none",
+          "tags": [
+            "DailyExpense",
+            "Food"
+          ],
+          "id": "tx_053c6f65-efd6-4c39-993f-8371d523a911",
+          "createdAt": "2026-09-21T19:49:37.040Z"
+        },
+        {
+          "type": "expense",
+          "amount": 100,
+          "category": "Food & Dining",
+          "description": "Food & Dining Expense",
+          "date": "2026-09-21",
+          "paymentMethod": "bKash",
+          "recurring": "none",
+          "expenseMode": "daily",
+          "id": "tx_4f8cb487-7979-4e60-a565-b3e28c24301f",
+          "createdAt": "2026-09-21T19:44:02.434Z"
         }
       ],
       "budgets": [
         {
-          "id": "b_3ec01d45284f",
-          "category": "Overall",
-          "limitAmount": 16500,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_8059383f2abb",
-          "category": "Housing & Rent",
-          "limitAmount": 6000,
-          "period": "monthly",
-          "alertThreshold": 90
-        },
-        {
-          "id": "b_39f624d0fd2a",
           "category": "Food & Dining",
+          "limitAmount": 500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_74b0f95c-a089-48f4-8af9-7923224a4d28"
+        },
+        {
+          "category": "Housing & Rent",
+          "limitAmount": 20500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_4c191298-2d41-49b6-bdd2-a2d6ce7d8e0f"
+        },
+        {
+          "category": "Household & Living",
+          "limitAmount": 58500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_d87e5399-5013-4362-b0d6-82ae92509c12"
+        },
+        {
+          "category": "Utilities & Bills",
           "limitAmount": 5500,
           "period": "monthly",
-          "alertThreshold": 80
+          "alertThreshold": 80,
+          "id": "b_799bb595-ad84-4db2-b845-4c96129d352d"
         },
         {
-          "id": "b_6389c3ab45e1",
-          "category": "Education",
-          "limitAmount": 2000,
-          "period": "monthly",
-          "alertThreshold": 80
-        },
-        {
-          "id": "b_ca984d059ebd",
           "category": "Transportation",
+          "limitAmount": 4000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_c289c3a6-d357-4d2f-ad14-55b6ab1e2b92"
+        },
+        {
+          "category": "Education",
+          "limitAmount": 3500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_2cb38f04-6fa7-4db9-93e3-612a835adbac"
+        },
+        {
+          "category": "Shopping",
+          "limitAmount": 3000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_1b4467d3-8204-490c-8621-1e1c2d9c176d"
+        },
+        {
+          "category": "Entertainment",
           "limitAmount": 1500,
           "period": "monthly",
-          "alertThreshold": 80
+          "alertThreshold": 80,
+          "id": "b_e737a386-5076-4138-8836-3e3e60b523d5"
         },
         {
-          "id": "b_da7db10ccc72",
-          "category": "Utilities & Bills",
-          "limitAmount": 1000,
+          "category": "Healthcare & Medical",
+          "limitAmount": 48500,
           "period": "monthly",
-          "alertThreshold": 80
+          "alertThreshold": 80,
+          "id": "b_5ca09e59-a660-430a-a0a0-1570f5285322"
+        },
+        {
+          "category": "Personal Care",
+          "limitAmount": 1500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_ab43ccbe-cc48-4ec2-85e1-f420ab9eddc3"
+        },
+        {
+          "category": "Travel",
+          "limitAmount": 2000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_e0dda790-ed03-4d9e-8c32-bc017f49303f"
+        },
+        {
+          "category": "Other",
+          "limitAmount": 1500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_445875b4-0a34-4023-b685-245487fcff1d"
+        },
+        {
+          "category": "Overall",
+          "limitAmount": 150500,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "id": "b_74f7f16e-e14a-4637-ae1c-297e09fb9bfd"
         }
       ],
       "savingsGoals": [
         {
-          "id": "g_3bd14a6b5bc5",
-          "name": "AI & GPU Workstation Build",
-          "targetAmount": 85000,
-          "currentAmount": 48000,
-          "targetDate": "2025-11-30",
-          "category": "Technology",
+          "name": "Emergency Fund",
+          "targetAmount": 250000,
+          "currentAmount": 1000000,
+          "targetDate": "2026-12-31",
+          "category": "Safety Net",
           "color": "#10b981",
-          "icon": "Laptop",
-          "monthlyContribution": 3000,
+          "icon": "Target",
+          "monthlyContribution": 250,
+          "id": "sg_55551bae-41b4-4694-899a-e05dd9eb3265",
           "contributions": [
             {
-              "id": "sc1",
-              "amount": 3000,
-              "date": "2025-08-01",
-              "note": "Tuition savings"
-            },
-            {
-              "id": "sc2",
-              "amount": 3000,
-              "date": "2025-07-01",
-              "note": "Tuition savings"
+              "id": "c_89b4cd7f-e5c4-424b-a87e-e2b7698022b2",
+              "amount": 1000000,
+              "date": "2026-09-21",
+              "note": "Contribution deposit"
             }
-          ]
-        },
-        {
-          "id": "g_f24efcc4b396",
-          "name": "National Hackathon & Tech Fest Tour",
-          "targetAmount": 15000,
-          "currentAmount": 9500,
-          "targetDate": "2025-10-15",
-          "category": "Contests",
-          "color": "#6366f1",
-          "icon": "Trophy",
-          "monthlyContribution": 1500,
-          "contributions": [
-            {
-              "id": "sc3",
-              "amount": 1500,
-              "date": "2025-08-05",
-              "note": "Contest savings pool"
-            }
-          ]
+          ],
+          "completed": true
         }
       ],
+      "notifications": [],
+      "updatedAt": "2026-09-30T12:53:38.972Z"
+    },
+    "usr_ab508d2de0abd7c9": {
+      "profile": {
+        "id": "usr_ab508d2de0abd7c9",
+        "name": "Aminul Islam Sifat",
+        "email": "aminul.i.sifat@gmail.com",
+        "role": "University Student",
+        "avatarUrl": "",
+        "currency": "BDT",
+        "currencySymbol": "Tk",
+        "monthlyIncomeTarget": 200000,
+        "monthlyExpenseBudget": 50000,
+        "joinedDate": "2026-09-21",
+        "phone": "0173452341",
+        "location": "",
+        "occupation": "",
+        "bio": "",
+        "financialGoal": "",
+        "riskTolerance": "moderate"
+      },
+      "transactions": [],
+      "budgets": [],
+      "savingsGoals": [],
+      "notifications": [],
+      "updatedAt": "2026-09-21T19:35:29.534Z"
+    },
+    "usr_e457762ade93669c": {
+      "profile": {
+        "id": "usr_e457762ade93669c",
+        "name": "Diag User",
+        "email": "diag_1790065995876@test.local",
+        "role": "Individual",
+        "avatarUrl": "data:image/jpeg;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "currency": "BDT",
+        "currencySymbol": "$",
+        "monthlyIncomeTarget": 4000,
+        "monthlyExpenseBudget": 2500,
+        "joinedDate": "2026-09-22"
+      },
+      "transactions": [],
+      "budgets": [],
+      "savingsGoals": [],
       "notifications": [
         {
-          "id": "notif_6dd0a29e-0f9f-4e30-859d-1f17eee32d41",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Transportation",
-          "message": "You spent $2,500, exceeding your $1,500 limit by $1,000.",
-          "timestamp": "2026-09-08T08:22:21.623Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Transportation"
-        },
-        {
-          "id": "notif_e9acd6a9-1d50-4503-ba7c-2096ea4e4dea",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Education",
-          "message": "You spent $3,000, exceeding your $2,000 limit by $1,000.",
-          "timestamp": "2026-09-08T08:22:21.623Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Education"
-        },
-        {
-          "id": "notif_7e461c6d-f24f-4704-8303-34e45e798157",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Utilities & Bills",
-          "message": "You spent $4,800, exceeding your $1,000 limit by $3,800.",
-          "timestamp": "2026-09-08T08:22:21.623Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Utilities & Bills"
-        },
-        {
-          "id": "notif_525bb85a-575b-42bd-81ba-7d2462741216",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Utilities & Bills",
-          "message": "You spent $4,200, exceeding your $1,000 limit by $3,200.",
-          "timestamp": "2026-09-08T08:22:21.623Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Utilities & Bills"
-        },
-        {
-          "id": "notif_37ba47d2-e8c8-4044-8329-8c32a9e9f3de",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Utilities & Bills",
-          "message": "You spent $3,200, exceeding your $1,000 limit by $2,200.",
-          "timestamp": "2026-09-08T08:22:21.622Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Utilities & Bills"
-        },
-        {
-          "id": "notif_d8cb6c0d-269b-43f0-a9a3-4ec6ac4a997a",
-          "type": "budget_exceeded",
-          "title": "Budget Exceeded: Food & Dining",
-          "message": "You spent $50,000, exceeding your $5,500 limit by $44,500.",
-          "timestamp": "2026-09-08T08:21:12.655Z",
-          "read": false,
-          "severity": "danger",
-          "relatedCategory": "Food & Dining"
-        },
-        {
-          "id": "notif_1788855402250",
+          "id": "notif_1790065995986",
           "type": "system",
-          "title": "Welcome to FINORA Database!",
-          "message": "Your personal financial database has been provisioned and is securely saved.",
-          "timestamp": "2026-09-08T08:16:42.249Z",
+          "title": "Welcome to FINORA!",
+          "message": "Your real account is ready. Start by adding your first income, expense, budget, or savings goal.",
+          "timestamp": "2026-09-22T08:33:15.986Z",
           "read": false,
           "severity": "success"
         }
       ],
-      "updatedAt": "2026-09-08T09:28:33.333Z"
+      "updatedAt": "2026-09-22T08:33:16.026Z"
+    },
+    "usr_dcb22317a3c7b101": {
+      "profile": {
+        "id": "usr_dcb22317a3c7b101",
+        "name": "Diag User",
+        "email": "diag_1790066720250@test.local",
+        "role": "Individual",
+        "avatarUrl": "data:image/jpeg;base64,AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "currency": "BDT",
+        "currencySymbol": "$",
+        "monthlyIncomeTarget": 4000,
+        "monthlyExpenseBudget": 2500,
+        "joinedDate": "2026-09-22"
+      },
+      "transactions": [],
+      "budgets": [],
+      "savingsGoals": [],
+      "notifications": [
+        {
+          "id": "notif_1790066720813",
+          "type": "system",
+          "title": "Welcome to FINORA!",
+          "message": "Your real account is ready. Start by adding your first income, expense, budget, or savings goal.",
+          "timestamp": "2026-09-22T08:45:20.813Z",
+          "read": false,
+          "severity": "success"
+        }
+      ],
+      "updatedAt": "2026-09-22T08:45:20.846Z"
+    },
+    "usr_ea2474ef4c42043f": {
+      "profile": {
+        "id": "usr_ea2474ef4c42043f",
+        "name": "Form Test",
+        "email": "diag2_1790068060379@test.local",
+        "role": "University Student",
+        "avatarUrl": "data:image/jpeg;base64,BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+        "currency": "BDT",
+        "currencySymbol": "$",
+        "monthlyIncomeTarget": 4000,
+        "monthlyExpenseBudget": 2500,
+        "joinedDate": "2026-09-22",
+        "university": "BUET",
+        "program": "CSE",
+        "degree": "B.Sc.",
+        "year": "1st Year",
+        "semester": "2nd Semester",
+        "studentId": "2103xxx",
+        "phone": "+880 1712-345678",
+        "occupation": "Student"
+      },
+      "transactions": [],
+      "budgets": [],
+      "savingsGoals": [],
+      "notifications": [
+        {
+          "id": "notif_1790068060854",
+          "type": "system",
+          "title": "Welcome to FINORA!",
+          "message": "Your real account is ready. Start by adding your first income, expense, budget, or savings goal.",
+          "timestamp": "2026-09-22T09:07:40.854Z",
+          "read": false,
+          "severity": "success"
+        }
+      ],
+      "updatedAt": "2026-09-22T09:07:40.884Z"
+    },
+    "usr_fefa064345f7da09": {
+      "profile": {
+        "id": "usr_fefa064345f7da09",
+        "name": "Prantik",
+        "email": "prantik123@gamil.com",
+        "role": "Salaried Employee",
+        "avatarUrl": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAEAAQADASIAAhEBAxEB/8QAHAAAAQUBAQEAAAAAAAAAAAAAAwIEBQYHAQgA/8QAQxAAAQMDAwIEAwUFBwIFBQAAAQIDBAAFEQYSITFBBxNRYSJxgRQVMpGhI0JSscEIFmJyktHwM4IkosLh8URTc9Li/8QAGwEAAgMBAQEAAAAAAAAAAAAAAgMBBAUABgf/xAAtEQACAgEEAgIABQMFAAAAAAAAAQIDEQQSITETQQUiIzJRYXEUkbFDgaHR8P/aAAwDAQACEQMRAD8AaoIxzS+ppCRntSgee1e9PPik0ukDnpS09M1wSFAcZpY6c8UlPIpSfaoJwKTx3pY6daSnilpxQthJHU470sUPuKKKhnIUnkUQUlKeK4pxtpJU4sJA7qOKW3gYkxwgAUve2j8Swn51DXK7R24DzseSkLbwMnB6kZA564z9agHCWUG4SH3m3VpDiC4MececjOOgBHsDVG/Wwr4XLH10uXLLVKmSkuuobbS0gDKXXAQAMZJ+foPY0e0vNGKNj5kYOFLHOVfyz7VRVaijPBpL70hQDqXCj9xAAKSOOvBp8u7Mb2FNrO4KOElXO30xxj51UjrnnLHOlYL8jCvQH0oiRlXNZ8pUF2SiU855zixu8jsjjjOR61LWu53EuhMhgpbxlIQvoPYHk1YWrg++BTrfot6RxilgDNVaTf5TTzKEtJSHCBhSFHI9cj1+RqeiSA+2DgpVjlJBGPzp0bIz/KwZRceyQTj2oyAnvimIVxRErx3rmjkySQlHGdtOW/LH8NRSXOmM0VKs84NLaDyTDSmcDJFOW1M+uRUIlzaOooyHj2V+lLcQ00WBl1n0p4zIZGBtNVtD6uOTR0Pkdzn50txZOS1sSWQR8KqkI81hP7h/OqYiQfXmnLUhX8RHypUoZCUsF7YuLA/dH509auLPZIqhMyscAmnjUtR6GluhM6Ujzqgc0sYzSDShXqDJFJpY4pCM5NLFQdEUkgjGaWnApA4PtSh1xXBIICKVx3pAA60sc0LJFgUROAMmkJ6io3VF0NsgpWlsKW6rYn1GfQZyaVZPbHIcVl4JCY+40wtSdqSgblFXpVAuesmJLmx155jDiSUpT+HB5wc/EOv+1GVdZaYIVISqQlSVIStRwMdM4zjPXrWfS5CllQSMIUrPIzWFdqHa+HwX64bSxTbmmfFSww8MIUdiCshISfYgDNN1z3I5+zhC/IUNuF84OOcVEIWGU7Bkk993FGKlLShw9j1BOTiq2BhKqeaipJYcUVn4QsYAwDzyDz0H61yRcVPKSVqypHGRgE/XH61Gh3LuVbvoeakEtxDFPmNulwJxlPRPua4jkcW6c6uQn9qpKSRuJOTirDDui0TUIbe81KQnC1fAB8s84+eKrESI40lDj7ToSo9jjHzyPlUlHDaXNuE5QOFdv5c0LeTkX63SRLP2h8uqaZQcE52nJGSPpVgts+PJTtjNqSkdBgDI9RWb2p9xqK+5JlhSVcJ2k/1/51qXsFxSSfLce39SW08pHTkntT9Lf4+GROO/k0AK9BSgr2ptb3vPjpWc+mSOtOQea18prKKrWAiSaKnPc0BJPeiIoWShygjHNEQoetN0HijJ6dKWyUOEGnDZ4+VNWycCjpVzzQMNdDpo04bOeaaIVx3py2fagaIHjSgKesKHGKjW1U8Y5HWoCRgvWlpNISRSq3zLCI9KUOvNDHUfrSkj61BKCg9KWBkihAnGBSxnvUMJchAcnBHFKBx9aH2og5xnjFCyUEb5Izk1VtRXiE59ot9xZUw4yo7FqGUK44OR06g81aW8c1Aakbt7pcLpZadCfiWofiHTBGOfpmqmr3KGUx9WM4ZlDswsvuqQpxSFEkEHGc+4Ga6yPPfaU0kLWTnaBwe/Q54rk2A8nY8pKxHcc4WAcYzU1ZIjf3qW2XACkKR5mMpVjHTHtXnrZqEXI0K4uUlEYMWqTKuIjNsKL6klTbeOSRz078c4qQbgy4TjcJwNpUsFKsJCikHBGMdcgjFamnRz8KzMajhpKnI6w4gqzudA/Ern5cD0zVJejS3biytbDjb+RtUojDiAcAAKHYfyrPp1ytTaLtukdbSfsrd0trkF5CXNoUOcjnFPC1FVBC0TRvJ/CM5x7ivQt08Nol9tbE9TCXVLAW66lRznHIJPX/2rPNRaPgaZnLkoZRMi7FJLDq9jiCeh4PxD36H0pcfkFPC9hvQyjz6KRJZfTamFuLS61+4QoHGOxFAgyWQHS9lRSAU+5z0q52eDDn2qVECRuA3pGcEH2FUa7RxDdLIRtIVkEHqKuUXqzj2ipdS68MkHlqWjzfJIZTxlRwM+nvX1quL0RbnkqI38H3qGacXyNygD1p7CUOBgkZ/SrSK+TStLXaVIcaQ4klsjGfQ1bM9qgdJMIbtzfwZ/hUoc4qcyMVrafPjQizsWnpRUHPIoKTwPaipNMYCDIPqaKkim6KOg9KBhIOlWelGbNN0qFESqgZI6QacIJpo2e9HbVQMIeN808ZJxTBtfHpTtlY70DJwYWOVdaXnmhjtzSxjFegMsWKXnuO9CRwP6URJ+lQSuQg6UvJ25oQ/D1paT0zQhZFpwMdTmiIzzxQ09u9KB96hhJYDN9Oaq+vfsUK1OuOKP2iSQhDilAYwQSAPkKsw4FRur7d96WCTHSlBcCCUFSc4Pt6H3pF8d0GkHW0pcmSXW4SHWwlS21454Ocg/86VZvCKy3DUF+LcZKUsIUlTy1n4G8c5Pr8u9VK2Wm4XV56Lbo2VMILj5yBtCc5J9OlX3Q7d0tdkVFZX5CHHA6+tKtq1jon3A+YGa8lqszg6odm1pntnvfSPSTV+sNit7cWVMYLbCAkl1YA+Zz0rOdaXTTN4lGVbZDS17ivLTgOxeeVDHY4GflWYahk26UEsrZKnd25brrilFXthKkjr86j7Sx5E1tbZHlqUAopOMfmTWOvj40LKZpf1rtfKNXY8UpFkZQiUp57aNucbgqoO6+Jzl6dUmNZVulR6FsKP5CmHiRYm4Me2yYalLbmI3JG8K46buO2Qar7s9arYq3Iaecb8wuFKnleXn2bHwJPyFN0tVNkVZHkVqL7FLZkm2tYPRXg4be0lQPxJUjbkVH3lyHeyp6Iz5bpySyOx9qiN8kJyY5Qn0xipK1maSkxEkOrUGknHOFccHtzVrbGD3RK7nKSwyvTIsiFKUxJacZcQcKStOCD8jTq0tl6c0wn8S1YHPenWqDLcuLi5qR561kuEgDn5DiuWFJakokDlaDlJq/vW1NlPxycsI121xhFgMsjJKUjnNOSrtTGxTjPtzbykhKwSlQHTIp71rer2uCceilNNSaYRBH50VJxQU0QHIzXM5BkGiJJPWm6TxREmgCyOUHIoqDxTZs980ZB5oWSkOUGjoNNULwaMhXNLYXY7bNOm1YpihWO9OG1ds1BODFEnFET1oSaIk1usy0xY46Glj86GMUoVxwQZI6ZpY6Ugeo5pQyc1AQVH4a6k80gK6ilpxuFCEFHWiJIJweRQc8ZpbZ53ZxQsPgy/UiLppzVsyXaHXWG3ikq8lRByecce/P1rStHaYuN+tD32E+SotsYKujmG8H5AEEd+RTjV+kvtVgOo2ZHmFa0hbYH4NqQM5+YqyeEt8atLSbZIdjtvKbQ60p5zYgpIzjJ4HJzk4ByrJHGfnes103KU6liSf+Geso0kY4U3lNFauHhVdn9rCLXKXIT1cBSls59yBmuXLw+kWS1ONTZCDcpS2o0dDS921TjiUAnOPXgf7Vtd41E8xB82XcITaFJzluY3jHqAlRKvoDVPgPQ7tcBdZE1tFvt7qZAWpJT57gB2hIUAoJGdxJAJIAAwCTR1GsvnmU+CxTRUsKKJzxW0gxK0NDi2+Ky05HaBjEJAKVJGBz+QNZ3ovStl1FZ25c6K/DkFZS6Y6gApSSRnafwnrn3zxV68Qdf2iLYQ2JaH17dqEtnPWs8f1fpuLZmVWJey4uqSX2l7i26s4ClKwQQfkRnHPrVah3ePEMoc4QXM8N/8AsFxa8OtHxkJclruMoA8pcKQk/QEUq72vT0RiCxaYbLWXytSQk79iEKJOTnICi2Ov7wqoJ1xOjt5mRILSzjY6yhw59iFrWP0quah1dLlyDJL5VI2hAcCUpwkdEhKQEpHU4AAySepNOq09s3zJv/Aud8ILhEZ4h+VIuK1tpAVuwcVDWtSRuBGCBx7124SVyAXFnJJ5ptH+JxISDuJwBXoIQ+iiY8p/ZyNL0SSbStR4CnOPyFTZPPTpTKzRhBtjEcgZSnJ9z3p2Oua9LTDZWomVZLfNsKk9zSwfT1oIOTSweKNgoMDz1pQUQO9CSaJmhZwdCuKKlVNUnFGSqlsJcjlHzo6FYFNEL55oiVZ5pbCHSVEnrThtR7UxQoAYo6V1DJTMiB/OlJPPWkAjNKFbpmBOc8dPelg80MUv24xUZJCDGfnS+KGDweaUDngjFQELSfhziiJxxQkmljr7UJyFjqR3pXpSE8nilHpUBFp0bLZcLtqmJU6w8CQ3/EcYIHuR09wKp2s4UnTsqG5GcS/HDZUw6k/F5ZUcJUOoUMcinsZ1TTyHEEhSVAg56VPeIF2sd2gtKiwltP7ip9xQACice/qK8Z8z8fKvUeaEcxl3+zX/AGel+O1m+nZJ8x6/gzn+86pUhKZzqyyjkpB/F7Vap2k71qzTiZVudEdQAU1G3bd6PUnoPYH9Kz42GXcrupi3NFa9/boAfWtVtGi7rFdbN51A9Khsp+CLFX5JJ+vB+vNYduyppx7NKtTt4l0ZHqO0Xy0rFtu7flrCQoDzUrGPmkkUztERJmNgvsNAnlS1gAfWt31XpTTl7sZLZuMaa1+B6Y5lAHcH4f5GswTCttoLrLtvi3V9XwpJeV5aPfgjJq5XfGcMLsrWaaUJZYLVk+Cl7yrfJLyCMFG7ekfJVQCFrUgFWfrVu0zoJM1K5kx9LMUg7dnKlK9BnoB61BX5iFEui4sNa1IaO0qWRkkdabVOL+sfRWtjNLMgDLK30lKR+FJUT6ADJP5VbNM6bdbkMzZQbDYAWlOclXcf713w8ZYejTw95aUrQEblnrznH1xVsKifrWz8dSrszl6Zn32OHCFE+nau5xQ91dzzwa22UQqT2pY65oKPlSgR9aFhBweKXkYoIPJpWaBkh0nmiJVTdB6GiA9KBkocA9yaIldNUq6URKqBrJOR2F8etFQvBpoleaK2rvQnZMtzxSgeaQPalAcdK3DOwEST0pQOfahDOeOKIDhPvUEpi0/iB60RPJ6UNPXOa6CD3zQhBU5FKBGM96QknoRXw6/yqCegyVda6M5wO3Whj8WKVu57moJ9BUnFddaQ/GWyv8LiSDSAr1pSFc0EkpLDCUsPKKrp+dIs2piiSc7DtJ9R2P5Vt0NDd8gtgOkJKQQoHGKyLWkFDluVPbGJEcAhXqnPINA0br521sGLLCinOUqH8q8B8t8ZKq36HqtBrYyh9zUp/hBHvDvnPXmSkH90JB/U1DTPCe225wp+8pS8H8SsYpi94tOeUEMuKQKq2oPEi6zUqbadKAfQ1Srr1L46LM7aFz2XDUc236fsqmY0kLLCNqckElR9qx0urfdW6tXxKJJNfTrjKmlIeXkA569TQEqPatSilVrBmXWuyWS9aEeZfcMIoCm0pLigf3lAjrVzJATj0rO/D10IvQSpQG9pQHuev9K0ElQ/OvRfGxSqf8mZqX9zuaUDQ89K6M5zmtBlcKFdjS09aCg46ml544oGEugwNKCs9+lABJTSwcHFCzgyT6mlpVkUDdyaUlXHWgwEngcA80sK96Ak5FKSRQkMcIUKMg5OKbJVRAsDFB2TnBmjDrbqctrChnGR0zR0j6Vl+i78i3vKadW64HCB8SuE1N6g1gGVliEpJwOV9q0VqobNzZT2PdjBddyA4ElQz6UsemayOJqea3JLynFLV0G4kgVa7DqlMhalSF7fh4B4yaiGrhPgl1SRchnHrXUj5io623qDPV5bLo8wdU1JJGR2qwmn0BhikHmlAEGhpOCASPlS+iSr0Gag7OQifXFK78VXrzekR1sBElCELI3lX7uDzz603iawirlFteEpUoBCh0A9TSZXQTw2HteC2AAgV3oeKpd01sGZyWojKVspVhxRPKh7VNWHUUO7vutspWhSOfixyPWhjfCTwmFteOSeeiuXCG/DaQpa3WlJCQPY1lyo+FFK08g4IrY4z0SHofUNzx5sxqG55ADRcCMJJKjt/AcgYUSBkdFc4oOs7eIt3L7OCxJHmNkdOa8x8tqYy1CgvRuaGlqrcysfZEDkChLY2/hSakkJwrmlvIASVYrNjPktShwQ+0g/hNEaQonpxRyMqpR4TVhSEOIlL644Km/xFJA+oxWm6UnO3GxtLeB+0tAIczn4h2VyOcisqezkYz17DNWfQdxej3BaUubkuJwpPZQz0x2NaeksdfPop3Q3cGgHIzX2f0qGj6ltjtxdgvKXGkNqKQHE8K+RGf1p3HutvkSTGaltl7OPLOUq+gNbKsi+mUMD70NLBHrSXErQrC0qSfQiuA44Ga5hILnAFdyMc0NJz3rpJzihOChQPeiIV19KAn3ogOPWhZKC7j2oiVeh6UAKpYNAwkHSrtSzymm4NESrihzg5rKPKBU01J3Y4HUA0N5YedK0gpHp1pvvyeTyaIhScYyaoOTwdgKXFJT0yB7UVEv4Nqep60BWFoPxflSA3tx8VcmckSUee5HVlsrRxztOM1dNMa4G1TV2UAlIAbWhJyeuc/pWe7SsgZ5pQylRAxViq+dbygZQTRompL645KDsNzaGvibWBwr69/lTO1ayktPynrg4Vb2yGm0jhKu1VV65SHLeiEENIaQsrOBgk4x1pMOM7PfbYjNOOvnsgZz9KbLVScsxYHjSWB5JmOyHSp5aiSScE5AzXIzEmU+lqMy484c7UNpKifkBWieHnhWq9PPOXm5/Z2o5AU0wApaie248D8jV2uzNt015lisMZqMx5SRKUEjzXiecLc/EoYwduce2Kqczm4+yyobY5ZmVq8P7zIbQ7cJMS1tLRvbMhSiXR6J2gjd7EitL0x4aW60tMXBLb8ySpAUlUhQ8pfGRhCFBRyccZNVozfMnpYZTudWQSEjokHGf1r0ExBscfR0N+8PNK2sp8xS5HlpbO0DaTkAY6knnsMZyIuXiUZfqMripNooetLciRo+YwyhtMYtqbKjK+zwkOEYPljOXlA55ztGMDI5NZkwHLloS3uOoIkMR0tucchxA2L/8yTRNbyGnbomR9/wLxDUQG3Y0htYaSnH7MoQcIAHQDAI984sGho6px1DaHEnzItxccCT2S4SrH+oLrB+bSqjC2LNb4tym5QkZIGiCUqGCDg115o7CBjGKt2s9MybZKU+ltXlnn5VWSRiqdVymtyLlle3hkS42EnpQVHJwKfPoCio00ZQVO4xxmr0ZcFKUSw6AtsJ65qnXRiQ5CYwklpYSoOKyUkZ642k4+VaXcYcG4FMh9LEkOAhExDeFOJA5yByl1I5x+8nPtVZ1GpjSXhTpeWplTjl0kTJK0ggZILaE89cBKc/99R+gvE3TkGV5V9sUwRnVDznWpPm7cHhQRtTgp65yT/Kr9b+iZUljOCk6ihzGdSSI8hJ8zecHPCgOAR6ggVptiYTCVGeW1HeESzpfbcdbBIcUpIHJ68FXB4pz4s6et17RbXtOPRFlW9TK215S6jbkBP8ApJGe1Ft+j9SobnszG5jrqLc0gFbYSnnbgbvbpnPajlbwmngBV8luk6hmTmzDkwLfI2KYYCFsqKtziNx5B4A9qpciZH+1ONgJSEkjKCVJPuO9W3+79z+9ZYEfytl0eJeUfgCUxAAM9+nzqA/urhQbXcMurB2pS3n6nmjp1UovsiypNdDF+Q1EYEh9YQ0eAongn0pDdwhOLCUSWyTzgKqTXpm8sMEhLMpvujdnP0NN5Phg9Ls7Nwhh23y3ApXlvAhtQycbT2q7LW7eyrGlyXB1BB6YpefeqNLl320LTGlBTZQSElQylWPQ96RGvk4LLpdzyTjtmj/qoC8NcF9B560pJNVy06hQ6A3KTsI6rz1qfbUFICkkkK6GmKcZLglZQYHrzREGm+eKK2QMGuOSPIyFKUaX8QxnNDaWoDgfpRUOJIyrjHvWc2FgW3gGiLI8vJGKGChKsjkUUbF9cmpRHsGlwo5BPzroWSsHBohbRgnPWrt4OaGGs9UKjyXgxa4Udcqa8TwlCUkhPzJH5BR7VO7gJcvAjw+0BetXrD7LK2be2vY5JUngnqUpzjJ6Z9M/IHcdG6H0lpuF58+e2tDatriG1ZLywM4JHxHGR6DntUv4jy2rPpZFv0ywmDbrXLXFQw0ratxK22yhaiOcEDr37+2Y2yXJUFpyy2lRGSc8fKrWjpdnMngRqbPHH6r/AHPQnhTL0jdTcpLFvjsNqdSkb2QkFSU47cHjFQviFL0WxqCW1NYhrdbwcojZ42jAyBzxVV8Em7i3ol19tbIzMcSM9VbQkenTOe9VLXcuc/fpy3kIR8QSpWcnhIFK0+li7pvLGXXyVcFx6L3oSyaNv17euSY8dTe5DfloV5IAB53JTg/871RP7TbkH7ss7SA0ZaJc5L5/EobH1NJTnqBhG73KyruKBoBMhF4hNqYC98hsfCoc5UO1TH9rGJIeh2i6fZS02CtpZ/xHaU9hyRu/Ku1VXjnFZJ09rmpPB57GD+HKT2I7V7V8NYMeZq8aphFp2JebYhyQhJICXiUq4B5/eV+Z7YrxQEqCielad4OauvWibmw+Uuqt8xwBLLitoUschac+vQ+ufasr5DRvUVOJf0t3jn/J7JvmnLfdYymX4oSkjGcdK82+Jui3tNXZSmwpcJ05QvHAPpXpm23YTWm9y0nzEhSSAU5BGRkHkUu9aet97tbkKc0lxtwdx0rx1crNFZtt6NWN2Y/dnjQsJKSMVHyUJigqVnjoB1UfQe9axqvwxvNqvyYcRrz4z68NP9EoH+I9sD/254phJtmkdGXBufd5irpOZIW2N21pKgc4AAOSMdMkn0r1Wjr88dy6KeotjW8Miv7Tt2tcaLprQsVaXplhjbZLiD8KCpCAE9OVHbuPzHrxjDTikgEEflTy/S5d6vk66yS447KfU6pSgc8n5n+Zp1bdMagnttOQ7PNfadOEOJaOw/8Ad0H1rQhHasFCbbeUPdK32TBuMAtuHcy8VJCuU/EkpPHyJr0nqLWskMXtuNHYaKVxWkqKirI2nOP9IrG9PeFd1E6MX3EB3enCQsYzn6/0rRLppieGLsUQFFQuaED4hjHPTmjlGuWM4Ii5onrrqyQqzXFKGm0LFxkpLiT1zFXyPfIx361k9ku8ozVvmdIT5jhGfMV+EVolv07MlypMdMR0By6PNftMhCcx1gHPzI/Ksxt0SU0txn7G84tDriMpbJSSFkdce1N0kYKeFgVqJS2NvJeo2qLgxGW2mS2+B03Jyr/c1rjWpmbdBah3CO2tEeOFOlIylIAx0Pqc4+RrF7BYZsq5W5h62yG0LkIStZZUMJ3cnp6Zouur8tV6vkSGPgEhphWc8obQFbf9bi/yFN1Gmhbaopf2EUaiVdTbf9yxarsdvvFtduFrW2604oqXHJ+FWeuO6T/zisi1HZ3bO+2S26iO8NzRWMHg4IPyNWrSs+7PXJq32gbnX+XG1/gwByVegAB5/wDirve9HTb1oaJ5rrTslGV9DnC0BxOD65Khj2pN0VW8ZH1vyRy1hmHtrIAHUVc7Td2XGGWQlzckBJOO9U2fCl22auLLZW083jKVDB5HFPrDc3bfISrZvSVpUoYHxAHpkg469qUrpVrMVkKMIyliTwiz3dU52a3GjviM0Rkrz1p/p1FxnzHoKEF8tDcHEjtTCbeLnPSl9UcJYST5aUNj4QfQ4GatPh3q+5adZm/ZbXGXKkhIbffVjYkZ+EgDpkg9arVaqzy7n/YvWU1beHn/AIPHiNo5ByKCoEK9a4M+vFdBOeelWkZ+AyPw+woiOefSgg8ACiNk4PtU9I7A4QrcjBxWueDct2wWZUnaFN3NTiHc9S0AWzj/AFKrHkj4M+vWvTWmtDRZ3hvpl9l12NKXbw4lOcoUVKK8kded3r9KbVZCGXMW4Sk8RLBCt7t2jiNKUHHpaEWyaWxny1ABUWR7pI4J9DSYOj7da5n2O4Qt81poF/csqRvHUjpx86ttiZjacRImSorLERDX2Nbjjp3uR0oTu3A9FJUSrI7ewrGPEW4yLtrqU5IfefjOJbDBUo7HEJbSErSnOMK27vmfWi00rLrXCt4QV8YV1bprk3fwet9pf0a8x9nZy1PlpPlOHGPOWU9D/CU1WL7oyySpk+UsylkurOzzhtODx2z+tU3wdU22zeIay5tbmpeSjzFBKUraSBwD3U2uq6/MmoiLQLjOCSMlP2pYSfoDimafTXRnZiYm3UVNQTia9pbR+n/vi1OtoeYdQppZS29nKhg8hWeMirl4n6SsV10bLiz235DQU2oJKhwQtPIOMjqenrXnzQkZlWpLafKTvDgXu75wSTnrWieKbiWtGPAuO5cdbSdzqzn4s+vtStXRb5Irf6HaW2rZLEfZCWrSWhbNJBXboSFgj4pDuSP9RpWvLbofUNvTDbn2mFIZJLLqHWhhRGCleDyDgZ78CsxSppKsjbn5V1TiCc4TgdOaFaaT/NMY70uol80NL1nZFyIsHWGnLpAgx1OpgT55UlTaB+Fo9UHHAG4J9q1LQni1bZcFYvtvnWINJUpT0gKdiYAydj4GMYGRnGexNYz4fxmZuomYywEpfYfSpWOn7FZz+YFRPiZLnStIaesEZwIYfZ+0yEngEtuOIT07ZBPPdKap6v4uF0dsuRteq94LT4wf2hkXWNIsmjYy0xXBtcuEhGFH/wDGjt81e+UmszsNtvOp3AuLBuF0eGAt1Q+BsnsVE7U/LikWHTllbSl24relO9SgHYj9Of1r0bAmwbdY2o0JhEdhhnDTbSAlKQB2A/4asR0sdNXGCfAnyO2TeDzXHsbhSS+8ptecgJb3DHucj9Aa0zROoIlj0y1b3nJMt1tSsbW8AAknHJ96qBktlRGSOw4oyXm0o4P6U2VNcl2FGyafRerbrh4323pj25CCqS2nc49kfiHYCp6TrC4qgSS7CiqDt88v4SoHgcAdfXrWUwJSEXiGvaTskNn/AMwq0Kk7W2yGU5+/lLUD9MikzppQcbLWaIjWTjTQ8i3hKvvtTZU47lIVsIxwOfnWeac1Zao/n/eEOX5xnPHcyhJSnKj75P5UuXdChMhJbGwX3zzg9CRz/KqJ9sQplySgFIW+VgexVU001N4QFtlmOUeitB6nsMi7obbnYU02teFNLTxjHUjHesy+7XLu1c7/AA3Q+uVc5TqWyeqCs7SPkMcU40DJTGuk6WCFJbt7gIz1yU8fp+lRXhZqWPD0yj72ZcMOO9+3fSeNqlE7cZzkkHp2HtTNj09rcHkXlX1pSQfTd1gadi3K5ul124rj+WlCU4DYKuhJ7naDx2I75xftMavkvQLjHMdsLgWqFJ27idwT5gWc/KsNmyH5MVpvy1JVcZHmAL6hGeB+WKvWlkvO3e/JkPbkm0uslI4z+yWQPpj9adOmDi5YyK8slNRzjgkNdCBqa1/b47RbusMqQtsJzvQDnGfYHI+tZ/a2/MnNNlG8FQJB7irBpafNYnh1CkPF1CHRu9cVy+WpFt1VHcS2lEKX+1aCtoSMjlPxAjg/piquprVbTXQyqTl2TDTkV9sJcdSwR8KUBwN4PoCtZzx/hogTGSnlzed3A83OPoEGmMBak3BYaU4Tt+LyyrOB1P7Pccc+1STokKRwZIA5AUmRx+bg/WqTXOS1l4weRgCBSk57UdLZPw5H5URthIPKhVrIkE0kEciiIQME80RTaU9uPWiNoBSSjnHWu3ENgmgOTitvut91BpE2mFFnuJbixkMbHBuRkNpzlJ6cp7c1kViiC4XqDASnJkyG2cY67lBP9a1TxjeH3w9glRbuHI9t2KZXiUZJnQypJmn3/XDCHbrcb3FadiuOuQW2Gk5w55DZJKVH5+nasr1gh63XiKW5RVFdYSqMon4koJPwnvkZ/LFWVQT94obktoXFeulxKwe4+zhOD9R/Kq49Mj3KfLuwt8KRHT5SWVzJRZZZV5YB+EYKslPQelTprPE+Bl0FYuR34ezHYuqJ0VuQ4hMuCl7O4jcptWPr/wBT+dQ8iU4ptSS84RnGCo1erRLgTNQ6cnPTLc7DS46w7stKmIcfc0vAChyolaUJAPHNAvEq2RZ8uM1dLK2W3iEiNp9RIGeDuwBnGO9WZXNWTS9leME4xbIXRaiNQQVLJ4V+8eOh9auPiOpx3TJCULX+3RjCeO9ONEz5v3lBEa6Xh9JV0j2JttPT1A6VbvEB+a7ppwkapWoOp6NNtd/eqeqtflRaoitjPP6IszqIzxHT/pmlqhTSSPssj6tmrg1HuCjlLGr8H1nhP6ACnBjXFLZJi6gwOcrvSQf50tzYe0jfDSPJTq6ClTKh/wBUYUMcFpQ/rQvukv2WDIXc7WwtEZbYRIkBDgHmuKxj5qNWnQN9egariJU3qvO5QPlykP5+Ej94c/nQbreorrP/AIy6yIT2wgM3SzBb+3JwSocEelMpsbk/4BtSwiqW/T8l1ADVxtSzz+GcjPHtnNa2be6bRID1xtrK/s6j+0lJx+H2zWeQLjay2lP26wLJ7u2dWRz67TWnyZkNu0OYnWZg/ZiMs21SudvyodXY8xRGnj2Yg3Y3lOHyptvexzluWn+tLctjwUU/eNsT2yZSafi5QVuBS7pAfOOC9aP5bQaEblEceITPtqkjubYRj5cUG5h4QG2WXMxtbt2tSRvTz9pB79sc1dnLTBW2jbcJb2L2QSxCWUj3z3qDtMyM7PjssXOKlxbqUgRrXlZOfcVbLrJddKHgzqdW69KOchsHsOAMUuUmEkiHvdohG1zwu4SWi5dinLkJSQMj51n19tzUa2yAxcobwQjOwKKVHHoCBn6VqU52QuQuOr+8bQXeAMrO9PT0NUPXVxC5Uq3uT5m5AUPLmREpJPsRyPnRVN5AsSwH0a/lm4FKshcMBXpz3/Sm+hLRPvT1t0pHZBhSZiJEx1OMnCThOewAUr6n8rN4buLXaVLkTLo0j7G2k+fCS4g4yPhPpxTvwc1BbLRDmTZEd9brFyWVr2AYAbUUpyTx+FZpkrZKUlFC1WmlkhIWmnZOu4dtkPtAtnkN5V5aE8k9vYVomiLPbo67lJx5yps1cVpbmD8CW8HHuSVVkFo1fcmJlzvzIjh6WpTTQWkqWlJPbke35VZrI467f7Jb5Cy66w24paumCpKlHp/iUatON06m28IRmqFq4yyVt+nYYmQ0MqdYUY60qOc/EhWO/sf0ovijb34+lbXLbkErjulsLGUqG4f/AMiqzPmz7TqBJjTHQluSpCUrJWkbs8AHp1qZ1NdrhcNGLalhpQDwUFJBBGDS9RC3Zl9E1yr3NLsitNxHkxPt0t5LgdIwp4pJI743g5/MVOttRn1FKfsZGM4QmOVfok1WtMXaMy2IklBSArKF7k459QodfcEU6ud8cauTaozxeaDZ3pDiglfUAHCyOKoNZLCZ5uKiE/CPir4ocUQc4z1p2lGOMd6WlA6etNTEsbJQe/NEShQ79etOEoAwQmugpKsdK4HJaPBm3uXHxOsEVplbjolB5CUjOS0C7/6M1afGS33Ri9XlL8N5G14r3Fo7fUc9K5/ZngCd4pRgIqZIYivuFJdDeBt253f91W/xIUqPcrtEDeqISd6wG4Lwfi8k5Od2cnuO3pUwk02izCP1yV6POTKnxJUN0lxUme6UrTuTsUjr+RxmouPMhp03BZajW1t45dDs34kZBUCQP4sEAcGp/Rz7b2k7M4r7g85EeaCh7cw8AklGCpPBJ29+tNbpBjJtcORDtFr86NbHJGVTA6MAkkhJOFn075PtUxnyFKIqJKlXDS65cSdqS5yLatuSw5GjBEJlbSgobkngkY9BVn1rcjJuUhcfUl+dZkNoeaQxb8AgpSeDkd6yiJfbvIirYcuUksnI8pLhSjH+UYH6VJ/f2oE6at8lu9XFCUBURWyUtP4TlIwD/D/Krk03JP8AYqxXDX7ml6Rac+025bifER5RcA3EbGMfUnj8quGv7ap3SknZab6+QpC8OSdv74Hp71g+nNQ3hdxheZdri5tfT+KUsj8Xua0rxDkyJGj5zK3Fu52H41k9Fp9aq6qD3xZYoa2tFYTYyDvd0eRnnLt2Skn8wKjLvDaclJhR9LxG1rGMJue4j/zYqruvIaQVbBnHYU3gYSpT7mFKUeMio2hZNg8KtOMwdUQn16XHmJKilYvCAc7T27UqdeRBthiG/wA20qSFZiJYEnB3HkuZ5z+lUDR03ZqSGonaC5tPyIIpU4KLC0ttYG9SRyP4jR6ev7Sf7AWz4SLVbr00pKUuaxdSrJOHLQlwDn15rWvvltFscV/eknaySPLtSR+77ivOcIt+XsSQVg7VDuDmtZuCQizSNvw4jqzxyPhqNXBZiyaHjJTn7zJBUmFfpEsn8SXIqUJA9e9TejDPuFxQxGLDxPLnnNjaU9ycYNVbw/t7tzvJishJBRlxSyQlKcjk4BrYUWu06Utrkpl5ltkHLjz2Rk9un5ACrsHXCrlZbKlinOzh4SLrFZskG0FQgRGEpT8biEAKUfZXXOe1Yx4izrwzc2z5rqbalWYxQduFeq8dV+/5d6a3DWs+dd0utuJaho4SxjhxP8R9/wCXT1zc46Yl4syglSJkd9OFpWjlPqOvBFVPHLTy3PlMs7lbHC7Mrfu05akLauMxpaV7w4h9QUFeuQc596hGrxPE+Qt14Si4ChZkDzN/PUk81YdT2B+xyFDl2I4f2T6kZIP8KsEYqptRnntqm0gr83aMnCnPYCrcoQmlKKEKUovbI0/QKTEsK1xzdCHGkZER0PNp6546pOTyDVM1S6LXpzyI7rwkSrlKcfC+F7cJSnI7cbv9Ro2jbybVeEIL7rCVfsXdiinj5j0NImWqPqXXsyPGvLSYcZlb7smUsgDCQVAcEk5wMVTmvHY3+o9feKISxIJCFqThqMAvPqrtVn0NMkO6sRJeeVuUhYz9KNbbfb49nUhEaFObdIcQ+7NLKiMcDZnjueeeanNBwIqr6wE2iEohCzlFzyenpTp2Px4QqEPvyQHiC66xPafGNhWF54ySDU7Febm6LljYcpWSO+OAad+LNnbXAZcTbJDQSojc0+lzHHp1rmhoMaRpZ1tF2iK3EHY5uQUq24wcjnp+lDO5ujk5VLymeclG9QwM4pxCQlJJAwT+I+tLuTK2n3GlbRsWRwc5oKHQEnb1qhF7lgbnBlIHXqK+2gHk0jcruMD1royfTNHkULJGCATnFcSgA/ETn3rqEk9ATXQCfb6VO7IJrv8AZdQhGtrjJWqIEt2taR9pBI3KdawQB3wD+dTOo21SLjPdhpW4hb7ilKs1w8pGSo5Kkr/e9xxUB/Z3aWJt6k7FqSzGQFKSOmST/wCmqlcEurCHFJOVkqSSOpNMhBtSkWFNJJF70w83bl3a1TX/ALMYbDqm259v89SfNShRUpxHqaLMcs0Sa2hMjT8tpu1blnyHG1JUew7d6qjV2nWnUF/EaQ9GK4qUYScAkFA/kal7/qO9uxrzmd5g+zxmiFtIJIOMjpS9jyHuRS3GFQbk4wTlIV8JHQpPQ/lU1ZwZNivVuyrcyW5jY9s7F/zSfpUZeFb0RXDjzGWwy4R+8OqD/p4+lSVljTGpbMtcOQYcptcRbuxWzK0HaM4xnOCB7VoJpwz+hWlxIjbStTUhPO3a4Dn05rbNVo83TFwABBTHUscZJAGf6Vi70aZFlgPRXmgr+NBFbTcHPvDQ7shtSgpcEk46529sUnVdxG0PsxGco7gilx2yptOTgAUZNvlSp4bZjPOf5Uk1PNaavqEAIstyUP8ADFWf6UL4QQLTEJpV8ghaiAX0ZOcY5ol1krgvvyLY5lyNIcLKSvByFnmj2ax3p2/QmFWu4IT5yN2Y6h3+VT8vQt6fiSpLEFLaBJdSfMO1QCVkdPpRUuLck/0AtzwVKyOSZjTTsxttuQ+6VucYOSr9K1i/uFq0zDyB9nUB/pNVvTugby9JiLWqIgeYnJU4fX2BrQNWaPniwzcS4xPlnru/2oNXKO6KTCoi8Mp39nr7Om+XQzcCOImVHGcfEAKbeJk6a9fVRpJWIKOIyedpHqf8VMrQmToe5Rps15p6NIXscQ0TkAd+QORmtPnQLbqm0kICHW3kBba09fZQ+VTVZsnl9M6de6OF2Ya6SypIHKM8H0qf0zqCTZ5IfaVvZVgOt9lD/emmoLTKs9wcgTEHj8KgOFjsRUWhp5hYRsWtC+BgcmtJxTjh8plNN7srtGwS5lpulmWtTrL0d9GClX8setU2FYpum7giOz5YnTciI+5g+Q11Us56Kxx/zFPtNJh6SdbE5H226SSCmAORGT/9xeeN3t+ftO6oTarvaXYkGWSl4hcq5DlKec7UH36HHyrPbdE8ei1xbHPswq/vLallpt7zE+YTv/iAPX60XQq5j11XFjyIzCHiQ+t8hKSgfulR9c4wKZagiTI0lx1+I6wxuUGiUnGB71zSt9+6A4UQIcxbqhgSGysDHpyKC2W6R1aSRot5c8iOvLOkSV4ALS8n6c1N+H7JRcIrhZ025lC+EOfH0781n8y+Kul0YCrLaYxSnctLLBCfqM1Y7TqRj76jNCzWoKAUP2LJQenzqZpuvJ0H+IW7xJguP2gPt2iKoJVwpmVgjg89aT4R3AotD0aZNlNlojDciIFpA56HGaaa4mwf7tlTlkaB3p+JLyk8+tNPCa+MIVMji4TonwBSEqAdQMH3+dL/ANInq0YXyIzMvs9SZLJT56gC03tGf8vaoCTHXGkrYUCCk9+9Wxx5YvdwlIeTJKpJ2vBrYcYHb1qHvDUiXO+0fiUvAO7jpSGlWt0mH43PiKMT2KCtpGCOoNL2gc5FdbBUorWSVE9SaWWyo8JOKU5FYT+6OcV3bxjj6UUsZSkECishoKwQCRUbicGm+CT4gaS1hJWrYVMI2naTylDv/wCwqIYS1LkwWGlJUpTqUnHPUitK8ApMG3eE99mS5LMdT9x8r9o4E5SENAdfdSqsrcPTuopcSI6uFMKHgpIaeBUCAR+6c456dK09NqXCl5jwDZSnZHnkwbVzW64yZKU5826uRyfUcf7Yp9rpxFotF9W3H8xTs1hoK67QkEn/AGq73/RdkUWmmI6mHPtD7yXEuqJBScjqelRmtNM2yTpORKTcZqlPz96UrWlW4BJ9ue9Keog/Q7wzQXwzNpnaNgzZDbEZyS0uK88vAJytSW1ZPTC07flUlM1FaHdHFkS0qmsFLrYSlRKVoII5xwcish01PixBIhHzfLbWQEk8lCh8XPYhQSoe4qVRMUqQ+43FUrzsnaDwc9T06das6WmMm9zK+pskktqNdd1Zp+YYEti4NhTmCrKFJAJHIyRjg1qtnv8AbH9GuFu4xtv2VeVeaMDAPU5rx1Z7g6mE9EcjK/8ADPEZH7oJzj+da94e3qMjSMhhxt05U4gdOhHz96HVaSvapJh6a+eWmixK1LpyBHkXAXeG4vaT8DwXn2+HNRsPxPsLzZTJdKXSOMNLI/lXn+4PuqkuoQlWArG2iNyFpbyEkL9qX4IfqP8ALL0jZrr4i2yJsft7/myi4A0PKX+LPHUCpiFrBiz6dft0huXKkIedLzjihuccU4VKPsMk4HYYFYGy+4u4R3Epz5awsD3BzV6vUiaXJaw3lLjql7ljCviOen1p2n09bb3foIvts4waLYdeNb4gbt687xkqXjHPyq0671epnTclwREblFKcb/VQ9qw20uzythLaEcKHOfer34gwbqdOSXFuAJASVdB+8OmKLU0VqccIHT22YeWUjWF+fuzcdDjKG0tqJTjJJJ96sXhTqlVqnIhzHcQnVY3KPDSj3+R7/nWfyEuoCQs5JPXsKcRFqGUIySSBgetKlBdYLMZP2eitX2uPeoPkSEAqH/RWkZUlR9u4qhfdUrTEhDJQiXf3k5YjAbkxE8/tFHpn09KtXh5fjaYsKwXNZkXl5re0pY+GC2RkBwn97HTPTgemZW+2lm6w348Sd5aP/qrkQCpfcoB9D/z3Cq9w/Dl0dZVn7R7MkcZt055cRc15DAJcu12UCFFX8CfUE8e5P5y1me8tu3W937LFZcIchQSCVBHJ8x0+/vxTLVkXyG0RXIwiRULxb4AILslfZxY67e+aq0u8LTGctjhW7KW7uky/MJ3Y4DaT2SKfKKktrEJ4eSv67ny03idDdkl9CZDgQoH4SNx5HtUdptCQ8p5YGEJyM+tNdSPLdurm7jYAkUu1PNoSpD/4FYz2qq+JNDo9EtFlrU86IrSnH3jjOOAKt3h7bQjUbC30hTm1Suee1QNuuFuYYCWE7SeuB1q0aEmheo0KCePKVzTrFiANf5iyeJZzp5SQAB5iapXh+/s1Ahkc+YlSD+Wf6VZvEGW49atiUjZ5oyc/OqNpqYmDPTKIGUOdaXH8gUvzmm2B91xqVChRH3p65ClBYOEI5/Wg3KAWXgp2UJU04PksDdk9gT0+lOrKZz0FuK2SG3T5ikgYyTzyastltn2ecEtr+JYwVDp17HGa89rLFNmrTFwieV0NgNJO3NcSsnoMc9KW75nw4FGabCiPhyO9Wd5j4OIRkqW4nKQeOf0oRSCrKsZx2qQWyPKTuBAJ/M03LXxqByOM1ymTg0K0SBC8HozRSvEi5qV/mAB/qijaBvUVjVMNwvONBKlKUc7QcJJAzn1FTkLT12keGmlmokUOoWl6Qr9okfiUSnqfRVREew3aLcWVSLY9sDgC8Y6Z55Fem00orS4yijavx1wynQtS3TaHXrk9vbhLWoF5XC3FduevNSd/usyRomNHj3FJcYcQt1JKd+Fo6jv1BqrSGENokMhBLjrjbaEpPGMn/ao7VRkF19+GtaENuJaLYOfwj+lUMJPovJt+zukzIk6peipKXHXGyoFRH4kkHPPtn6ZrWIelri6iE6kxx5i/LOXDlPpnjtyPpWEWabJhXlmeApTyVE88bsjB/nW8QtR3ROk0KVAZ+EIcSpLxChj6dcYo67bYTTggLa65xamV9Oj7tH1zdLSl2OpamS8TvOFYwcDI9Fe1aTouy3JmzvR5EAZDuQfhVngelZhqDXEpnxLhXF6CpvLYQ4hLwJWCjaTnA7/yrYdFa0tUiG9lqY24kJKklnP5EGj1N9uxpoXp6Yb85MX1Jpi6MajmspjKbSH1FO5QHBOR396bJ0xcFJJLscH03E/0q2+JGsLajVTrjcWUslCfxJCcHHvzVaY1etatzNuAT23O/wDtSFOcl0Wmop9kf9yXSNJ2tlhZzjgn/atWl6MuM2wx5jsqM2+Yre9IBwVAD2ql2/Uq95W5aUrV1yHcf+mr23rVTl4i2u8SIlntSkj7VJUFLcaHl5xnpycDO3jOTTqrLoNvHoTZGuWMgtLaLkOLjLfmIbTvH4Ubs8+5FXvxBsbB06829JfLZWjJRgZ5+Rqg2XWZdvWywsfareJRRGflrVuW2FY3YA4+dTXiVqS+HTj4xBQAtGdiVEj4h60OonfOcWwqI1RTK4NLWlxvKnJOP84/2r62WBNsf+84EoealX7JL0fzQk+vUc1UWtRX0J5n8DsGUY/lTqNqu9JbKCqOoDupvk/kaHFrG5gWOdBuU7yrY35qjJJfuMlgFx6Qrk7QkDIGO3/xVn0jqC5vsRITlqW1GaOy3xVJKluY4Bdx0Oe5/wDmsaI1m/8AfsRt23MqdUvblDu3JII7j+tS6NcS0Qreym2uBKbmppJLw4VkfD0680icZ56DjKP6j7UVpuV+uzDSX2WbjIfcYflK+JTSQM7EDHCevOeuTWbu6LuTLshpUiMpLClJ5WobsE9se3er/aNUOMyBKetrvmG8LaUQsEgkdOlVK9a1js3WehyFJSrzHBgkdcmjrnbHjAucYPnJmmpoi4c1IUEncnI281MeG0i3p1Gx94hoNYV/1EBQJxxwaby79EN0alyLWJiUIKfJdXhKiQRzwfX9K7pWFEmOvvPN+SlKstDzOR7e9MhW7J4Ac1COWbvb7NpS6RC+q0xU/EcrDYRn34qNt9t0q1qQtRJK2cNEKDboIGT7g1SksOoaERN4U1ExlbcdZSVf5iDVz8J7fCF2luNJjqaaZSglRCskn1PfinX6ecY9i6b4zl0SeqNM2yda0NRLooK35GWwrsfcVlLenZQiuSG32loTIKMcgn3rXPFPVcTTtuZZiMxHJCwrCdvTjA6VmujX5lz8qOptDKXHx+1eWUtj36ZP0zSfHPZgZ5IuZt8WMzEjxo7LbKSEJCnBg54A7fXrTiUpuC6hSlkEJGSFjJ/PpUfdpzMBsIwh17ruP73uDgfrVWul5kzeClDfGPhzXlrYtPDNxcrKP//Z",
+        "currency": "BDT",
+        "currencySymbol": "Tk",
+        "monthlyIncomeTarget": 180000,
+        "monthlyExpenseBudget": 600000,
+        "joinedDate": "2026-09-22",
+        "university": "RUET",
+        "location": "Rajshahi",
+        "phone": "01753066604",
+        "occupation": "Employeee",
+        "bio": "",
+        "financialGoal": "",
+        "riskTolerance": "moderate",
+        "program": "",
+        "degree": "",
+        "year": "",
+        "semester": "",
+        "studentId": ""
+      },
+      "transactions": [],
+      "budgets": [],
+      "savingsGoals": [],
+      "notifications": [
+        {
+          "id": "notif_1790068332498",
+          "type": "system",
+          "title": "Welcome to FINORA!",
+          "message": "Your real account is ready. Start by adding your first income, expense, budget, or savings goal.",
+          "timestamp": "2026-09-22T09:12:12.498Z",
+          "read": false,
+          "severity": "success"
+        }
+      ],
+      "updatedAt": "2026-09-22T09:14:40.692Z"
+    },
+    "usr_10eda072193889f5": {
+      "profile": {
+        "id": "usr_10eda072193889f5",
+        "name": "Prantik",
+        "email": "prantik1234@gmail.com",
+        "role": "Salaried Employee",
+        "avatarUrl": "data:image/jpeg;base64,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",
+        "currency": "BDT",
+        "currencySymbol": "Tk",
+        "monthlyIncomeTarget": 1800000,
+        "monthlyExpenseBudget": 600000,
+        "joinedDate": "2026-09-22",
+        "university": "RUET",
+        "location": "Rajshahi",
+        "phone": "01753066604",
+        "occupation": "Employeee",
+        "bio": "",
+        "financialGoal": "",
+        "riskTolerance": "moderate",
+        "program": "",
+        "degree": "",
+        "year": "",
+        "semester": "",
+        "studentId": ""
+      },
+      "transactions": [
+        {
+          "type": "expense",
+          "amount": 200000,
+          "category": "Healthcare & Medical",
+          "description": "200000 is tranfered for emergency medical cost from acount 2345",
+          "date": "2026-09-22",
+          "paymentMethod": "Cash",
+          "tags": [
+            "Other",
+            "Smart Import"
+          ],
+          "id": "tx_5098a7d6-8c39-47b5-86ec-1acec12477a4",
+          "createdAt": "2026-09-22T09:32:51.546Z"
+        },
+        {
+          "type": "expense",
+          "amount": 18000,
+          "category": "Housing & Rent",
+          "description": "House Rent / Apartment Lease",
+          "date": "2026-09-22",
+          "paymentMethod": "Bank Transfer",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Housing&Rent"
+          ],
+          "id": "tx_36622968-a237-4d6c-9d2e-b1e21bc77209",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 120000,
+          "category": "Household & Living",
+          "description": "Monthly Grocery & Bazaar",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Household&Living"
+          ],
+          "id": "tx_335821d0-75df-4b84-87c6-3a6b32366825",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 31998,
+          "category": "Utilities & Bills",
+          "description": "Electricity, Gas & Water",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Utilities&Bills"
+          ],
+          "id": "tx_d5076ff6-e349-43c4-a761-ffdb2897efa3",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 1000,
+          "category": "Utilities & Bills",
+          "description": "High-Speed Broadband WiFi",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Utilities&Bills"
+          ],
+          "id": "tx_29f785ba-226d-43a9-a9f5-c59c75caf438",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 3501,
+          "category": "Household & Living",
+          "description": "Home Maid / Cook Salary",
+          "date": "2026-09-22",
+          "paymentMethod": "Cash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Household&Living"
+          ],
+          "id": "tx_6b86dff5-3ddf-484e-b635-85fa94b90de7",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 600,
+          "category": "Utilities & Bills",
+          "description": "Mobile Phone & 4G/5G Pack",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Utilities&Bills"
+          ],
+          "id": "tx_64e4ce38-3947-4cda-8a6d-91c5d016dc42",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 3000,
+          "category": "Education",
+          "description": "Tuition, Courses & Study Materials",
+          "date": "2026-09-22",
+          "paymentMethod": "bKash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Education"
+          ],
+          "id": "tx_7cab979e-c2c5-4c52-b1db-bc2b6ed46e2e",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 2500,
+          "category": "Transportation",
+          "description": "Monthly Commute & Metro Pass",
+          "date": "2026-09-22",
+          "paymentMethod": "Nagad",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Transportation"
+          ],
+          "id": "tx_17e97fe6-81d3-4512-a2d8-e2eb7fd8d646",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 1800,
+          "category": "Healthcare & Medical",
+          "description": "Pharmacy & Regular Medicine",
+          "date": "2026-09-22",
+          "paymentMethod": "Cash",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Healthcare&Medical"
+          ],
+          "id": "tx_81fe28e6-0dd9-4ef6-9f4a-8b1a85b057bc",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "expense",
+          "amount": 1200,
+          "category": "Entertainment",
+          "description": "Streaming & Digital Tools",
+          "date": "2026-09-22",
+          "paymentMethod": "Credit Card",
+          "recurring": "monthly",
+          "expenseMode": "monthly",
+          "tags": [
+            "MonthlyCost",
+            "Entertainment"
+          ],
+          "id": "tx_7cf88d98-c9e9-444a-a905-ddfd6d0fe7f7",
+          "createdAt": "2026-09-22T09:32:14.500Z"
+        },
+        {
+          "type": "income",
+          "amount": 2500000,
+          "category": "Salary",
+          "description": "Salary Income",
+          "date": "2026-09-22",
+          "paymentMethod": "Bank Transfer",
+          "recurring": "none",
+          "id": "tx_9da15a87-f733-4ea9-a5d8-dcd7b11a39a3",
+          "createdAt": "2026-09-22T09:31:35.371Z"
+        }
+      ],
+      "budgets": [],
+      "savingsGoals": [],
+      "notifications": [
+        {
+          "id": "notif_1790069453502",
+          "type": "system",
+          "title": "Welcome to FINORA!",
+          "message": "Your real account is ready. Start by adding your first income, expense, budget, or savings goal.",
+          "timestamp": "2026-09-22T09:30:53.501Z",
+          "read": false,
+          "severity": "success"
+        }
+      ],
+      "updatedAt": "2026-09-22T09:32:52.581Z"
     }
   },
-  "lastBackup": "2026-09-08T09:28:33.333Z"
+  "lastBackup": "2026-09-30T12:53:38.972Z",
+  "resetCodes": [
+    {
+      "email": "mdtausifalsahad@gmail.com",
+      "code": "851870",
+      "expiresAt": "2026-09-30T13:05:54.542Z"
+    }
+  ]
 }

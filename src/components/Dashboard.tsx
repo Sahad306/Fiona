@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   ArrowUpRight,
   ArrowDownRight,
@@ -98,15 +98,29 @@ export const Dashboard: React.FC<DashboardProps> = ({
     })
     .filter((b) => b.ratio >= 80);
 
-  // 6-Month Income vs Expense historical bar chart data
-  const monthlyBarData = [
-    { month: 'Mar', income: profile.monthlyIncomeTarget ? profile.monthlyIncomeTarget * 0.9 : 4500, expenses: profile.monthlyExpenseBudget ? profile.monthlyExpenseBudget * 0.85 : 2800 },
-    { month: 'Apr', income: profile.monthlyIncomeTarget ? profile.monthlyIncomeTarget * 0.95 : 4700, expenses: profile.monthlyExpenseBudget ? profile.monthlyExpenseBudget * 0.92 : 3100 },
-    { month: 'May', income: profile.monthlyIncomeTarget ? profile.monthlyIncomeTarget * 1.05 : 5100, expenses: profile.monthlyExpenseBudget ? profile.monthlyExpenseBudget * 0.95 : 3200 },
-    { month: 'Jun', income: profile.monthlyIncomeTarget ? profile.monthlyIncomeTarget * 1.0 : 4900, expenses: profile.monthlyExpenseBudget ? profile.monthlyExpenseBudget * 0.88 : 2950 },
-    { month: 'Jul', income: profile.monthlyIncomeTarget ? profile.monthlyIncomeTarget * 1.1 : 5300, expenses: profile.monthlyExpenseBudget ? profile.monthlyExpenseBudget * 1.02 : 3350 },
-    { month: 'Aug (Cur)', income: summary.totalIncome, expenses: summary.totalExpenses },
-  ];
+  // 6-Month Income vs Expense — REAL data from recorded transactions only.
+  // Months with no records simply show zero; nothing is fabricated.
+  const monthlyBarData = useMemo(() => {
+    const months: { key: string; label: string }[] = [];
+    const [y, m] = selectedMonth.split('-').map(Number);
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(y, m - 1 - i, 1);
+      months.push({
+        key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`,
+        label: d.toLocaleString('en', { month: 'short' }) + (i === 0 ? ' (Cur)' : ''),
+      });
+    }
+    return months.map(({ key, label }) => {
+      let income = 0;
+      let expenses = 0;
+      transactions.forEach((tx) => {
+        if (!tx.date.startsWith(key) || tx.savingsTransfer) return;
+        if (tx.type === 'income') income += tx.amount;
+        else expenses += tx.amount;
+      });
+      return { month: label, income, expenses };
+    });
+  }, [transactions, selectedMonth]);
 
   // Cumulative savings cash flow data
   const cashFlowTrendData = [
@@ -356,7 +370,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 <BarChart data={monthlyBarData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.5} />
                   <XAxis dataKey="month" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                  <YAxis
+                    stroke="#94a3b8"
+                    fontSize={11}
+                    tickLine={false}
+                    tickFormatter={(v: number) =>
+                      Math.abs(v) >= 1_000_000
+                        ? `${(v / 1_000_000).toFixed(Math.abs(v) % 1_000_000 === 0 ? 0 : 1)}M`
+                        : Math.abs(v) >= 1_000
+                        ? `${(v / 1_000).toFixed(Math.abs(v) % 1_000 === 0 ? 0 : 1)}k`
+                        : `${v}`
+                    }
+                  />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
                     formatter={(value: number | undefined) => [formatCurrency(value || 0), '']}
@@ -395,7 +420,18 @@ export const Dashboard: React.FC<DashboardProps> = ({
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.4} />
                   <XAxis dataKey="day" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                  <YAxis stroke="#94a3b8" fontSize={11} tickLine={false} />
+                  <YAxis
+                    stroke="#94a3b8"
+                    fontSize={11}
+                    tickLine={false}
+                    tickFormatter={(v: number) =>
+                      Math.abs(v) >= 1_000_000
+                        ? `${(v / 1_000_000).toFixed(Math.abs(v) % 1_000_000 === 0 ? 0 : 1)}M`
+                        : Math.abs(v) >= 1_000
+                        ? `${(v / 1_000).toFixed(Math.abs(v) % 1_000 === 0 ? 0 : 1)}k`
+                        : `${v}`
+                    }
+                  />
                   <Tooltip
                     contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
                     formatter={(value: number | undefined) => [formatCurrency(value || 0), '']}

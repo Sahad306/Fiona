@@ -73,6 +73,7 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
     contributeToGoal,
     withdrawFromGoal,
     formatCurrency,
+    profile,
   } = useFinance();
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -431,11 +432,10 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Target Amount ($) *</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Target Amount ({profile.currencySymbol}) *</label>
                   <input
                     type="number"
                     step="50"
-                    min="50"
                     required
                     value={targetAmount}
                     onChange={(e) => setTargetAmount(e.target.value)}
@@ -445,11 +445,10 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Current Saved ($)</label>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1">Current Saved ({profile.currencySymbol})</label>
                   <input
                     type="number"
                     step="10"
-                    min="0"
                     value={currentAmount}
                     onChange={(e) => setCurrentAmount(e.target.value)}
                     placeholder="0"
@@ -491,12 +490,11 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Monthly Contribution Target ($)
+                  Monthly Contribution Target ({profile.currencySymbol})
                 </label>
                 <input
                   type="number"
                   step="25"
-                  min="0"
                   value={monthlyContribution}
                   onChange={(e) => setMonthlyContribution(e.target.value)}
                   placeholder="200"
@@ -556,11 +554,10 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
             <form onSubmit={handleDepositSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Deposit Amount (৳) *</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Deposit Amount ({profile.currencySymbol}) *</label>
                 <input
                   type="number"
                   step="10"
-                  min="1"
                   required
                   value={transactionAmount}
                   onChange={(e) => setTransactionAmount(e.target.value)}
@@ -591,7 +588,7 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
                   type="submit"
                   className="flex-1 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 text-xs font-bold shadow-md shadow-teal-500/25 cursor-pointer"
                 >
-                  Confirm Deposit 🎉
+                  Confirm Deposit 
                 </button>
               </div>
             </form>
@@ -612,12 +609,10 @@ export const SavingsGoalsView: React.FC<SavingsGoalsViewProps> = ({
 
             <form onSubmit={handleWithdrawSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Withdrawal Amount (৳) *</label>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">Withdrawal Amount ({profile.currencySymbol}) *</label>
                 <input
                   type="number"
                   step="10"
-                  min="1"
-                  max={selectedGoal.currentAmount}
                   required
                   value={transactionAmount}
                   onChange={(e) => setTransactionAmount(e.target.value)}

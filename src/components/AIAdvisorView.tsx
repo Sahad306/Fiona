@@ -15,6 +15,8 @@ import {
   User,
   Bot,
   ArrowLeft,
+  Download,
+  Printer,
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 
@@ -54,7 +56,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
   const [isLoading, setIsLoading] = useState(false);
   const [auditReport, setAuditReport] = useState<any>(null);
   const [isGeneratingAudit, setIsGeneratingAudit] = useState(false);
-  const [aiProvider, setAiProvider] = useState<'mistral' | 'gemini'>('mistral');
+  const [aiProvider, setAiProvider] = useState<'mistral' | 'gemini'>('gemini');
 
   // Suggested quick prompts
   const quickPrompts = [
@@ -199,6 +201,8 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200" id="finora-ai-advisor-view">
+      {/* Everything interactive is screen-only; the print statement renders at the end. */}
+      <div className="print:hidden">
       {onBackToDashboard && (
         <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
@@ -266,6 +270,46 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             <p className="text-[11px] text-slate-400 mt-1 max-w-xs">
               Based on your savings rate ({summary.savingsRate}%), budget adherence ({summary.budgetUtilization.percentage}%), and goal progress.
             </p>
+          </div>
+
+          {/* Live score details — export only: Excel or Print PDF */}
+          <div className="flex items-center gap-2 mt-3">
+            <button
+              onClick={() => {
+                const score = summary.financialHealthScore;
+                const condition = score >= 80 ? 'Excellent (80-100): strong savings, within budget, positive cash flow' : score >= 65 ? 'Good (65-79): healthy overall, minor leaks to fix' : score >= 50 ? 'Fair (50-64): needs attention — budget or savings slipping' : 'Worse / High Risk (0-49): over budget and/or negative cash flow — act now';
+                const header = 'Item,Points,Max,Detail';
+                const rows = summary.financialHealthBreakdown.map((r) =>
+                  `"${r.label}",${r.points},${r.max || '-'},"${r.note.replace(/"/g, '""')}"`
+                );
+                const finalScore = `FINAL SCORE,${score},100,"${condition}"`;
+                const csv = '\uFEFF' + [
+                  'FINORA HEALTH SCORE REPORT',
+                  `Period,${selectedMonth}`,
+                  '',
+                  'Condition Bands,Worse: 0-49,Good: 65-79,Fair: 50-64,Excellent: 80-100',
+                  '',
+                  header,
+                  ...rows,
+                  finalScore,
+                ].join('\n');
+                const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `FINORA_Health_Score_Breakdown_${selectedMonth}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              }}
+              className="flex flex-1 items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 text-[10px] font-bold border border-emerald-500/30 transition-colors cursor-pointer"
+            >
+              <Download className="w-3 h-3" /> Excel
+            </button>
+            <button
+              onClick={() => window.print()}
+              className="flex flex-1 items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold border border-slate-700 transition-colors cursor-pointer"
+            >
+              <Printer className="w-3 h-3" /> Print PDF
+            </button>
           </div>
         </div>
 
@@ -385,7 +429,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               <h3 className="text-xs font-bold text-white">FINORA Assistant Chat</h3>
               <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                Connected to {aiProvider === 'mistral' ? 'Mistral 14B Latest' : 'Gemini 2.5 Flash'}
+                Connected to {aiProvider === 'mistral' ? 'Mistral 14B Latest' : 'Gemini Flash-Lite (latest)'}
               </p>
             </div>
           </div>
@@ -397,8 +441,8 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               onChange={(e) => setAiProvider(e.target.value as 'mistral' | 'gemini')}
               className="mt-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-semibold text-emerald-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
             >
+              <option value="gemini">Gemini Flash-Lite (latest)</option>
               <option value="mistral">Mistral 14B Latest</option>
-              <option value="gemini">Gemini 2.5 Flash</option>
             </select>
           </div>
         </div>
@@ -489,6 +533,91 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             <Send className="w-4 h-4 stroke-[2.5]" />
           </button>
         </form>
+      </div>
+      </div>
+
+      {/* ══════════ PRINT-ONLY HEALTH SCORE STATEMENT ══════════ */}
+      <div className="hidden print:block text-slate-900">
+        <div className="border-t-4 border-emerald-600 pt-3 mb-6">
+          <div className="flex items-start justify-between pb-3 border-b border-slate-300">
+            <div>
+              <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
+              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+            </div>
+            <div className="text-right text-xs">
+              <p className="font-bold text-sm text-slate-900">FINANCIAL HEALTH STATEMENT</p>
+              <p className="text-slate-500">Period: {selectedMonth}</p>
+              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
+          <div>
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="font-bold text-base">{profile.name}</p>
+            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+          </div>
+          <div className="text-right">
+            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Financial Health Score</p>
+            <p className={`font-black text-4xl ${summary.financialHealthScore >= 80 ? 'text-emerald-700' : summary.financialHealthScore >= 50 ? 'text-amber-600' : 'text-red-700'}`}>{summary.financialHealthScore}<span className="text-lg text-slate-500"> / 100</span></p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-4 gap-3 mb-6">
+          {[['Excellent', '80-100', summary.financialHealthScore >= 80], ['Good', '65-79', summary.financialHealthScore >= 65 && summary.financialHealthScore < 80], ['Fair', '50-64', summary.financialHealthScore >= 50 && summary.financialHealthScore < 65], ['Worse / High Risk', '0-49', summary.financialHealthScore < 50]].map(([label, range, active]) => (
+            <div key={label as string} className={`border rounded p-2.5 text-center ${active ? 'border-slate-800 border-2 bg-slate-50' : 'border-slate-200'}`}>
+              <p className="text-[9px] uppercase font-black tracking-wider text-slate-600">{label}</p>
+              <p className="text-sm font-black text-slate-900">{range}</p>
+              {active && <p className="text-[8px] font-bold text-emerald-700 uppercase tracking-wider">You are here</p>}
+            </div>
+          ))}
+        </div>
+
+        <p className="text-sm font-black uppercase tracking-wider text-slate-800 mb-2">Points Ledger — Earnings &amp; Penalties</p>
+        <table className="w-full text-xs border-collapse">
+          <thead>
+            <tr>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Item</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Detail</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Max</th>
+              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {summary.financialHealthBreakdown.map((row, i) => (
+              <tr key={row.label} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{row.label}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{row.note}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-500">{row.max > 0 ? row.max : '—'}</td>
+                <td className={`border-b border-slate-200 px-2.5 py-1.5 text-right font-black ${row.points < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
+                  {row.points > 0 && row.max > 0 ? `+${row.points}` : row.points}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={3}>Final Score</td>
+              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-slate-900">{summary.financialHealthScore} / 100</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div className="print-keep-together mt-10 flex items-end justify-between">
+          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
+            <div>
+              <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+            </div>
+          </div>
+          <div className="w-56"></div>
+        </div>
+        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2 mt-4">
+          This health statement was generated by FINORA on {new Date().toLocaleString('en-GB')} for the selected period. Scores reflect savings rate, budget discipline, cash flow, goal progress, and applicable penalties. For internal and personal use.
+        </p>
       </div>
     </div>
   );

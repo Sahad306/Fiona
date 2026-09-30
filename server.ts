@@ -8,7 +8,7 @@ import { db, verifyPassword } from "./server/db";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json({ limit: "1mb" }));
 
@@ -56,13 +56,7 @@ function rateLimit(maxRequests: number, windowMs: number) {
   };
 }
 
-// Apply rate limiting to auth endpoints (10 requests per minute)
-const authRateLimit = rateLimit(10, 60_000);
-// General API rate limit (100 requests per minute)
-const apiRateLimit = rateLimit(100, 60_000);
-
-app.use("/api/auth/", authRateLimit);
-app.use("/api/", apiRateLimit);
+// Rate limiting removed per user request — it blocked legitimate rapid logins with 429s.
 
 // Lazy-initialized Gemini client
 let aiClient: GoogleGenAI | null = null;
@@ -84,6 +78,8 @@ function getGeminiClient(): GoogleGenAI | null {
 
 const MISTRAL_API_URL = "https://api.mistral.ai/v1/chat/completions";
 const MISTRAL_MODEL = process.env.MISTRAL_MODEL || "ministral-14b-latest";
+// Default Gemini model (alias — Google routes it to the latest Flash-Lite release)
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-flash-lite-latest";
 
 function getMistralApiKey(): string | null {
   return process.env.MISTRAL_API_KEY || null;
@@ -131,6 +127,18 @@ function buildAdvisorReply(analysis: any): string {
 }
 
 function normalizeAdvisorResult(raw: any): { analysis: any; reply: string } {
+  // Conversational response (e.g. greeting) — pass the reply through, no fake analysis.
+  const hasAnalysisShape =
+    raw &&
+    (typeof raw.analysis === "object" ||
+      raw.executiveSummary ||
+      raw.healthScore != null ||
+      raw.recommendations ||
+      raw.actionableRecommendations ||
+      raw.savingsOpportunity);
+  if (typeof raw?.reply === "string" && raw.reply.trim() && !hasAnalysisShape) {
+    return { analysis: null, reply: raw.reply.trim() };
+  }
   const source = raw && typeof raw.analysis === "object" && raw.analysis !== null ? raw.analysis : raw || {};
   const executiveSummary =
     source.executiveSummary ||
@@ -240,7 +248,7 @@ app.get("/api/db/status", (_req, res) => {
 // Register New User
 app.post("/api/auth/register", (req, res) => {
   try {
-    const { email, password, name, role, currency, monthlyIncomeTarget, monthlyExpenseBudget } = req.body;
+    const { email, password, name, role, currency, monthlyIncomeTarget, monthlyExpenseBudget, university, program, degree, year, semester, studentId, bio, location, financialGoal, phone, occupation, avatarUrl } = req.body;
 
     if (!email || !email.includes("@")) {
       return res.status(400).json({ error: "Please provide a valid email address." });
@@ -265,6 +273,18 @@ app.post("/api/auth/register", (req, res) => {
       currency: currency || "USD",
       monthlyIncomeTarget: parseFloat(monthlyIncomeTarget) || 4000,
       monthlyExpenseBudget: parseFloat(monthlyExpenseBudget) || 2500,
+      university,
+      program,
+      degree,
+      year,
+      semester,
+      studentId,
+      bio,
+      location,
+      financialGoal,
+      phone,
+      occupation,
+      avatarUrl,
     });
 
     const session = db.createSession(user.id);
@@ -364,6 +384,173 @@ app.get("/api/auth/me", (req, res) => {
 
   return res.json({
     user: safeUser,
+    userData,
+  });
+});
+
+// Verify current password (gate for profile editing)
+app.post("/api/auth/verify-password", (req, res) => {
+  const auth = getAuthUser(req);
+  if (!auth) {
+    return res.status(401).json({ error: "Unauthorized or session expired" });
+  }
+  const { password } = req.body;
+  if (!password) {
+    return res.status(400).json({ error: "Password is required." });
+  }
+  const valid = verifyPassword(password, auth.user.passwordHash, auth.user.salt);
+  if (!valid) {
+    return res.status(401).json({ error: "Incorrect password. Profile editing remains locked." });
+  }
+  return res.json({ valid: true });
+});
+
+// Update profile fields (session required; password gate enforced via verify-password)
+app.put("/api/auth/profile", (req, res) => {
+  const auth = getAuthUser(req);
+  if (!auth) {
+    return res.status(401).json({ error: "Unauthorized or session expired" });
+  }
+  const {
+    name, role, currency, currencySymbol, monthlyIncomeTarget, monthlyExpenseBudget,
+    phone, location, occupation, bio, financialGoal, riskTolerance, avatarUrl,
+    university, program, degree, year, semester, studentId,
+  } = req.body;
+
+  const profilePatch: Record<string, unknown> = {};
+  if (typeof name === "string" && name.trim()) profilePatch.name = name.trim();
+  if (role) profilePatch.role = role;
+  if (currency) profilePatch.currency = currency;
+  if (currencySymbol) profilePatch.currencySymbol = currencySymbol;
+  if (typeof monthlyIncomeTarget === "number") profilePatch.monthlyIncomeTarget = monthlyIncomeTarget;
+  if (typeof monthlyExpenseBudget === "number") profilePatch.monthlyExpenseBudget = monthlyExpenseBudget;
+  if (typeof phone === "string") profilePatch.phone = phone;
+  if (typeof location === "string") profilePatch.location = location;
+  if (typeof occupation === "string") profilePatch.occupation = occupation;
+  if (typeof bio === "string") profilePatch.bio = bio;
+  if (typeof financialGoal === "string") profilePatch.financialGoal = financialGoal;
+  if (riskTolerance) profilePatch.riskTolerance = riskTolerance;
+  if (typeof avatarUrl === "string" && avatarUrl.length < 700_000) profilePatch.avatarUrl = avatarUrl;
+  if (typeof university === "string") profilePatch.university = university;
+  if (typeof program === "string") profilePatch.program = program;
+  if (typeof degree === "string") profilePatch.degree = degree;
+  if (typeof year === "string") profilePatch.year = year;
+  if (typeof semester === "string") profilePatch.semester = semester;
+  if (typeof studentId === "string") profilePatch.studentId = studentId;
+
+  if (Object.keys(profilePatch).length === 0) {
+    return res.status(400).json({ error: "No valid profile fields provided." });
+  }
+
+  const userData = db.updateUserData(auth.user.id, { profile: profilePatch as any });
+  const user = db.findUserById(auth.user.id);
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  const safeUser = {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    currency: user.currency,
+    currencySymbol: user.currencySymbol,
+    monthlyIncomeTarget: user.monthlyIncomeTarget,
+    monthlyExpenseBudget: user.monthlyExpenseBudget,
+    createdAt: user.createdAt,
+  };
+
+  return res.json({ user: safeUser, userData });
+});
+
+// Forgot password: generate a 6-digit reset code (valid 15 minutes).
+// ponytail: no SMTP creds configured yet, so the code is returned to the client (dev mode).
+// Upgrade path: swap sendResetCode() for a nodemailer call once SMTP_* env vars exist.
+app.post("/api/auth/forgot-password", (req, res) => {
+  const { email } = req.body;
+  if (!email || typeof email !== "string" || !email.trim()) {
+    return res.status(400).json({ error: "Please enter your email address." });
+  }
+  const user = db.findUserByEmail(email);
+  if (!user) {
+    // Don't leak whether the email exists; still report success.
+    return res.json({ ok: true, message: "If that email is registered, a reset code has been sent." });
+  }
+  const code = db.createResetCode(user.email);
+  console.log(`[Auth] Password reset code generated for ${user.email}`);
+  // Development mode: return the code in the response. With SMTP configured this would be emailed instead.
+  return res.json({
+    ok: true,
+    message: "If that email is registered, a reset code has been sent.",
+    devMode: true,
+    devCode: code,
+  });
+});
+
+// Reset password using the emailed code
+app.post("/api/auth/reset-password", (req, res) => {
+  const { email, code, password } = req.body;
+  if (!email || !code || !password) {
+    return res.status(400).json({ error: "Email, reset code and new password are required." });
+  }
+  if (String(password).length < 6) {
+    return res.status(400).json({ error: "New password must be at least 6 characters." });
+  }
+  const user = db.findUserByEmail(email);
+  if (!user) {
+    return res.status(400).json({ error: "Invalid or expired reset code." });
+  }
+  if (!db.consumeResetCode(user.email, String(code))) {
+    return res.status(400).json({ error: "Invalid or expired reset code." });
+  }
+  db.updateUserPassword(user.id, String(password));
+  return res.json({ ok: true, message: "Password updated. Please sign in with your new password." });
+});
+
+// Change password (authenticated, from profile)
+app.put("/api/auth/change-password", (req, res) => {
+  const auth = getAuthUser(req);
+  if (!auth) {
+    return res.status(401).json({ error: "Unauthorized or session expired" });
+  }
+  const { currentPassword, newPassword } = req.body;
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: "Current and new password are required." });
+  }
+  if (String(newPassword).length < 6) {
+    return res.status(400).json({ error: "New password must be at least 6 characters." });
+  }
+  if (!verifyPassword(String(currentPassword), auth.user.passwordHash, auth.user.salt)) {
+    return res.status(401).json({ error: "Current password is incorrect." });
+  }
+  // Preserve this session so the user stays signed in; all other sessions are invalidated.
+  db.updateUserPassword(auth.user.id, String(newPassword), auth.session.token);
+  return res.json({ ok: true, message: "Password changed successfully." });
+});
+
+// Change email (authenticated, password-gated, from profile)
+app.put("/api/auth/change-email", (req, res) => {
+  const auth = getAuthUser(req);
+  if (!auth) {
+    return res.status(401).json({ error: "Unauthorized or session expired" });
+  }
+  const { password, newEmail } = req.body;
+  if (!password || !newEmail) {
+    return res.status(400).json({ error: "Password and new email are required." });
+  }
+  if (!verifyPassword(String(password), auth.user.passwordHash, auth.user.salt)) {
+    return res.status(401).json({ error: "Password is incorrect." });
+  }
+  const result = db.updateUserEmail(auth.user.id, String(newEmail));
+  if (!result.ok) {
+    return res.status(400).json({ error: result.error });
+  }
+  const updated = db.findUserById(auth.user.id)!;
+  const userData = db.getUserData(auth.user.id);
+  return res.json({
+    ok: true,
+    message: "Email updated successfully.",
+    user: { id: updated.id, email: updated.email, name: updated.name, role: updated.role, createdAt: updated.createdAt },
     userData,
   });
 });
@@ -558,54 +745,54 @@ app.post("/api/ai/advisor", async (req, res) => {
       savingsGoals: goalContext,
     };
 
-    const systemPrompt = `You are FINORA's intelligent personal finance assistant. Analyze the user's complete financial context, including income, expense outflows, recent transactions, budgets, and savings goals. Provide friendly, actionable, encouraging advice. Return ONLY valid JSON. Do not include markdown, comments, or text outside the JSON object.`;
+    const systemPrompt = `You are FINORA's intelligent personal finance assistant. You have access to the user's financial data (income, expenses, transactions, budgets, savings goals), but that data is PRIVATE REFERENCE MATERIAL — not content to display.
 
-    const userPrompt = `Analyze this FINORA user's financial data and answer their request.
+STRICT RULES:
+1. FIRST classify the user's request:
+   - CONVERSATIONAL: greetings ("hi", "hello"), small talk, questions about you/capabilities, or any message that does not ask for financial analysis. For these, reply briefly and warmly (1-3 sentences) like a normal chat assistant. NEVER dump financial data, scores, or recommendations. NEVER mention you have their data unless directly asked.
+   - FINANCIAL ANALYSIS: requests that explicitly ask for advice, audit, health check, savings tips, budget review, spending analysis, etc. Only then produce the structured analysis.
+2. Never echo, list, or restate the raw financial context (transactions, budgets, goals) unless the user specifically asks about them.
+3. Reference data only to ground your answer — cite at most the few specific numbers needed, never entire tables.
+4. Return ONLY valid JSON. No markdown, no comments, no text outside the JSON object.
 
-Financial Context:
+Response format — exactly ONE of these two shapes:
+- For CONVERSATIONAL requests: { "reply": "your short chat response" }
+- For FINANCIAL ANALYSIS requests: { "analysis": { "executiveSummary": "2-4 sentence overview", "healthScore": 85, "actionableRecommendations": ["tip 1", "tip 2", "tip 3"], "cutbackOpportunities": ["specific adjustment"], "savingsOpportunity": "one practical saving adjustment", "encouragement": "brief uplifting close" } }`;
+
+    const userPrompt = `Financial Context (private reference data — do not dump):
 ${JSON.stringify(financialContext, null, 2)}
 
 User Request:
 ${question}
 
-Return ONLY valid JSON with this exact structure:
-{
-  "analysis": {
-    "executiveSummary": "A concise 2-4 sentence overview of financial health, expense pressure, and savings velocity.",
-    "healthScore": 85,
-    "actionableRecommendations": ["Specific tip 1", "Specific tip 2", "Specific tip 3"],
-    "cutbackOpportunities": ["Specific expense cut or adjustment"],
-    "savingsOpportunity": "Highlight one practical adjustment to save more money this month.",
-    "encouragement": "A brief uplifting motivational closing line."
-  }
-}`;
+Classify the request first (CONVERSATIONAL vs FINANCIAL ANALYSIS), then respond with the matching JSON shape only.`;
 
     let rawResult: any = null;
     let modelUsed = "";
 
-    if (requestedProvider === "gemini" && ai) {
+    if ((requestedProvider === "gemini" || requestedProvider === "gemini-flash-lite-latest") && ai) {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: GEMINI_MODEL,
         contents: `${systemPrompt}\n\n${userPrompt}`,
         config: {
           responseMimeType: "application/json",
         },
       });
       rawResult = extractJson(response.text || "{}") || {};
-      modelUsed = "gemini-2.5-flash";
+      modelUsed = GEMINI_MODEL;
     } else if (mistralKey) {
       rawResult = await generateWithMistral(systemPrompt, userPrompt);
       modelUsed = MISTRAL_MODEL;
     } else if (ai) {
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: GEMINI_MODEL,
         contents: `${systemPrompt}\n\n${userPrompt}`,
         config: {
           responseMimeType: "application/json",
         },
       });
       rawResult = extractJson(response.text || "{}") || {};
-      modelUsed = "gemini-2.5-flash";
+      modelUsed = GEMINI_MODEL;
     } else {
       return res.status(503).json({ error: "No AI provider is configured." });
     }

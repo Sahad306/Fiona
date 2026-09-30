@@ -282,8 +282,93 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
             <Plus className="w-4 h-4 stroke-[3]" />
             <span>Create Budget</span>
           </button>
+
+          <button
+            onClick={togglePlanner}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/20 transition-all cursor-pointer"
+          >
+            <Sliders className="w-4 h-4" />
+            {showPlanner ? 'Hide Planner' : 'Monthly Budget Planner'}
+            {showPlanner ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Budget Planner Panel */}
+      {showPlanner && (
+        <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Lightbulb className="w-5 h-5 text-yellow-400" />
+                Monthly Budget Planner
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Set budget limits for all expense categories at once. Leave blank to skip.
+              </p>
+            </div>
+            <button
+              onClick={handleAISuggest}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 text-purple-300 font-semibold text-sm rounded-xl transition-all cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4" />
+              {aiSuggested ? 'Re-suggest' : 'AI Suggest Budgets'}
+            </button>
+          </div>
+
+          {aiSuggested && (
+            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-3 flex items-start gap-2">
+              <Sparkles className="w-4 h-4 text-purple-400 flex-shrink-0 mt-0.5" />
+              <div className="text-xs text-purple-200">
+                <strong>AI Suggestion Applied:</strong> Based on your last 3 months of spending patterns and income,
+                these budgets include a 15% buffer above your average spending. Adjust as needed.
+              </div>
+            </div>
+          )}
+
+          {/* Category Inputs Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
+              <div key={cat} className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
+                <label className="text-[11px] font-semibold text-slate-300 block mb-1.5">{cat}</label>
+                <div className="relative">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-slate-500 pointer-events-none">{profile.currencySymbol}</span>
+                  <input
+                    type="number"
+                    value={plannerAmounts[cat] || ''}
+                    onChange={(e) => setPlannerAmounts((prev) => ({ ...prev, [cat]: e.target.value }))}
+                    placeholder="0"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Alert Threshold + Save */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-slate-800">
+            <div className="flex items-center gap-3">
+              <label className="text-xs text-slate-400 font-semibold">Alert at:</label>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                value={plannerThreshold}
+                onChange={(e) => setPlannerThreshold(Number(e.target.value))}
+                className="w-32 accent-emerald-500"
+              />
+              <span className="text-xs font-bold text-emerald-400">{plannerThreshold}%</span>
+            </div>
+            <button
+              onClick={handleSaveAll}
+              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
+            >
+              <Save className="w-4 h-4" />
+              Apply All Budgets
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Overall Monthly Budget Master Card */}
       {overallBudget && (
@@ -524,13 +609,10 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1">
-                  Monthly Limit Amount (৳)
+                  Monthly Limit Amount ({profile.currencySymbol})
                 </label>
                 <input
                   type="number"
-                  step="500"
-                  min="100"
-                  required
                   value={limitAmount}
                   onChange={(e) => setLimitAmount(e.target.value)}
                   placeholder="e.g. 10000"

@@ -100,19 +100,41 @@ if not exist "node_modules\" (
     echo [OK] Dependencies installed successfully.
 )
 
-:: 4. Open browser automatically after delay
-start "" cmd /c "timeout /t 3 >nul & start http://localhost:3000"
-
-:: 5. Launch development server
+:: 4. Launch development server in background, then wait for it to be ready
 echo.
 echo ====================================================================
-echo   FINORA Server is running at: http://localhost:3000
+echo   Starting FINORA Server...
 echo   Keep this window open while using FINORA.
 echo   Press Ctrl + C to stop the server.
 echo ====================================================================
 echo.
 
-call "%NPM_CMD%" run dev
+:: Start the server in a hidden window
+start /b "" cmd /c "%NPM_CMD% run dev"
+
+:: Poll the health endpoint until the server is actually ready
+echo [WAIT] Waiting for server to be ready...
+set /a "MAX_RETRIES=30"
+set /a "RETRY=0"
+:waitloop
+set /a "RETRY+=1"
+if !RETRY! gtr !MAX_RETRIES! (
+    echo [WARN] Server didn't respond in time. Opening browser anyway...
+    goto :openbrowser
+)
+:: Use curl to check if server is responding
+curl.exe -s -m 2 http://localhost:3000/api/health >nul 2>nul
+if !errorlevel! equ 0 goto :openbrowser
+timeout /t 1 /nobreak >nul
+goto :waitloop
+
+:openbrowser
+echo [OK] Server is ready!
+start http://localhost:3000
+
+:: Keep this window alive so user can see logs and Ctrl+C
+:: Re-attach by just waiting on the background process
+pause
 
 if %errorlevel% neq 0 (
     echo.

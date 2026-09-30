@@ -5,7 +5,6 @@ import {
   ArrowDownRight,
   PieChart,
   Target,
-  Sparkles,
   Bell,
   CheckCheck,
   Trash2,
@@ -16,7 +15,6 @@ import {
   Download,
   Menu,
   X,
-  CreditCard,
   Building2,
   GraduationCap,
   Briefcase,
@@ -29,20 +27,24 @@ import {
   LogIn,
   UserPlus,
   CloudCheck,
+  Zap,
+  Lock,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import ProfileEditModal from './ProfileEditModal';
 import { useFinance } from '../context/FinanceContext';
-import { PRESET_PROFILES } from '../data/defaultData';
+
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
-  onOpenTransactionModal: (type?: 'income' | 'expense') => void;
-  onOpenAuthModal: (tab?: 'login' | 'register' | 'presets') => void;
+  onOpenAuthModal: (tab?: 'login' | 'register') => void;
+  onOpenSmartImport: () => void;
   onSignOut?: () => void;
 }
 
 const CURRENCIES = [
-  { code: 'BDT', symbol: '৳', label: 'BDT (৳ Bangladeshi Taka)' },
+  { code: 'BDT', symbol: 'Tk', label: 'BDT (Tk Bangladeshi Taka)' },
   { code: 'USD', symbol: '$', label: 'USD ($ US Dollar)' },
   { code: 'EUR', symbol: '€', label: 'EUR (€ Euro)' },
   { code: 'GBP', symbol: '£', label: 'GBP (£ British Pound)' },
@@ -55,8 +57,8 @@ const CURRENCIES = [
 export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
-  onOpenTransactionModal,
   onOpenAuthModal,
+  onOpenSmartImport,
   onSignOut,
 }) => {
   const {
@@ -68,8 +70,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     markAllNotificationsAsRead,
     deleteNotification,
     clearAllNotifications,
-    activeProfileKey,
-    switchProfile,
     resetCurrentProfile,
     exportJSON,
     summary,
@@ -77,14 +77,12 @@ export const Navbar: React.FC<NavbarProps> = ({
     currentUser,
     isAuthenticated,
     logout,
-    isDbSyncing,
-    dbLastSynced,
-    isDbConnected,
     syncDatabase,
   } = useFinance();
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
@@ -104,25 +102,24 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const navItems = [
+  const navItems: { id: string; label: string; icon: LucideIcon; badge?: string }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: PieChart },
     { id: 'income', label: 'Income', icon: ArrowUpRight },
     { id: 'expenses', label: 'Expenses', icon: ArrowDownRight },
-    { id: 'budgets', label: 'Budgets', icon: CreditCard },
-    { id: 'savings', label: 'Savings Goals', icon: Target },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'advisor', label: 'AI Advisor', icon: Sparkles, badge: 'Smart' },
+    { id: 'budget-goals', label: 'Budgets & Goals', icon: Target },
+    { id: 'reports-ai', label: 'Reports And AI Advisor', icon: FileText },
   ];
 
   return (
+    <>
     <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-sm" id="finora-navbar">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo & Tagline */}
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4 lg:space-x-6 min-w-0 flex-1">
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="flex items-center space-x-3 text-left focus:outline-none group cursor-pointer"
+              className="flex items-center space-x-3 text-left focus:outline-none group cursor-pointer shrink-0"
               id="finora-brand-logo"
             >
               {/* Precision Designed Emblem Logo */}
@@ -152,7 +149,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden lg:flex items-center space-x-1" id="desktop-nav-menu">
+            <nav className="hidden xl:flex items-center space-x-1 min-w-0 overflow-x-auto no-scrollbar" id="desktop-nav-menu">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -161,7 +158,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={item.id}
                     id={`nav-item-${item.id}`}
                     onClick={() => setActiveTab(item.id)}
-                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                    className={`shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       isActive
                         ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm'
                         : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -181,33 +178,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Right Action Controls */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Database Live Status Indicator */}
+          <div className="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
+            {/* Smart Import Button */}
             <button
-              id="db-sync-btn"
-              onClick={() => syncDatabase()}
-              title={`Database Status: ${isDbConnected ? 'Connected & Persistent' : 'Offline Mode'}. Click to force sync.`}
-              className={`hidden md:flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold transition-all cursor-pointer ${
-                isDbSyncing
-                  ? 'bg-amber-500/10 border-amber-500/30 text-amber-300 animate-pulse'
-                  : isDbConnected
-                  ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-300 hover:bg-emerald-500/20'
-                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
-              }`}
+              id="smart-import-btn"
+              onClick={() => onOpenSmartImport()}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-violet-500 hover:bg-violet-400 text-white text-xs font-bold shadow-md shadow-violet-500/25 transition-all active:scale-95 cursor-pointer"
+              title="Import Bank / bKash / Nagad transactions"
             >
-              <Database className={`w-3.5 h-3.5 ${isDbSyncing ? 'animate-spin' : ''}`} />
-              <span>{isDbSyncing ? 'Syncing...' : 'DB Saved'}</span>
-            </button>
-
-            {/* Quick Add Button with Taka Symbol */}
-            <button
-              id="quick-add-transaction-btn"
-              onClick={() => onOpenTransactionModal()}
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
-            >
-              <span className="text-sm font-black leading-none">৳</span>
-              <span className="hidden sm:inline">Add Transaction</span>
-              <span className="sm:hidden">Add</span>
+              <Zap className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Smart Import</span>
+              <span className="sm:hidden">Import</span>
             </button>
 
             {/* Currency Selector */}
@@ -334,20 +315,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* Logout Button */}
-            <button
-              id="navbar-logout-btn"
-              onClick={async () => {
-                await logout();
-                onSignOut?.();
-              }}
-              className="flex items-center space-x-1.5 px-2.5 py-2 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer border border-rose-500/30"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-              <span className="hidden xl:inline text-xs font-bold">Logout</span>
-            </button>
-
             {/* User Account / Profile Menu */}
             <div className="relative" ref={profileRef}>
               <button
@@ -355,8 +322,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-800/80 transition-colors text-left cursor-pointer border border-transparent hover:border-slate-700"
               >
-                <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center font-bold text-emerald-400 text-xs">
-                  {profile.name ? profile.name.charAt(0).toUpperCase() : 'U'}
+                <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center font-bold text-emerald-400 text-xs overflow-hidden">
+                  {profile.avatarUrl ? (
+                    <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
+                  ) : (
+                    profile.name ? profile.name.charAt(0).toUpperCase() : 'U'
+                  )}
                 </div>
                 <div className="hidden sm:block text-left">
                   <p className="text-xs font-semibold text-white leading-tight flex items-center gap-1">
@@ -379,7 +350,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="flex items-center justify-between">
                       <p className="font-bold text-white text-sm">{profile.name}</p>
                       <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
-                        {isAuthenticated ? 'Logged In' : 'Demo Account'}
+                        {isAuthenticated ? 'Logged In' : 'Registered'}
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-400">{profile.email}</p>
@@ -397,7 +368,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenAuthModal('login');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-[11px] cursor-pointer transition-colors"
+                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-[10px] cursor-pointer transition-colors"
                     >
                       <LogIn className="w-3.5 h-3.5" />
                       <span>Sign In</span>
@@ -408,81 +379,35 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenAuthModal('register');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="flex items-center justify-center space-x-1 py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-[11px] cursor-pointer transition-colors border border-slate-700"
+                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-[10px] cursor-pointer transition-colors border border-slate-700"
                     >
                       <UserPlus className="w-3.5 h-3.5" />
                       <span>Register</span>
                     </button>
                   </div>
 
-                  <p className="px-2 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Fast Switch Persona:
-                  </p>
-
-                  <div className="space-y-0.5">
+                  <div className="px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg mb-1">
+                    <p className="text-[11px] font-semibold text-emerald-300 flex items-center gap-1.5">
+                      <User className="w-3.5 h-3.5" />
+                      {profile.name}
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">
+                      {profile.role} · {profile.currency} ({profile.currencySymbol})
+                    </p>
+                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-300">
+                      <span>Target: <b className="text-emerald-400">{formatCurrency(profile.monthlyIncomeTarget ?? 0)}</b></span>
+                      <span>Budget: <b className="text-amber-400">{formatCurrency(profile.monthlyExpenseBudget ?? 0)}</b></span>
+                    </div>
                     <button
+                      id="menu-btn-edit-profile"
                       onClick={() => {
-                        switchProfile('sahad');
+                        setIsProfileModalOpen(true);
                         setIsProfileMenuOpen(false);
                       }}
-                      className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                        activeProfileKey === 'sahad' ? 'bg-emerald-500/20 text-emerald-300 font-semibold' : 'text-slate-300 hover:bg-slate-800'
-                      }`}
+                      className="mt-2 w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] cursor-pointer transition-colors"
                     >
-                      <GraduationCap className="w-3.5 h-3.5 text-teal-400" />
-                      <span>Sahad (RUET CSE)</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        switchProfile('employee');
-                        setIsProfileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                        activeProfileKey === 'employee' ? 'bg-emerald-500/20 text-emerald-300 font-semibold' : 'text-slate-300 hover:bg-slate-800'
-                      }`}
-                    >
-                      <Briefcase className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Sarah Chen (Salaried)</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        switchProfile('student');
-                        setIsProfileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                        activeProfileKey === 'student' ? 'bg-emerald-500/20 text-emerald-300 font-semibold' : 'text-slate-300 hover:bg-slate-800'
-                      }`}
-                    >
-                      <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Alex Turner (Student)</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        switchProfile('freelancer');
-                        setIsProfileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                        activeProfileKey === 'freelancer' ? 'bg-emerald-500/20 text-emerald-300 font-semibold' : 'text-slate-300 hover:bg-slate-800'
-                      }`}
-                    >
-                      <CreditCard className="w-3.5 h-3.5 text-purple-400" />
-                      <span>Marco Silva (Freelance)</span>
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        switchProfile('business');
-                        setIsProfileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-left transition-colors cursor-pointer ${
-                        activeProfileKey === 'business' ? 'bg-emerald-500/20 text-emerald-300 font-semibold' : 'text-slate-300 hover:bg-slate-800'
-                      }`}
-                    >
-                      <Store className="w-3.5 h-3.5 text-amber-400" />
-                      <span>Elena Rostova (Business)</span>
+                      <Lock className="w-3 h-3" />
+                      View & Edit Profile
                     </button>
                   </div>
 
@@ -506,7 +431,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 text-left cursor-pointer"
                     >
                       <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Reset Demo Baseline</span>
+                      <span>Reset Local Data</span>
                     </button>
 
                     <button
@@ -540,7 +465,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="mobile-nav-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
+              className="xl:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -549,7 +474,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-3 border-t border-slate-800 space-y-1" id="mobile-nav-menu">
+          <div className="xl:hidden py-3 border-t border-slate-800 space-y-1" id="mobile-nav-menu">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -595,5 +520,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         )}
       </div>
     </header>
+
+    {/* Rendered OUTSIDE <header> — backdrop-blur-md on the header creates a containing
+        block for fixed-position descendants, which pushed this modal off-screen. */}
+    <ProfileEditModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
+    </>
   );
 };
