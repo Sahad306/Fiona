@@ -702,15 +702,87 @@ app.post("/api/ai/advisor", async (req, res) => {
       });
     }
 
-    const recentTransactions = Array.isArray(transactions)
-      ? transactions.slice(0, 25).map((tx: any) => ({
+    const allTransactions = Array.isArray(transactions)
+      ? transactions.map((tx: any) => ({
           date: tx.date,
           type: tx.type,
           category: tx.category,
           description: tx.description || tx.merchant || tx.note,
           amount: tx.amount,
           paymentMethod: tx.paymentMethod,
+          savingsTransfer: tx.savingsTransfer,
         }))
+      : [];
+
+    const recentTransactions = allTransactions.slice(0, 25);
+
+    // ── Spending Trend Analysis (MoM comparison) ──
+    const currentMonth = month || new Date().toISOString().slice(0, 7);
+    const [curY, curM] = currentMonth.split("-").map(Number);
+    const prevMonthDate = new Date(curY, curM - 2, 1);
+    const prevMonth = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, "0")}`;
+
+    const monthlyAgg: Record<string, { income: number; expenses: number; byCategory: Record<string, number> }> = {};
+    for (const tx of allTransactions) {
+      if (!tx.date || tx.savingsTransfer) continue;
+      const m = tx.date.slice(0, 7);
+      if (!monthlyAgg[m]) monthlyAgg[m] = { income: 0, expenses: 0, byCategory: {} };
+      if (tx.type === "income") monthlyAgg[m].income += tx.amount;
+      else {
+        monthlyAgg[m].expenses += tx.amount;
+        monthlyAgg[m].byCategory[tx.category] = (monthlyAgg[m].byCategory[tx.category] || 0) + tx.amount;
+      }
+    }
+
+    const curData = monthlyAgg[currentMonth] || { income: 0, expenses: 0, byCategory: {} };
+    const prevData = monthlyAgg[prevMonth] || { income: 0, expenses: 0, byCategory: {} };
+
+    const spendingTrends = {
+      currentMonth,
+      previousMonth: prevMonth,
+      expenseChangePercent: prevData.expenses > 0 ? Math.round(((curData.expenses - prevData.expenses) / prevData.expenses) * 100) : null,
+      incomeChangePercent: prevData.income > 0 ? Math.round(((curData.income - prevData.income) / prevData.income) * 100) : null,
+      categoryChanges: Object.entries(curData.byCategory)
+        .map(([cat, amount]) => {
+          const prevAmount = prevData.byCategory[cat] || 0;
+          const changePct = prevAmount > 0 ? Math.round(((amount - prevAmount) / prevAmount) * 100) : null;
+          return { category: cat, current: amount, previous: prevAmount, changePercent: changePct };
+        })
+        .filter((c) => c.changePercent !== null && Math.abs(c.changePercent) >= 15)
+        .sort((a, b) => Math.abs(b.changePercent!) - Math.abs(a.changePercent!))
+        .slice(0, 5),
+      weekendVsWeekday: (() => {
+        let weekendSpend = 0, weekdaySpend = 0, weekendCount = 0, weekdayCount = 0;
+        for (const tx of allTransactions) {
+          if (!tx.date.startsWith(currentMonth) || tx.type !== "expense" || tx.savingsTransfer) continue;
+          const day = new Date(tx.date).getDay();
+          if (day === 0 || day === 6) { weekendSpend += tx.amount; weekendCount++; }
+          else { weekdaySpend += tx.amount; weekdayCount++; }
+        }
+        const weekendAvg = weekendCount > 0 ? Math.round(weekendSpend / weekendCount) : 0;
+        const weekdayAvg = weekdayCount > 0 ? Math.round(weekdaySpend / weekdayCount) : 0;
+        return { weekendAvg, weekdayAvg, differencePercent: weekdayAvg > 0 ? Math.round(((weekendAvg - weekdayAvg) / weekdayAvg) * 100) : null };
+      })(),
+    };
+
+    // ── Goal Projections ──
+    const goalProjections = Array.isArray(savingsGoals)
+      ? savingsGoals.map((goal: any) => {
+          const target = goal.targetAmount ?? goal.target ?? 0;
+          const saved = goal.savedAmount ?? goal.saved ?? goal.current ?? 0;
+          const remaining = Math.max(0, target - saved);
+          const monthlyContrib = curData.income > 0 ? (finance.monthlySavings ?? 0) / (savingsGoals.length || 1) : 0;
+          const monthsToGoal = monthlyContrib > 0 ? +(remaining / monthlyContrib).toFixed(1) : null;
+          return {
+            name: goal.name,
+            target,
+            saved,
+            remaining,
+            percentComplete: target > 0 ? Math.round((saved / target) * 100) : 0,
+            estimatedMonthsLeft: monthsToGoal,
+            onTrack: goal.deadline ? monthsToGoal !== null && monthsToGoal <= 6 : null,
+          };
+        })
       : [];
 
     const budgetContext = Array.isArray(budgets)
@@ -721,17 +793,8 @@ app.post("/api/ai/advisor", async (req, res) => {
         }))
       : [];
 
-    const goalContext = Array.isArray(savingsGoals)
-      ? savingsGoals.map((goal: any) => ({
-          name: goal.name,
-          target: goal.targetAmount ?? goal.target,
-          saved: goal.savedAmount ?? goal.saved ?? goal.current,
-          deadline: goal.deadline ?? goal.targetDate,
-        }))
-      : [];
-
     const financialContext = {
-      month: month || "current month",
+      month: currentMonth,
       userProfile: profile || targetProfile || "Standard User",
       financialSummary: {
         totalIncome: finance.totalIncome ?? finance.monthlyIncome ?? 0,
@@ -743,24 +806,43 @@ app.post("/api/ai/advisor", async (req, res) => {
         incomeSourcesBreakdown: finance.incomeSourcesBreakdown || [],
         budgetUtilization: finance.budgetUtilization || {},
       },
+      spendingTrends,
+      goalProjections,
       recentTransactions,
       budgets: budgetContext,
-      savingsGoals: goalContext,
+      savingsGoals: goalProjections,
     };
 
-    const systemPrompt = `You are FINORA's intelligent personal finance assistant. You have access to the user's financial data (income, expenses, transactions, budgets, savings goals), but that data is PRIVATE REFERENCE MATERIAL — not content to display.
-
-STRICT RULES:
-1. FIRST classify the user's request:
-   - CONVERSATIONAL: greetings ("hi", "hello"), small talk, questions about you/capabilities, or any message that does not ask for financial analysis. For these, reply briefly and warmly (1-3 sentences) like a normal chat assistant. NEVER dump financial data, scores, or recommendations. NEVER mention you have their data unless directly asked.
-   - FINANCIAL ANALYSIS: requests that explicitly ask for advice, audit, health check, savings tips, budget review, spending analysis, etc. Only then produce the structured analysis.
-2. Never echo, list, or restate the raw financial context (transactions, budgets, goals) unless the user specifically asks about them.
-3. Reference data only to ground your answer — cite at most the few specific numbers needed, never entire tables.
-4. Return ONLY valid JSON. No markdown, no comments, no text outside the JSON object.
-
-Response format — exactly ONE of these two shapes:
-- For CONVERSATIONAL requests: { "reply": "your short chat response" }
-- For FINANCIAL ANALYSIS requests: { "analysis": { "executiveSummary": "2-4 sentence overview", "healthScore": 85, "actionableRecommendations": ["tip 1", "tip 2", "tip 3"], "cutbackOpportunities": ["specific adjustment"], "savingsOpportunity": "one practical saving adjustment", "encouragement": "brief uplifting close" } }`;
+    const systemPrompt = [
+      'You are FINORA\'s intelligent personal finance assistant with advanced analytical capabilities.',
+      'You have access to the user\'s financial data including SPENDING TRENDS (month-over-month comparisons,',
+      'weekend vs weekday patterns, category-level changes) and GOAL PROJECTIONS (estimated completion',
+      'timelines, on-track status). This data is PRIVATE REFERENCE MATERIAL \u2014 not content to display.',
+      '',
+      'STRICT RULES:',
+      '1. FIRST classify the user\'s request:',
+      '   - CONVERSATIONAL: greetings, small talk, questions about you/capabilities. Reply briefly (1-3 sentences).',
+      '     NEVER dump financial data, scores, or recommendations.',
+      '   - FINANCIAL ANALYSIS: advice, audit, health check, savings tips, budget review, spending analysis.',
+      '     Only then produce the structured analysis.',
+      '2. ALWAYS use spendingTrends data when giving financial advice \u2014 compare current vs previous month,',
+      '   highlight significant category changes (>15%), reference weekend vs weekday patterns when relevant.',
+      '3. ALWAYS use goalProjections data when discussing savings \u2014 cite estimated months to completion,',
+      '   whether goals are on track, suggest specific monthly contribution adjustments.',
+      '4. Never echo or restate raw financial context unless the user specifically asks.',
+      '5. Reference data only to ground your answer \u2014 cite specific numbers, never entire tables.',
+      '6. Be SPECIFIC and ACTIONABLE: instead of "reduce dining", say "Food spending increased 32% MoM',
+      '   (Tk X \u2192 Tk Y). A weekly limit of Tk Z would bring it back in line."',
+      '7. Return ONLY valid JSON. No markdown, no comments, no text outside the JSON object.',
+      '',
+      'Response format \u2014 exactly ONE of these two shapes:',
+      '- CONVERSATIONAL: { "reply": "your short chat response" }',
+      '- FINANCIAL ANALYSIS: { "analysis": { "executiveSummary": "2-4 sentence overview with trends",',
+      '  "healthScore": 85, "trendInsights": ["MoM insight", "category spike", "weekend pattern"],',
+      '  "actionableRecommendations": ["specific tip with numbers"], "goalProjections": ["Goal X: Y months left"],',
+      '  "cutbackOpportunities": ["adjustment with amount"], "savingsOpportunity": "adjustment with impact",',
+      '  "encouragement": "brief uplifting close" } }',
+    ].join('\n');
 
     const userPrompt = `Financial Context (private reference data — do not dump):
 ${JSON.stringify(financialContext, null, 2)}

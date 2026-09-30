@@ -17,6 +17,7 @@ import {
   ArrowLeft,
   Download,
   Printer,
+  Target,
 } from 'lucide-react';
 import { useFinance } from '../context/FinanceContext';
 
@@ -88,12 +89,12 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
         body: JSON.stringify({
           profile,
           summary,
-          transactions: transactions.slice(0, 25),
+          transactions,
           budgets,
           savingsGoals,
           month: selectedMonth,
           aiProvider,
-          query: 'Generate a complete structured financial audit with recommendations and savings opportunities.',
+          query: 'Generate a complete structured financial audit with trend analysis, goal projections, and actionable recommendations.',
         }),
       });
 
@@ -152,7 +153,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
         body: JSON.stringify({
           profile,
           summary,
-          transactions: transactions.slice(0, 25),
+          transactions,
           budgets,
           savingsGoals,
           month: selectedMonth,
@@ -162,11 +163,30 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
       });
 
       const data = await response.json();
-      const aiReply =
-        data.reply ||
-        (data.analysis
-          ? `${data.analysis.executiveSummary}\n\n**Key Action Items:**\n${data.analysis.actionableRecommendations?.map((r: string) => `• ${r}`).join('\n')}`
-          : 'I analyzed your financial data. Your spending is aligned with your targets. Keep maintaining your current savings rate.');
+      let aiReply = '';
+      if (data.reply) {
+        aiReply = data.reply;
+      } else if (data.analysis) {
+        const a = data.analysis;
+        const parts: string[] = [a.executiveSummary];
+        if (a.trendInsights?.length) {
+          parts.push('\n\n**📊 Trend Insights:**');
+          parts.push(...a.trendInsights.map((t: string) => `• ${t}`));
+        }
+        if (a.goalProjections?.length) {
+          parts.push('\n\n**🎯 Goal Projections:**');
+          parts.push(...a.goalProjections.map((g: string) => `• ${g}`));
+        }
+        if (a.actionableRecommendations?.length) {
+          parts.push('\n\n**💡 Action Items:**');
+          parts.push(...a.actionableRecommendations.map((r: string) => `• ${r}`));
+        }
+        if (a.savingsOpportunity) parts.push(`\n\n💰 ${a.savingsOpportunity}`);
+        if (a.encouragement) parts.push(`\n\n${a.encouragement}`);
+        aiReply = parts.join('\n');
+      } else {
+        aiReply = 'I analyzed your financial data. Your spending is aligned with your targets. Keep maintaining your current savings rate.';
+      }
 
       const aiMsg: Message = {
         id: `ai-${Date.now()}`,
@@ -382,6 +402,38 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           <p className="text-xs text-slate-200 leading-relaxed font-medium">
             {auditReport.executiveSummary}
           </p>
+
+          {auditReport.trendInsights && auditReport.trendInsights.length > 0 && (
+            <div>
+              <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <TrendingUp className="w-3.5 h-3.5" /> Spending Trend Insights
+              </h4>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {auditReport.trendInsights.map((item: string, idx: number) => (
+                  <li key={idx} className="flex items-start space-x-2">
+                    <span className="text-indigo-400 font-bold">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {auditReport.goalProjections && auditReport.goalProjections.length > 0 && (
+            <div>
+              <h4 className="text-xs font-bold text-teal-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5" /> Goal Projections
+              </h4>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {auditReport.goalProjections.map((item: string, idx: number) => (
+                  <li key={idx} className="flex items-start space-x-2">
+                    <span className="text-teal-400 font-bold">•</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {auditReport.actionableRecommendations && (
             <div>
