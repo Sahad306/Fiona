@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { MonthPicker } from './MonthPicker';
 import {
   ArrowDownRight,
   Plus,
@@ -287,15 +288,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center space-x-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 text-xs">
-            <Calendar className="w-4 h-4 text-slate-400" />
-            <input
-              type="month"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="bg-transparent text-slate-200 text-xs font-semibold focus:outline-none cursor-pointer font-mono"
-            />
-          </div>
+          <MonthPicker value={selectedMonth} onChange={setSelectedMonth} />
 
           <button
             onClick={() => exportCSV('expense')}
