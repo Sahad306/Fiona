@@ -79,12 +79,15 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
     autoSavePreviousMonth();
   }, [autoSavePreviousMonth]);
 
+  const [saveMsg, setSaveMsg] = useState<string>('');
   const handleSaveReport = async () => {
     const result = await saveCurrentReport();
     if (result.success) {
-      alert('Report saved successfully!');
+      setSaveMsg(`✅ ${selectedMonth} report saved!`);
+      setTimeout(() => setSaveMsg(''), 3000);
     } else {
-      alert('Could not save report. It may already be saved or has no transactions.');
+      setSaveMsg('⚠️ No transactions found for this month.');
+      setTimeout(() => setSaveMsg(''), 3000);
     }
   };
 
@@ -291,6 +294,16 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
             <Save className="w-4 h-4" />
             <span className="hidden sm:inline">Save Report</span>
           </button>
+
+          {saveMsg && (
+            <span className={`text-xs font-bold px-3 py-2 rounded-xl border ${
+              saveMsg.startsWith('✅') 
+                ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' 
+                : 'bg-amber-500/15 text-amber-400 border-amber-500/30'
+            }`}>
+              {saveMsg}
+            </span>
+          )}
         </div>
       </div>
 
