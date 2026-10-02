@@ -1,4 +1,4 @@
-import { UserProfile, Transaction, Budget, SavingsGoal, AppNotification, PaymentMethod } from '../types';
+import { UserProfile, Transaction, Budget, SavingsGoal, AppNotification, PaymentMethod, SavedReport } from '../types';
 
 export interface ProfileData {
   profile: UserProfile;
@@ -6,6 +6,7 @@ export interface ProfileData {
   budgets: Budget[];
   savingsGoals: SavingsGoal[];
   notifications: AppNotification[];
+  savedReports?: SavedReport[];
 }
 
 export const PRESET_PROFILES: Record<string, ProfileData> = {};

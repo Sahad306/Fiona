@@ -202,3 +202,17 @@ export interface DatabaseStatus {
   isOnline: boolean;
 }
 
+export interface SavedReport {
+  id: string;
+  month: string; // YYYY-MM
+  savedAt: string; // ISO timestamp
+  totalIncome: number;
+  totalExpenses: number;
+  netSavings: number;
+  savingsRate: number;
+  transactionCount: number;
+  categoryBreakdown: { category: string; spent: number; percentage: number }[];
+  incomeSources: { source: string; amount: number; percentage: number }[];
+  transactions: Transaction[]; // Full frozen copy for export
+}
+

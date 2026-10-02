@@ -9,6 +9,7 @@ import {
   FinancialSummary,
   AuthUser,
   UserRole,
+  SavedReport,
 } from '../types';
 import { ProfileData } from '../data/defaultData';
 
@@ -101,6 +102,12 @@ interface FinanceContextType {
   deleteNotification: (id: string) => void;
   clearAllNotifications: () => void;
 
+  // Report Archive
+  savedReports: SavedReport[];
+  saveCurrentReport: () => Promise<{ success: boolean }>;
+  deleteSavedReport: (id: string) => void;
+  autoSavePreviousMonth: () => void;
+
   // Data Utilities
   exportCSV: (type?: 'all' | 'income' | 'expense') => void;
   exportJSON: () => void;
@@ -182,6 +189,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       budgets: [],
       savingsGoals: [],
       notifications: [],
+      savedReports: [],
     };
   }, [activeProfileKey, currentUser]);
 
@@ -190,6 +198,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [budgets, setBudgets] = useState<Budget[]>(initialData.budgets);
   const [savingsGoals, setSavingsGoals] = useState<SavingsGoal[]>(initialData.savingsGoals);
   const [notifications, setNotifications] = useState<AppNotification[]>(initialData.notifications);
+  const [savedReports, setSavedReports] = useState<SavedReport[]>(initialData.savedReports || []);
 
   // Sync ref to debounce database API calls
   const syncTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -273,6 +282,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       budgets,
       savingsGoals,
       notifications,
+      savedReports,
     };
     // Block ALL persistence during logout transition to prevent empty/stale state bleed
     if (isLoggingOutRef.current) return;
@@ -335,6 +345,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       budgets,
       savingsGoals,
       notifications,
+      savedReports,
     };
 
     try {
@@ -1105,6 +1116,95 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     setNotifications([]);
   }, []);
 
+  // Report Archive Functions
+  const autoSaveDoneRef = useRef(false);
+
+  const buildSnapshot = useCallback((month: string): SavedReport | null => {
+    const monthTxs = transactions.filter((tx) => tx.date.startsWith(month) && !tx.savingsTransfer);
+    if (monthTxs.length === 0) return null;
+
+    let inc = 0;
+    let exp = 0;
+    const catTotals: Record<string, number> = {};
+    const srcTotals: Record<string, number> = {};
+
+    monthTxs.forEach((tx) => {
+      if (tx.type === 'income') {
+        inc += tx.amount;
+        srcTotals[tx.category] = (srcTotals[tx.category] || 0) + tx.amount;
+      } else {
+        exp += tx.amount;
+        catTotals[tx.category] = (catTotals[tx.category] || 0) + tx.amount;
+      }
+    });
+
+    const net = inc - exp;
+    const rate = inc > 0 ? Math.max(0, Math.round((net / inc) * 100)) : 0;
+
+    const categoryBreakdown = Object.entries(catTotals)
+      .map(([category, spent]) => ({
+        category,
+        spent,
+        percentage: exp > 0 ? Math.round((spent / exp) * 100) : 0,
+      }))
+      .sort((a, b) => b.spent - a.spent);
+
+    const incomeSources = Object.entries(srcTotals)
+      .map(([source, amount]) => ({
+        source,
+        amount,
+        percentage: inc > 0 ? Math.round((amount / inc) * 100) : 0,
+      }))
+      .sort((a, b) => b.amount - a.amount);
+
+    return {
+      id: createId('rpt'),
+      month,
+      savedAt: new Date().toISOString(),
+      totalIncome: inc,
+      totalExpenses: exp,
+      netSavings: net,
+      savingsRate: rate,
+      transactionCount: monthTxs.length,
+      categoryBreakdown,
+      incomeSources,
+      transactions: monthTxs.map((t) => ({ ...t })),
+    };
+  }, [transactions]);
+
+  const saveCurrentReport = useCallback(async (): Promise<{ success: boolean }> => {
+    const snapshot = buildSnapshot(selectedMonth);
+    if (!snapshot) return { success: false };
+    // Prevent duplicate saves for same month
+    const exists = savedReports.some((r) => r.month === selectedMonth);
+    if (exists) return { success: false };
+
+    const updated = [snapshot, ...savedReports];
+    setSavedReports(updated);
+    return { success: true };
+  }, [buildSnapshot, selectedMonth, savedReports]);
+
+  const deleteSavedReport = useCallback((id: string) => {
+    setSavedReports((prev) => prev.filter((r) => r.id !== id));
+  }, []);
+
+  const autoSavePreviousMonth = useCallback(() => {
+    if (autoSaveDoneRef.current) return;
+    autoSaveDoneRef.current = true;
+
+    const now = new Date();
+    const prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const prevMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+
+    const alreadySaved = savedReports.some((r) => r.month === prevMonth);
+    if (alreadySaved) return;
+
+    const snapshot = buildSnapshot(prevMonth);
+    if (snapshot) {
+      setSavedReports((prev) => [snapshot, ...prev]);
+    }
+  }, [buildSnapshot, savedReports]);
+
   const updateProfile = useCallback((updated: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...updated }));
   }, []);
@@ -1240,6 +1340,10 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         markAllNotificationsAsRead,
         deleteNotification,
         clearAllNotifications,
+        savedReports,
+        saveCurrentReport,
+        deleteSavedReport,
+        autoSavePreviousMonth,
         exportCSV,
         exportJSON,
         importJSON,

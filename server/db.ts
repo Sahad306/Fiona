@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { UserProfile, Transaction, Budget, SavingsGoal, AppNotification, UserRole } from '../src/types';
+import { UserProfile, Transaction, Budget, SavingsGoal, AppNotification, UserRole, SavedReport } from '../src/types';
 
 export interface DBUser {
   id: string;
@@ -37,6 +37,7 @@ export interface UserDataStore {
   budgets: Budget[];
   savingsGoals: SavingsGoal[];
   notifications: AppNotification[];
+  savedReports: SavedReport[];
   updatedAt: string;
 }
 
@@ -248,6 +249,7 @@ class Database {
       transactions: [],
       budgets: [],
       savingsGoals: [],
+      savedReports: [],
       notifications: [
         {
           id: `notif_${Date.now()}`,
@@ -344,6 +346,7 @@ class Database {
       budgets: [],
       savingsGoals: [],
       notifications: [],
+      savedReports: [],
       updatedAt: new Date().toISOString(),
     };
 
@@ -353,6 +356,7 @@ class Database {
       budgets: data.budgets !== undefined ? data.budgets : existing.budgets,
       savingsGoals: data.savingsGoals !== undefined ? data.savingsGoals : existing.savingsGoals,
       notifications: data.notifications !== undefined ? data.notifications : existing.notifications,
+      savedReports: data.savedReports !== undefined ? data.savedReports : (existing.savedReports || []),
       updatedAt: new Date().toISOString(),
     };
 
