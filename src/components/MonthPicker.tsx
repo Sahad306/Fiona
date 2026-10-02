@@ -65,12 +65,12 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
       {/* Trigger Button */}
       <button
         type="button"
-        onClick={() => setOpen(!open)}
-        className="flex items-center space-x-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-colors cursor-pointer min-w-[160px]"
+        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((prev) => !prev); }}
+        className="relative z-10 flex items-center space-x-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-colors cursor-pointer min-w-[160px] select-none"
       >
-        <Calendar className="w-4 h-4 text-emerald-400" />
-        <span className="text-xs font-semibold text-slate-200 flex-1 text-left">{displayLabel}</span>
-        <ChevronRight className={`w-3 h-3 text-slate-500 transition-transform ${open ? 'rotate-90' : ''}`} />
+        <Calendar className="w-4 h-4 text-emerald-400 pointer-events-none" />
+        <span className="text-xs font-semibold text-slate-200 flex-1 text-left pointer-events-none">{displayLabel}</span>
+        <ChevronRight className={`w-3 h-3 text-slate-500 transition-transform pointer-events-none ${open ? 'rotate-90' : ''}`} />
       </button>
 
       {/* Dropdown Panel */}
