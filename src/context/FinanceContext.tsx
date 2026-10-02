@@ -200,11 +200,14 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const hasLoadedServerDataRef = useRef(false);
   // Prevents autosave from writing empty/stale state during logout transition.
   const isLoggingOutRef = useRef(false);
+  // Tracks whether the initial server data load is still in progress.
+  const isLoadingServerDataRef = useRef(false);
 
   // Load user data from server database if token exists
   useEffect(() => {
     async function fetchUserData() {
       if (!authToken) return;
+      isLoadingServerDataRef.current = true;
       try {
         setIsDbSyncing(true);
         const res = await fetch('/api/auth/me', {
@@ -243,8 +246,13 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       } catch (err) {
         console.warn('Could not sync with remote database on load, using local cache:', err);
         setIsDbConnected(false);
+        // DO NOT set hasLoadedServerDataRef = true here.
+        // If the fetch failed, we don't know what the server has.
+        // Keeping it false blocks autosave from pushing empty mount state.
+        // Autosave will remain blocked until a successful load or fresh login.
       } finally {
         setIsDbSyncing(false);
+        isLoadingServerDataRef.current = false;
       }
     }
 
@@ -268,6 +276,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     };
     // Block ALL persistence during logout transition to prevent empty/stale state bleed
     if (isLoggingOutRef.current) return;
+    // Block autosave while initial server data is still loading
+    if (isLoadingServerDataRef.current) return;
 
     // When authenticated, server DB is the source of truth - do not write to shared localStorage keys
     if (!authToken) {
