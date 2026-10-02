@@ -28,6 +28,7 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
   const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const updatePosition = useCallback(() => {
     if (buttonRef.current) {
@@ -39,11 +40,14 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
     }
   }, []);
 
-  // Close on outside click
+  // Close on outside click — must check BOTH container and portal dropdown
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const inContainer = containerRef.current?.contains(target);
+      const inDropdown = dropdownRef.current?.contains(target);
+      if (!inContainer && !inDropdown) {
         setOpen(false);
       }
     };
@@ -97,8 +101,10 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
       {/* Dropdown Panel — rendered via portal to escape overflow/z-index stacking contexts */}
       {open && createPortal(
         <div
+          ref={dropdownRef}
           className="fixed z-[9999] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-3 w-[260px] animate-in fade-in slide-in-from-top-1 duration-150"
           style={{ top: dropdownPos.top, left: dropdownPos.left }}
+          onMouseDown={(e) => e.stopPropagation()}
         >
           {/* Year Navigation */}
           <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
