@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Calendar, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface MonthPickerProps {
@@ -24,7 +25,19 @@ const FULL_MONTH_NAMES = [
 export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, className = '' }) => {
   const [open, setOpen] = useState(false);
   const [viewYear, setViewYear] = useState(() => parseInt(value.split('-')[0]) || new Date().getFullYear());
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const updatePosition = useCallback(() => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setDropdownPos({
+        top: rect.bottom + 4,
+        left: rect.left,
+      });
+    }
+  }, []);
 
   // Close on outside click
   useEffect(() => {
@@ -64,8 +77,16 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
     <div ref={containerRef} className={`relative ${className}`}>
       {/* Trigger Button */}
       <button
+        ref={buttonRef}
         type="button"
-        onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen((prev) => !prev); }}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setOpen((prev) => {
+            if (!prev) updatePosition();
+            return !prev;
+          });
+        }}
         className="relative z-10 flex items-center space-x-2 bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 hover:border-emerald-500/40 transition-colors cursor-pointer min-w-[160px] select-none"
       >
         <Calendar className="w-4 h-4 text-emerald-400 pointer-events-none" />
@@ -73,9 +94,12 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
         <ChevronRight className={`w-3 h-3 text-slate-500 transition-transform pointer-events-none ${open ? 'rotate-90' : ''}`} />
       </button>
 
-      {/* Dropdown Panel */}
-      {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-3 w-[260px] animate-in fade-in slide-in-from-top-1 duration-150">
+      {/* Dropdown Panel — rendered via portal to escape overflow/z-index stacking contexts */}
+      {open && createPortal(
+        <div
+          className="fixed z-[9999] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-3 w-[260px] animate-in fade-in slide-in-from-top-1 duration-150"
+          style={{ top: dropdownPos.top, left: dropdownPos.left }}
+        >
           {/* Year Navigation */}
           <div className="flex items-center justify-between mb-3 pb-2 border-b border-slate-800">
             <button
@@ -143,7 +167,8 @@ export const MonthPicker: React.FC<MonthPickerProps> = ({ value, onChange, class
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
