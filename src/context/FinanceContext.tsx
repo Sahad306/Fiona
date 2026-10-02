@@ -198,6 +198,8 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   // Guards against the mount race: without a completed server load, the autosave effect
   // would push EMPTY state to /api/db/sync and wipe the user's data (e.g. on page reload).
   const hasLoadedServerDataRef = useRef(false);
+  // Prevents autosave from writing empty/stale state during logout transition.
+  const isLoggingOutRef = useRef(false);
 
   // Load user data from server database if token exists
   useEffect(() => {
@@ -264,6 +266,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
       savingsGoals,
       notifications,
     };
+    // Block ALL persistence during logout transition to prevent empty/stale state bleed
+    if (isLoggingOutRef.current) return;
+
     // When authenticated, server DB is the source of truth - do not write to shared localStorage keys
     if (!authToken) {
       localStorage.setItem(`${STORAGE_KEY_PREFIX}${activeProfileKey}`, JSON.stringify(dataToSave));
@@ -403,6 +408,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
 
         if (autoLogin) {
+          // Re-enable autosave (was blocked during previous logout)
+          isLoggingOutRef.current = false;
+
           setAuthToken(data.token);
           setCurrentUser(data.user);
           localStorage.setItem(AUTH_TOKEN_KEY, data.token);
@@ -455,6 +463,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
           return { success: false, error: data.error || 'Authentication failed' };
         }
 
+        // Re-enable autosave (was blocked during previous logout)
+        isLoggingOutRef.current = false;
+
         setAuthToken(data.token);
         setCurrentUser(data.user);
         localStorage.setItem(AUTH_TOKEN_KEY, data.token);
@@ -493,6 +504,14 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   // Authentication: Logout
   const logout = useCallback(async () => {
+    // Block autosave immediately before any state changes
+    isLoggingOutRef.current = true;
+    // Cancel any pending debounced sync to prevent stale data push
+    if (syncTimeoutRef.current) {
+      clearTimeout(syncTimeoutRef.current);
+      syncTimeoutRef.current = null;
+    }
+
     if (authToken) {
       try {
         await fetch('/api/auth/logout', {

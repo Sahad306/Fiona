@@ -123,16 +123,36 @@ export const Dashboard: React.FC<DashboardProps> = ({
     });
   }, [transactions, selectedMonth]);
 
-  // Cumulative savings cash flow data
-  const cashFlowTrendData = [
-    { day: 'Day 1', balance: summary.totalIncome * 0.6, savings: 1200 },
-    { day: 'Day 5', balance: summary.totalIncome * 0.55, savings: 1500 },
-    { day: 'Day 10', balance: summary.totalIncome * 0.7, savings: 1850 },
-    { day: 'Day 15', balance: summary.totalIncome * 0.65, savings: 2200 },
-    { day: 'Day 20', balance: summary.totalIncome * 0.8, savings: 2600 },
-    { day: 'Day 25', balance: summary.totalIncome - summary.totalExpenses * 0.85, savings: 2900 },
-    { day: 'Current', balance: summary.remainingBalance, savings: summary.monthlySavings },
-  ];
+  // Cumulative savings cash flow data — derived from REAL transactions only
+  const cashFlowTrendData = useMemo(() => {
+    const [y, m] = selectedMonth.split('-').map(Number);
+    const daysInMonth = new Date(y, m, 0).getDate();
+    const checkpoints = [1, 5, 10, 15, 20, 25, daysInMonth];
+
+    return checkpoints.map((day) => {
+      const cutoff = `${selectedMonth}-${String(day).padStart(2, '0')}`;
+      let cumIncome = 0;
+      let cumExpenses = 0;
+      let cumSavings = 0;
+      transactions.forEach((tx) => {
+        if (tx.date > cutoff || tx.savingsTransfer) return;
+        if (tx.type === 'income') cumIncome += tx.amount;
+        else cumExpenses += tx.amount;
+      });
+      // Savings goal contributions count as savings
+      savingsGoals.forEach((g) => {
+        g.contributions?.forEach((c) => {
+          if (c.date <= cutoff) cumSavings += c.amount;
+        });
+      });
+      const balance = cumIncome - cumExpenses;
+      return {
+        day: day === daysInMonth ? 'Current' : `Day ${day}`,
+        balance,
+        savings: cumSavings || (balance > 0 ? balance * 0.2 : 0),
+      };
+    });
+  }, [transactions, savingsGoals, selectedMonth, summary]);
 
   // Donut chart expense data
   const expensePieData = summary.topExpenseCategories.map((c) => ({

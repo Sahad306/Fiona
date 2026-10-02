@@ -13,7 +13,7 @@
       "monthlyIncomeTarget": 300000,
       "monthlyExpenseBudget": 150000,
       "createdAt": "2026-09-08T18:12:03.063Z",
-      "lastLoginAt": "2026-09-30T12:51:46.689Z"
+      "lastLoginAt": "2026-10-02T13:35:12.687Z"
     },
     {
       "id": "usr_ab508d2de0abd7c9",
@@ -148,6 +148,12 @@
       "userId": "usr_a95eec990770e6c1",
       "createdAt": "2026-09-30T12:51:46.689Z",
       "expiresAt": "2026-10-30T12:51:46.689Z"
+    },
+    {
+      "token": "d15ff3c45133dd2edd604617ff739556cb9b182672338aab0c0a68a6b4fbde91",
+      "userId": "usr_a95eec990770e6c1",
+      "createdAt": "2026-10-02T13:35:12.687Z",
+      "expiresAt": "2026-11-01T13:35:12.687Z"
     }
   ],
   "userData": {
@@ -645,7 +651,7 @@
         }
       ],
       "notifications": [],
-      "updatedAt": "2026-09-30T12:53:38.972Z"
+      "updatedAt": "2026-10-02T13:35:13.896Z"
     },
     "usr_ab508d2de0abd7c9": {
       "profile": {
@@ -1036,7 +1042,7 @@
       "updatedAt": "2026-09-22T09:32:52.581Z"
     }
   },
-  "lastBackup": "2026-09-30T12:53:38.972Z",
+  "lastBackup": "2026-10-02T13:35:13.896Z",
   "resetCodes": [
     {
       "email": "mdtausifalsahad@gmail.com",
