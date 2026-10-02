@@ -1175,11 +1175,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const saveCurrentReport = useCallback(async (): Promise<{ success: boolean }> => {
     const snapshot = buildSnapshot(selectedMonth);
     if (!snapshot) return { success: false };
-    // Prevent duplicate saves for same month
-    const exists = savedReports.some((r) => r.month === selectedMonth);
-    if (exists) return { success: false };
-
-    const updated = [snapshot, ...savedReports];
+    // Replace existing report for same month (allows fixing broken snapshots)
+    const filtered = savedReports.filter((r) => r.month !== selectedMonth);
+    const updated = [snapshot, ...filtered];
     setSavedReports(updated);
     return { success: true };
   }, [buildSnapshot, selectedMonth, savedReports]);
@@ -1190,6 +1188,9 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   const autoSavePreviousMonth = useCallback(() => {
     if (autoSaveDoneRef.current) return;
+    // CRITICAL: Don't auto-save until server data has fully loaded.
+    // Otherwise we'd snapshot empty mount state and permanently save zeros.
+    if (!hasLoadedServerDataRef.current && authToken) return;
     autoSaveDoneRef.current = true;
 
     const now = new Date();
@@ -1203,7 +1204,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (snapshot) {
       setSavedReports((prev) => [snapshot, ...prev]);
     }
-  }, [buildSnapshot, savedReports]);
+  }, [buildSnapshot, savedReports, authToken]);
 
   const updateProfile = useCallback((updated: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...updated }));
