@@ -70,6 +70,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
     saveCurrentReport,
     deleteSavedReport,
     autoSavePreviousMonth,
+    buildSnapshot,
   } = useFinance();
 
   const [reportPeriod, setReportPeriod] = useState<'month' | 'ytd'>('month');
@@ -94,6 +95,22 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
 
   const handleExportPDF = (report: SavedReport) => {
     setPrintReport(report);
+    setTimeout(() => window.print(), 100);
+  };
+
+  const handlePrintCurrent = () => {
+    const currentSnapshot = buildSnapshot(selectedMonth);
+    if (!currentSnapshot) {
+      alert('No transactions for this month.');
+      return;
+    }
+    // Temporarily set printReport to current data (does NOT save to DB)
+    setPrintReport({
+      ...currentSnapshot,
+      id: 'temp-' + Date.now(),
+      savedAt: new Date().toISOString(),
+      isTemporary: true,
+    });
     setTimeout(() => window.print(), 100);
   };
 
@@ -272,11 +289,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
           </button>
 
           <button
-            onClick={handlePrint}
+            onClick={handlePrintCurrent}
             className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-all cursor-pointer"
+            title="Generate PDF from current month data"
           >
             <Printer className="w-4 h-4" />
-            <span>Print Report</span>
+            <span>Print Current</span>
           </button>
 
           <button

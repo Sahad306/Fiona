@@ -214,5 +214,7 @@ export interface SavedReport {
   categoryBreakdown: { category: string; spent: number; percentage: number }[];
   incomeSources: { source: string; amount: number; percentage: number }[];
   transactions: Transaction[]; // Full frozen copy for export
+  /** Marks an unsaved, in-memory snapshot used only for printing (not persisted). */
+  isTemporary?: boolean;
 }
 

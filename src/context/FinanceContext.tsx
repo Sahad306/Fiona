@@ -107,6 +107,7 @@ interface FinanceContextType {
   saveCurrentReport: () => Promise<{ success: boolean }>;
   deleteSavedReport: (id: string) => void;
   autoSavePreviousMonth: () => void;
+  buildSnapshot: (month: string) => SavedReport | null;
 
   // Data Utilities
   exportCSV: (type?: 'all' | 'income' | 'expense') => void;
@@ -1345,6 +1346,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         saveCurrentReport,
         deleteSavedReport,
         autoSavePreviousMonth,
+        buildSnapshot,
         exportCSV,
         exportJSON,
         importJSON,

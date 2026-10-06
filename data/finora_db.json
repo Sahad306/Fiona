@@ -98,6 +98,20 @@
       "monthlyExpenseBudget": 600000,
       "createdAt": "2026-09-22T09:30:53.501Z",
       "lastLoginAt": "2026-09-22T09:30:53.506Z"
+    },
+    {
+      "id": "usr_0c865c525088c89f",
+      "email": "demo@finora.io",
+      "name": "Ayesha Rahman",
+      "passwordHash": "9431d87af4ef542b93d125fad3a21d1fccb8e35deceb6d745b9c948aecbe4dda0cae4847c89f9151355d121204e8bf9cc01b64cf3738d79844528ef0d2d64f20",
+      "salt": "f051177b52c4b42913b3c022d733da90",
+      "role": "Salaried Employee",
+      "currency": "BDT",
+      "currencySymbol": "Tk",
+      "monthlyIncomeTarget": 60000,
+      "monthlyExpenseBudget": 42000,
+      "createdAt": "2026-10-06T13:43:55.299Z",
+      "lastLoginAt": "2026-10-06T13:43:55.305Z"
     }
   ],
   "sessions": [
@@ -154,6 +168,12 @@
       "userId": "usr_a95eec990770e6c1",
       "createdAt": "2026-10-02T13:35:12.687Z",
       "expiresAt": "2026-11-01T13:35:12.687Z"
+    },
+    {
+      "token": "91e890381841d9621a3be60b29bc460fa36d0e27636db44139184ff98196ec36",
+      "userId": "usr_0c865c525088c89f",
+      "createdAt": "2026-10-06T13:43:55.305Z",
+      "expiresAt": "2026-11-05T13:43:55.305Z"
     }
   ],
   "userData": {
@@ -1040,9 +1060,751 @@
         }
       ],
       "updatedAt": "2026-09-22T09:32:52.581Z"
+    },
+    "usr_0c865c525088c89f": {
+      "profile": {
+        "id": "usr_0c865c525088c89f",
+        "name": "Ayesha Rahman",
+        "email": "demo@finora.io",
+        "role": "Salaried Employee",
+        "avatarUrl": "",
+        "currency": "BDT",
+        "currencySymbol": "Tk",
+        "monthlyIncomeTarget": 60000,
+        "monthlyExpenseBudget": 42000,
+        "joinedDate": "2026-01-15",
+        "location": "Rajshahi, Bangladesh",
+        "financialGoal": "Build a 6-month emergency fund and buy a laptop",
+        "occupation": "Software Engineer",
+        "bio": "Software engineer tracking every taka.",
+        "riskTolerance": "moderate",
+        "notificationsEnabled": true,
+        "darkMode": true,
+        "budgetAlertThreshold": 80,
+        "savingsTargetPercent": 20
+      },
+      "transactions": [
+        {
+          "id": "tx_0001",
+          "type": "income",
+          "amount": 45000,
+          "category": "Salary",
+          "description": "Monthly salary",
+          "date": "2026-08-01",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-08-01T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0002",
+          "type": "income",
+          "amount": 12000,
+          "category": "Freelancing",
+          "description": "Freelance web project — client milestone",
+          "date": "2026-08-12",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-12T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0003",
+          "type": "income",
+          "amount": 5000,
+          "category": "Allowances",
+          "description": "Family allowance",
+          "date": "2026-08-05",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-08-05T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0004",
+          "type": "income",
+          "amount": 3000,
+          "category": "Investments",
+          "description": "Sanchayapatra profit share",
+          "date": "2026-08-20",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-08-20T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0005",
+          "type": "expense",
+          "amount": 18000,
+          "category": "Housing & Rent",
+          "description": "Apartment rent — house owner",
+          "date": "2026-08-02",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-08-02T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0006",
+          "type": "expense",
+          "amount": 12000,
+          "category": "Household & Living",
+          "description": "Monthly grocery & bazaar",
+          "date": "2026-08-04",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-04T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0007",
+          "type": "expense",
+          "amount": 3200,
+          "category": "Utilities & Bills",
+          "description": "Electricity prepaid meter token",
+          "date": "2026-08-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0008",
+          "type": "expense",
+          "amount": 1000,
+          "category": "Utilities & Bills",
+          "description": "Broadband WiFi recharge",
+          "date": "2026-08-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0009",
+          "type": "expense",
+          "amount": 3500,
+          "category": "Household & Living",
+          "description": "Home maid salary",
+          "date": "2026-08-07",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-08-07T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0010",
+          "type": "expense",
+          "amount": 2500,
+          "category": "Transportation",
+          "description": "MRT Rapid Pass + rickshaw commute",
+          "date": "2026-08-10",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-08-10T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0011",
+          "type": "expense",
+          "amount": 3000,
+          "category": "Education",
+          "description": "Online course & study materials",
+          "date": "2026-08-09",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-09T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0012",
+          "type": "expense",
+          "amount": 1800,
+          "category": "Healthcare & Medical",
+          "description": "Pharmacy & regular medicine",
+          "date": "2026-08-14",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-08-14T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0013",
+          "type": "expense",
+          "amount": 1200,
+          "category": "Entertainment",
+          "description": "Streaming subscriptions",
+          "date": "2026-08-15",
+          "paymentMethod": "Credit Card",
+          "createdAt": "2026-08-15T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0014",
+          "type": "expense",
+          "amount": 2200,
+          "category": "Food & Dining",
+          "description": "Mess & restaurant meals",
+          "date": "2026-08-18",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-18T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0015",
+          "type": "expense",
+          "amount": 1500,
+          "category": "Personal Care",
+          "description": "Haircut, soap & toiletries",
+          "date": "2026-08-19",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-08-19T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0016",
+          "type": "expense",
+          "amount": 4000,
+          "category": "Shopping",
+          "description": "Clothes & shoes",
+          "date": "2026-08-22",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-08-22T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0017",
+          "type": "expense",
+          "amount": 2800,
+          "category": "Food & Dining",
+          "description": "Tea stall & snacks",
+          "date": "2026-08-24",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-08-24T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0018",
+          "type": "expense",
+          "amount": 600,
+          "category": "Utilities & Bills",
+          "description": "Mobile 4G pack",
+          "date": "2026-08-25",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-08-25T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0019",
+          "type": "income",
+          "amount": 45000,
+          "category": "Salary",
+          "description": "Monthly salary",
+          "date": "2026-09-01",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-09-01T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0020",
+          "type": "income",
+          "amount": 12000,
+          "category": "Freelancing",
+          "description": "Freelance web project — client milestone",
+          "date": "2026-09-12",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-12T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0021",
+          "type": "income",
+          "amount": 5000,
+          "category": "Allowances",
+          "description": "Family allowance",
+          "date": "2026-09-05",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-09-05T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0022",
+          "type": "income",
+          "amount": 3000,
+          "category": "Investments",
+          "description": "Sanchayapatra profit share",
+          "date": "2026-09-20",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-09-20T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0023",
+          "type": "expense",
+          "amount": 18000,
+          "category": "Housing & Rent",
+          "description": "Apartment rent — house owner",
+          "date": "2026-09-02",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-09-02T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0024",
+          "type": "expense",
+          "amount": 12000,
+          "category": "Household & Living",
+          "description": "Monthly grocery & bazaar",
+          "date": "2026-09-04",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-04T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0025",
+          "type": "expense",
+          "amount": 3200,
+          "category": "Utilities & Bills",
+          "description": "Electricity prepaid meter token",
+          "date": "2026-09-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0026",
+          "type": "expense",
+          "amount": 1000,
+          "category": "Utilities & Bills",
+          "description": "Broadband WiFi recharge",
+          "date": "2026-09-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0027",
+          "type": "expense",
+          "amount": 3500,
+          "category": "Household & Living",
+          "description": "Home maid salary",
+          "date": "2026-09-07",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-09-07T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0028",
+          "type": "expense",
+          "amount": 2500,
+          "category": "Transportation",
+          "description": "MRT Rapid Pass + rickshaw commute",
+          "date": "2026-09-10",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-09-10T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0029",
+          "type": "expense",
+          "amount": 3000,
+          "category": "Education",
+          "description": "Online course & study materials",
+          "date": "2026-09-09",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-09T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0030",
+          "type": "expense",
+          "amount": 1800,
+          "category": "Healthcare & Medical",
+          "description": "Pharmacy & regular medicine",
+          "date": "2026-09-14",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-09-14T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0031",
+          "type": "expense",
+          "amount": 1200,
+          "category": "Entertainment",
+          "description": "Streaming subscriptions",
+          "date": "2026-09-15",
+          "paymentMethod": "Credit Card",
+          "createdAt": "2026-09-15T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0032",
+          "type": "expense",
+          "amount": 2200,
+          "category": "Food & Dining",
+          "description": "Mess & restaurant meals",
+          "date": "2026-09-18",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-18T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0033",
+          "type": "expense",
+          "amount": 1500,
+          "category": "Personal Care",
+          "description": "Haircut, soap & toiletries",
+          "date": "2026-09-19",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-09-19T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0034",
+          "type": "expense",
+          "amount": 4000,
+          "category": "Shopping",
+          "description": "Clothes & shoes",
+          "date": "2026-09-22",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-09-22T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0035",
+          "type": "expense",
+          "amount": 2800,
+          "category": "Food & Dining",
+          "description": "Tea stall & snacks",
+          "date": "2026-09-24",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-09-24T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0036",
+          "type": "expense",
+          "amount": 600,
+          "category": "Utilities & Bills",
+          "description": "Mobile 4G pack",
+          "date": "2026-09-25",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-09-25T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0037",
+          "type": "income",
+          "amount": 45000,
+          "category": "Salary",
+          "description": "Monthly salary — October payroll",
+          "date": "2026-10-01",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-10-01T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0038",
+          "type": "income",
+          "amount": 12000,
+          "category": "Freelancing",
+          "description": "Freelance web project — client milestone",
+          "date": "2026-10-12",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-12T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0039",
+          "type": "income",
+          "amount": 5000,
+          "category": "Allowances",
+          "description": "Family allowance",
+          "date": "2026-10-05",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-10-05T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0040",
+          "type": "income",
+          "amount": 3000,
+          "category": "Investments",
+          "description": "Sanchayapatra profit share",
+          "date": "2026-10-20",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-10-20T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0041",
+          "type": "expense",
+          "amount": 18000,
+          "category": "Housing & Rent",
+          "description": "Apartment rent — house owner",
+          "date": "2026-10-02",
+          "paymentMethod": "Bank Transfer",
+          "createdAt": "2026-10-02T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0042",
+          "type": "expense",
+          "amount": 12000,
+          "category": "Household & Living",
+          "description": "Monthly grocery & bazaar",
+          "date": "2026-10-04",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-04T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0043",
+          "type": "expense",
+          "amount": 3200,
+          "category": "Utilities & Bills",
+          "description": "Electricity prepaid meter token",
+          "date": "2026-10-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0044",
+          "type": "expense",
+          "amount": 1000,
+          "category": "Utilities & Bills",
+          "description": "Broadband WiFi recharge",
+          "date": "2026-10-06",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-06T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0045",
+          "type": "expense",
+          "amount": 3500,
+          "category": "Household & Living",
+          "description": "Home maid salary",
+          "date": "2026-10-07",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-10-07T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0046",
+          "type": "expense",
+          "amount": 2500,
+          "category": "Transportation",
+          "description": "MRT Rapid Pass + rickshaw commute",
+          "date": "2026-10-10",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-10-10T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0047",
+          "type": "expense",
+          "amount": 3000,
+          "category": "Education",
+          "description": "Online course & study materials",
+          "date": "2026-10-09",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-09T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0048",
+          "type": "expense",
+          "amount": 1800,
+          "category": "Healthcare & Medical",
+          "description": "Pharmacy & regular medicine",
+          "date": "2026-10-14",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-10-14T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0049",
+          "type": "expense",
+          "amount": 1200,
+          "category": "Entertainment",
+          "description": "Streaming subscriptions",
+          "date": "2026-10-15",
+          "paymentMethod": "Credit Card",
+          "createdAt": "2026-10-15T10:00:00.000Z",
+          "recurring": "monthly"
+        },
+        {
+          "id": "tx_0050",
+          "type": "expense",
+          "amount": 2200,
+          "category": "Food & Dining",
+          "description": "Mess & restaurant meals",
+          "date": "2026-10-18",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-18T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0051",
+          "type": "expense",
+          "amount": 1500,
+          "category": "Personal Care",
+          "description": "Haircut, soap & toiletries",
+          "date": "2026-10-19",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-10-19T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0052",
+          "type": "expense",
+          "amount": 4000,
+          "category": "Shopping",
+          "description": "Clothes & shoes",
+          "date": "2026-10-22",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-10-22T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0053",
+          "type": "expense",
+          "amount": 2800,
+          "category": "Food & Dining",
+          "description": "Tea stall & snacks",
+          "date": "2026-10-24",
+          "paymentMethod": "Cash",
+          "createdAt": "2026-10-24T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0054",
+          "type": "expense",
+          "amount": 600,
+          "category": "Utilities & Bills",
+          "description": "Mobile 4G pack",
+          "date": "2026-10-25",
+          "paymentMethod": "bKash",
+          "createdAt": "2026-10-25T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0055",
+          "type": "expense",
+          "amount": 7000,
+          "category": "Travel",
+          "description": "Cox's Bazar weekend trip",
+          "date": "2026-10-03",
+          "paymentMethod": "Nagad",
+          "createdAt": "2026-10-03T10:00:00.000Z"
+        },
+        {
+          "id": "tx_0056",
+          "type": "expense",
+          "amount": 5000,
+          "category": "Shopping",
+          "description": "New smartphone accessories",
+          "date": "2026-10-05",
+          "paymentMethod": "Credit Card",
+          "createdAt": "2026-10-05T10:00:00.000Z"
+        }
+      ],
+      "budgets": [
+        {
+          "id": "b1",
+          "category": "Overall",
+          "limitAmount": 42000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "month": "2026-10"
+        },
+        {
+          "id": "b2",
+          "category": "Food & Dining",
+          "limitAmount": 5000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "month": "2026-10"
+        },
+        {
+          "id": "b3",
+          "category": "Housing & Rent",
+          "limitAmount": 18000,
+          "period": "monthly",
+          "alertThreshold": 90,
+          "month": "2026-10"
+        },
+        {
+          "id": "b4",
+          "category": "Shopping",
+          "limitAmount": 4000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "month": "2026-10"
+        },
+        {
+          "id": "b5",
+          "category": "Transportation",
+          "limitAmount": 3000,
+          "period": "monthly",
+          "alertThreshold": 80,
+          "month": "2026-10"
+        }
+      ],
+      "savingsGoals": [
+        {
+          "id": "g1",
+          "name": "Emergency Fund",
+          "targetAmount": 200000,
+          "currentAmount": 85000,
+          "targetDate": "2027-06-30",
+          "category": "Safety",
+          "color": "#10b981",
+          "icon": "Shield",
+          "monthlyContribution": 8000,
+          "contributions": [
+            {
+              "id": "c1",
+              "amount": 45000,
+              "date": "2026-08-05"
+            },
+            {
+              "id": "c2",
+              "amount": 40000,
+              "date": "2026-09-05"
+            }
+          ]
+        },
+        {
+          "id": "g2",
+          "name": "New Laptop",
+          "targetAmount": 120000,
+          "currentAmount": 52000,
+          "targetDate": "2027-01-15",
+          "category": "Tech",
+          "color": "#6366f1",
+          "icon": "Laptop",
+          "monthlyContribution": 6000,
+          "contributions": [
+            {
+              "id": "c3",
+              "amount": 30000,
+              "date": "2026-08-10"
+            },
+            {
+              "id": "c4",
+              "amount": 22000,
+              "date": "2026-09-12"
+            }
+          ]
+        },
+        {
+          "id": "g3",
+          "name": "Hajj Savings",
+          "targetAmount": 500000,
+          "currentAmount": 60000,
+          "targetDate": "2029-12-31",
+          "category": "Religious",
+          "color": "#f59e0b",
+          "icon": "Moon",
+          "monthlyContribution": 5000,
+          "contributions": [
+            {
+              "id": "c5",
+              "amount": 60000,
+              "date": "2026-07-01"
+            }
+          ]
+        }
+      ],
+      "notifications": [
+        {
+          "id": "n1",
+          "type": "budget_limit_close",
+          "title": "Budget Alert: Shopping",
+          "message": "You have used 125% of your Shopping budget (Tk 5,000 / Tk 4,000).",
+          "timestamp": "2026-10-05T18:20:00.000Z",
+          "read": false,
+          "severity": "danger",
+          "relatedCategory": "Shopping"
+        },
+        {
+          "id": "n2",
+          "type": "budget_limit_close",
+          "title": "Budget Alert: Food & Dining",
+          "message": "You have used 100% of your Food & Dining budget (Tk 5,000 / Tk 5,000).",
+          "timestamp": "2026-10-24T09:10:00.000Z",
+          "read": false,
+          "severity": "warning",
+          "relatedCategory": "Food & Dining"
+        },
+        {
+          "id": "n3",
+          "type": "savings_milestone",
+          "title": "Milestone Reached!",
+          "message": "Emergency Fund has crossed 40% of its target. Keep going!",
+          "timestamp": "2026-09-06T12:00:00.000Z",
+          "read": true,
+          "severity": "success",
+          "relatedGoalId": "g1"
+        },
+        {
+          "id": "n4",
+          "type": "income_received",
+          "title": "Income Logged",
+          "message": "Freelancing income of Tk 12,000 was recorded via bKash.",
+          "timestamp": "2026-10-12T15:30:00.000Z",
+          "read": true,
+          "severity": "info"
+        }
+      ],
+      "savedReports": [],
+      "updatedAt": "2026-10-06T14:37:34.633Z"
     }
   },
-  "lastBackup": "2026-10-02T13:35:13.896Z",
+  "lastBackup": "2026-10-06T14:37:34.633Z",
   "resetCodes": [
     {
       "email": "mdtausifalsahad@gmail.com",
