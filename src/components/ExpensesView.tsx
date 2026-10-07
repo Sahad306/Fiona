@@ -153,7 +153,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
     return map;
   }, [monthlyExpenses]);
 
-  // Filtered expenses for standard view
+  // it controls every expenses in the block
   const displayExpenses = useMemo(() => {
     return expenseTransactions
       .filter((tx) => {
@@ -165,7 +165,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           (tx.notes && tx.notes.toLowerCase().includes(searchQuery.toLowerCase()));
         const matchesSector = selectedSector === 'all' || tx.category === selectedSector;
         const matchesPayment = selectedPaymentMethod === 'all' || tx.paymentMethod === selectedPaymentMethod;
-        return matchesMonth && matchesSearch && matchesSector && matchesPayment;
+        return matchesMonth && matchesSearch && matchesSector && matchesPayment;// it has to follow all the blocks to stay in the cod
       })
       .sort((a, b) => {
         if (sortBy === 'date_desc') return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -186,7 +186,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
   const targetDailyBudget = monthlyBudgetLimit / daysInMonth;
   const actualAvgDailySpend = totalMonthlyExpense / daysInMonth;
 
-  // Daily Expense Aggregation (Group by Date)
+  // add all the expenses here 
   const dailyGroups = useMemo(() => {
     const groups: Record<string, { date: string; total: number; transactions: Transaction[] }> = {};
 
