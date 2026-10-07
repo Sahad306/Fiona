@@ -95,13 +95,13 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
     formatCurrency,
     exportCSV,
     profile,
-  } = useFinance();
+  } = useFinance();// provides all finance state and utility functions
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSource, setSelectedSource] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'date_desc' | 'date_asc' | 'amount_desc' | 'amount_asc'>('date_desc');
 
-  // Filter income transactions
+  // keeps only income transactions
   const incomeTransactions = useMemo(() => {
     return transactions.filter((tx) => tx.type === 'income' && !tx.savingsTransfer);
   }, [transactions]);
@@ -172,7 +172,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       .reduce((sum, tx) => sum + tx.amount, 0);
   }, [monthlyIncomes]);
 
-  // Quick 1-click Fast Add
+  // creates a new transaction immediately
   const handleQuickAdd = (preset: (typeof INCOME_QUICK_PRESETS)[0]) => {
     addTransaction({
       type: 'income',
@@ -362,7 +362,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
         </div>
       </div>
 
-      {/* Visual Charts */}
+      {/* Visual Charts */} 
       {sourceBreakdown.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
