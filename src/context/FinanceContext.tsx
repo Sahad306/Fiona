@@ -890,7 +890,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     [budgets, selectedMonth, formatCurrency]
   );
 
-  // Add Transaction
+  // Add Transaction(gives transaction an id and timestamp)
   const addTransaction = useCallback(
     (tx: Omit<Transaction, 'id' | 'createdAt'>): Transaction => {
       const newTransaction: Transaction = {
@@ -899,7 +899,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
         createdAt: new Date().toISOString(),
       };
 
-      // Budget checks run outside the state updater (updaters must stay pure).
+      // check budget and save it to state
       checkBudgetThresholds(newTransaction, transactions);
       setTransactions((prev) => [newTransaction, ...prev]);
 
@@ -929,7 +929,7 @@ export const FinanceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     },
     [checkBudgetThresholds, transactions]
   );
-
+// update and delete evry transaction
   const updateTransaction = useCallback((id: string, updated: Partial<Transaction>) => {
     setTransactions((prev) => prev.map((tx) => (tx.id === id ? { ...tx, ...updated } : tx)));
   }, []);
