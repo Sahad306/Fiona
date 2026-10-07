@@ -126,7 +126,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [tags, setTags] = useState<string[]>([]);
   const [notes, setNotes] = useState<string>('');
 
-  // Daily Routine & Monthly Auto-Calculation with Off-Days States
+  // Daily Routine Mode
   const [isDailyRoutineEnabled, setIsDailyRoutineEnabled] = useState<boolean>(false);
   const [dailyRateInput, setDailyRateInput] = useState<string>('');
   const [totalMonthDays, setTotalMonthDays] = useState<number>(30);
@@ -134,7 +134,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [offDaysReason, setOffDaysReason] = useState<string>('Weekend / Holiday');
   const [saveAsRoutineMonthlyTotal, setSaveAsRoutineMonthlyTotal] = useState<boolean>(false);
 
-  // Monthly Sectors Fast-Matrix State (for Option 2: Monthly Mode)
+  // all the cost together for a month
   const [monthlySectorsState, setMonthlySectorsState] = useState<
     Array<{
       key: string;
