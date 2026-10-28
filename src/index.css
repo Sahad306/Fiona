@@ -1,5 +1,58 @@
 @import "tailwindcss";
 
+/* Make Tailwind's `dark:` variant follow the .dark class instead of
+   the OS preference. Without this, dark: utilities fire on a dark-mode
+   OS while the light token variables stay active -> mismatched page. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────────────────────
+   THEME TOKENS
+   Semantic surface/ink colors. Every component uses these
+   instead of hardcoded slate shades, so the whole app can
+   flip between light and dark from one place.
+   ───────────────────────────────────────────────────────────── */
+@theme {
+  --color-canvas: var(--c-canvas);
+  --color-surface: var(--c-surface);
+  --color-elevated: var(--c-elevated);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-ink: var(--c-ink);
+  --color-ink-2: var(--c-ink-2);
+  --color-ink-3: var(--c-ink-3);
+  --color-ink-4: var(--c-ink-4);
+}
+
+/* Light (default) */
+:root {
+  --c-canvas: #f8fafc;
+  --c-surface: #ffffff;
+  --c-elevated: #f1f5f9;
+  --c-line: #e2e8f0;
+  --c-line-strong: #cbd5e1;
+  /* Text ramp tuned for WCAG AA (4.5:1) on white:
+     ink 17.9:1 / ink-2 10.4:1 / ink-3 7.5:1 / ink-4 4.8:1 */
+  --c-ink: #0f172a;
+  --c-ink-2: #334155;
+  --c-ink-3: #475569;
+  --c-ink-4: #64748b;
+  color-scheme: light;
+}
+
+/* Dark */
+.dark {
+  --c-canvas: #020617;
+  --c-surface: #0f172a;
+  --c-elevated: #1e293b;
+  --c-line: #1e293b;
+  --c-line-strong: #334155;
+  --c-ink: #f8fafc;
+  --c-ink-2: #cbd5e1;
+  --c-ink-3: #94a3b8;
+  --c-ink-4: #64748b;
+  color-scheme: dark;
+}
+
 html,
 body {
   overflow-x: hidden;

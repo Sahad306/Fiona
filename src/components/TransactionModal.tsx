@@ -45,7 +45,6 @@ import {
   DEFAULT_INCOME_SOURCES,
   PAYMENT_METHODS,
   MONTHLY_SECTOR_CONFIGS,
-  BANGLADESH_DAILY_PRESETS,
 } from '../data/defaultData';
 import { Transaction, PaymentMethod, SectorSplit } from '../types';
 
@@ -65,9 +64,9 @@ const INCOME_SOURCE_DETAILS: Record<string, { icon: React.ReactNode; label: stri
   Investments: { icon: <TrendingUp className="w-4 h-4 text-indigo-400" />, label: 'Investments & DPS', desc: 'Stocks, savings certificates & dividends' },
   Allowances: { icon: <Gift className="w-4 h-4 text-pink-400" />, label: 'Family Allowances', desc: 'Family support & education grants' },
   'Rental Income': { icon: <Home className="w-4 h-4 text-amber-400" />, label: 'Rental Income', desc: 'Property, sublease & tenant revenue' },
-  'Side Hustle': { icon: <Zap className="w-4 h-4 text-amber-300" />, label: 'Tuition & Side Hustle', desc: 'Coaching, mentoring & extra income' },
+  'Side Hustle': { icon: <Zap className="w-4 h-4 text-amber-700 dark:text-amber-300" />, label: 'Tuition & Side Hustle', desc: 'Coaching, mentoring & extra income' },
   Gifts: { icon: <Gift className="w-4 h-4 text-purple-400" />, label: 'Awards & Stipends', desc: 'Academic scholarship & gifts' },
-  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Inflows', desc: 'Miscellaneous incoming funds' },
+  Other: { icon: <Wallet className="w-4 h-4 text-ink-3" />, label: 'Other Inflows', desc: 'Miscellaneous incoming funds' },
 };
 
 // Expense sectors metadata
@@ -81,9 +80,9 @@ const EXPENSE_SECTOR_DETAILS: Record<string, { icon: React.ReactNode; label: str
   Shopping: { icon: <ShoppingBag className="w-4 h-4 text-pink-400" />, label: 'Shopping & Apparel', desc: 'Clothing, gadgets, accessories' },
   'Healthcare & Medical': { icon: <HeartPulse className="w-4 h-4 text-rose-400" />, label: 'Healthcare & Medical', desc: 'Pharmacy medicines, doctor, tests' },
   Entertainment: { icon: <Film className="w-4 h-4 text-cyan-400" />, label: 'Entertainment', desc: 'Streaming, movies, gaming, outings' },
-  'Personal Care': { icon: <HeartPulse className="w-4 h-4 text-teal-300" />, label: 'Personal Care', desc: 'Grooming, salon, personal items' },
+  'Personal Care': { icon: <HeartPulse className="w-4 h-4 text-teal-700 dark:text-teal-300" />, label: 'Personal Care', desc: 'Grooming, salon, personal items' },
   Travel: { icon: <Plane className="w-4 h-4 text-orange-400" />, label: 'Travel & Trips', desc: 'Vacation, train tickets, hotel stays' },
-  Other: { icon: <Wallet className="w-4 h-4 text-slate-400" />, label: 'Other Outflows', desc: 'Miscellaneous expenses' },
+  Other: { icon: <Wallet className="w-4 h-4 text-ink-3" />, label: 'Other Outflows', desc: 'Miscellaneous expenses' },
 };
 
 // Payment Rail Branding & Colors
@@ -96,7 +95,7 @@ const PAYMENT_RAIL_STYLES: Record<string, { bg: string; text: string; border: st
   'Credit Card': { bg: 'bg-blue-950/40 hover:bg-blue-900/50', text: 'text-blue-400', border: 'border-blue-500/40' },
   'Debit Card': { bg: 'bg-cyan-950/40 hover:bg-cyan-900/50', text: 'text-cyan-400', border: 'border-cyan-500/40' },
   'UPI / Online': { bg: 'bg-indigo-950/40 hover:bg-indigo-900/50', text: 'text-indigo-400', border: 'border-indigo-500/40' },
-  Other: { bg: 'bg-slate-900 hover:bg-slate-800', text: 'text-slate-300', border: 'border-slate-700' },
+  Other: { bg: 'bg-surface hover:bg-elevated', text: 'text-ink-2', border: 'border-line-strong' },
 };
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({
@@ -145,6 +144,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       amount: string;
       paymentMethod: PaymentMethod;
       notes: string;
+      isCustom?: boolean;
     }>
   >(() =>
     MONTHLY_SECTOR_CONFIGS.map((sec) => ({
@@ -152,8 +152,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       category: sec.category,
       label: sec.label,
       desc: sec.desc,
-      enabled: true,
-      amount: sec.defaultAmount.toString(),
+      enabled: false,
+      amount: '',
       paymentMethod: sec.defaultMethod,
       notes: '',
     }))
@@ -234,24 +234,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
   if (!isOpen) return null;
 
-  // Handle Quick Chip Bumps
-  const handleAmountBump = (add: number) => {
-    const curr = parseFloat(amount) || 0;
-    const next = (curr + add).toString();
-    setAmount(next);
-    if (isDailyRoutineEnabled && !dailyRateInput) {
-      setDailyRateInput(next);
-    }
-  };
-
-  // Quick Daily Preset Selected
-  const handleDailyPresetSelect = (preset: (typeof BANGLADESH_DAILY_PRESETS)[0]) => {
-    setAmount(preset.amount.toString());
-    setCategory(preset.category);
-    setDescription(preset.label);
-    setDailyRateInput(preset.amount.toString());
-  };
-
   // Tag Management
   const handleAddTag = (newTag?: string) => {
     const t = (newTag || tagInput).trim();
@@ -271,26 +253,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
     const parsedAmount = parseFloat(amount);
     if (isNaN(parsedAmount) || parsedAmount <= 0) return;
 
-    let finalAmount = parsedAmount;
-    let finalDesc = description || (type === 'income' ? `${category} Income` : `${category} Expense`);
-    let finalRecurring = recurring;
-
-    let dailyConfigData = undefined;
-    if (type === 'expense' && isDailyRoutineEnabled) {
-      dailyConfigData = {
-        dailyRate: calculatedRoutine.rate,
-        totalDaysInMonth: calculatedRoutine.days,
-        offDaysCount: calculatedRoutine.off,
-        offDaysReason: offDaysReason,
-        calculatedMonthlyTotal: calculatedRoutine.monthlyTotal,
-      };
-
-      if (saveAsRoutineMonthlyTotal) {
-        finalAmount = calculatedRoutine.monthlyTotal;
-        finalDesc = `${finalDesc} (${calculatedRoutine.activeDays} Active Days × ${formatCurrency(calculatedRoutine.rate)})`;
-        finalRecurring = 'monthly';
-      }
-    }
+    const finalAmount = parsedAmount;
+    const finalDesc = description || (type === 'income' ? `${category} Income` : `${category} Expense`);
+    const finalRecurring = recurring;
 
     const txData: Omit<Transaction, 'id' | 'createdAt'> = {
       type,
@@ -304,7 +269,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       tags: tags.length > 0 ? tags : undefined,
       notes: notes.trim() || undefined,
       expenseMode: type === 'expense' ? expenseMode : undefined,
-      dailyConfig: dailyConfigData,
     };
 
     if (editingTransaction) {
@@ -319,7 +283,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   // Submit Batch Monthly Sectors (Option 2: Monthly Mode)
   const handleSubmitMonthlySectors = (e: React.FormEvent) => {
     e.preventDefault();
-    const activeItems = monthlySectorsState.filter((s) => s.enabled && parseFloat(s.amount) > 0);
+    const activeItems = monthlySectorsState.filter(
+      (s) => s.enabled && parseFloat(s.amount) > 0 && s.label.trim().length > 0
+    );
     if (activeItems.length === 0) return;
 
     const txBatch: Array<Omit<Transaction, 'id' | 'createdAt'>> = activeItems.map((item) => ({
@@ -340,13 +306,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/80 backdrop-blur-md overflow-y-auto">
       <div
-        className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col"
+        className="bg-surface border border-line rounded-3xl w-full max-w-2xl shadow-2xl overflow-hidden my-8 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col"
         id="finora-transaction-modal"
       >
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90 sticky top-0 z-10">
+        <div className="px-6 py-4 border-b border-line flex items-center justify-between bg-surface/90 sticky top-0 z-10">
           <div className="flex items-center space-x-3">
             <div
               className={`w-10 h-10 rounded-2xl flex items-center justify-center font-bold text-sm shadow-inner ${
@@ -358,24 +324,19 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               {type === 'income' ? <ArrowUpRight className="w-5 h-5 stroke-[2.5]" /> : <ArrowDownRight className="w-5 h-5 stroke-[2.5]" />}
             </div>
             <div>
-              <h2 className="text-base font-black text-white tracking-tight">
+              <h2 className="text-base font-black text-ink tracking-tight">
                 {editingTransaction
                   ? `Edit ${editingTransaction.type === 'income' ? 'Income Deposit' : 'Expense'}`
                   : type === 'income'
                   ? 'Add Income Inflow'
                   : 'Add Expense Outflow'}
               </h2>
-              <p className="text-[11px] text-slate-400">
-                {type === 'income'
-                  ? 'Record salary, freelancing, tuition, gifts & business revenues'
-                  : 'Choose between Daily Routine with Off-Days or Ready Monthly Sectors'}
-              </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+            className="w-8 h-8 rounded-full bg-elevated hover:bg-line-strong text-ink-3 hover:text-ink flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -384,7 +345,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         {/* Top Type Selector: Income vs Expense */}
         {!editingTransaction && (
           <div className="px-6 pt-4 pb-2">
-            <div className="grid grid-cols-2 p-1 bg-slate-950 rounded-2xl border border-slate-800 gap-1">
+            <div className="grid grid-cols-2 p-1 bg-canvas rounded-2xl border border-line gap-1">
               <button
                 type="button"
                 onClick={() => {
@@ -394,7 +355,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 className={`py-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                   type === 'expense'
                     ? 'bg-gradient-to-r from-rose-500/30 to-amber-500/30 text-rose-300 border border-rose-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-ink-3 hover:text-ink'
                 }`}
               >
                 <ArrowDownRight className="w-4 h-4 text-rose-400" />
@@ -409,8 +370,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 }}
                 className={`py-2.5 rounded-xl font-black text-xs transition-all flex items-center justify-center space-x-2 cursor-pointer ${
                   type === 'income'
-                    ? 'bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    ? 'bg-gradient-to-r from-emerald-500/30 to-teal-500/30 text-emerald-700 border border-emerald-500/40 shadow-sm'
+                    : 'text-ink-3 hover:text-ink'
                 }`}
               >
                 <ArrowUpRight className="w-4 h-4 text-emerald-400" />
@@ -423,9 +384,9 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         {/*  USER REQUEST CORE: TWO CLEAR OPTIONS FOR EXPENSE (DAILY vs MONTHLY) */}
         {type === 'expense' && !editingTransaction && (
           <div className="px-6 py-2">
-            <div className="bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+            <div className="bg-canvas p-1.5 rounded-2xl border border-line">
               <div className="flex items-center justify-between mb-1.5 px-2">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-ink-3 uppercase tracking-wider">
                   Expense Structure Selection
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium">
@@ -440,8 +401,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   onClick={() => setExpenseMode('daily')}
                   className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden ${
                     expenseMode === 'daily'
-                      ? 'bg-gradient-to-br from-amber-500/20 via-slate-900 to-slate-900 border-amber-500/50 shadow-md ring-1 ring-amber-500/30'
-                      : 'bg-slate-900/70 hover:bg-slate-800/80 border-slate-800'
+                      ? 'bg-gradient-to-br from-amber-500/20 via-elevated to-surface border-amber-500/50 shadow-md ring-1 ring-amber-500/30'
+                      : 'bg-surface/70 hover:bg-elevated/80 border-line'
                   }`}
                 >
                   <div className="flex items-center space-x-2.5">
@@ -449,26 +410,20 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       className={`w-7 h-7 rounded-lg flex items-center justify-center ${
                         expenseMode === 'daily'
                           ? 'bg-amber-500 text-slate-950 font-black'
-                          : 'bg-slate-800 text-amber-400'
+                          : 'bg-elevated text-amber-400'
                       }`}
                     >
                       <Zap className="w-4 h-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-black text-white">OPTION 1: Daily Expense</span>
+                        <span className="text-xs font-black text-ink">OPTION 1: Daily Expense</span>
                         {expenseMode === 'daily' && (
                           <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
                         )}
                       </div>
-                      <span className="text-[10px] text-amber-300 font-semibold block">
-                        Daily Expenses & Routine Calculation (with Off-Days)
-                      </span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
-                    Add daily meals, transport & auto-calculate monthly total by subtracting missed / off-days.
-                  </p>
                 </button>
 
                 {/* OPTION 2: MONTHLY EXPENSE MODE */}
@@ -477,8 +432,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   onClick={() => setExpenseMode('monthly')}
                   className={`p-3 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden ${
                     expenseMode === 'monthly'
-                      ? 'bg-gradient-to-br from-indigo-500/20 via-slate-900 to-slate-900 border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
-                      : 'bg-slate-900/70 hover:bg-slate-800/80 border-slate-800'
+                      ? 'bg-gradient-to-br from-indigo-500/20 via-elevated to-surface border-indigo-500/50 shadow-md ring-1 ring-indigo-500/30'
+                      : 'bg-surface/70 hover:bg-elevated/80 border-line'
                   }`}
                 >
                   <div className="flex items-center space-x-2.5">
@@ -486,26 +441,20 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       className={`w-7 h-7 rounded-lg flex items-center justify-center ${
                         expenseMode === 'monthly'
                           ? 'bg-indigo-500 text-white font-black'
-                          : 'bg-slate-800 text-indigo-400'
+                          : 'bg-elevated text-indigo-400'
                       }`}
                     >
                       <CalendarDays className="w-4 h-4" />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs font-black text-white">OPTION 2: Monthly Costs</span>
+                        <span className="text-xs font-black text-ink">OPTION 2: Monthly Costs</span>
                         {expenseMode === 'monthly' && (
                           <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span>
                         )}
                       </div>
-                      <span className="text-[10px] text-indigo-300 font-semibold block">
-                        Monthly Matrix (Rent, Utilities & Bills)
-                      </span>
                     </div>
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-2 leading-relaxed">
-                    Preset monthly options: Rent, WiFi, Bills, Cleaning. Just enter amount & payment method.
-                  </p>
                 </button>
               </div>
             </div>
@@ -522,34 +471,54 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 <div className="flex items-center space-x-2.5">
                   <CalendarDays className="w-5 h-5 text-indigo-400" />
                   <div>
-                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">
+                    <h3 className="text-xs font-bold text-ink uppercase tracking-wider">
                       Ready Monthly Expense Checklist
                     </h3>
-                    <p className="text-[11px] text-indigo-300">
-                      Standard monthly sectors are ready. Simply input the <strong>Amount</strong> & <strong>Payment Method</strong>.
-                    </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-[10px] text-slate-400 block">Total Monthly Sum</span>
-                  <span className="text-base font-black text-indigo-300 font-mono">
+                  <span className="text-[10px] text-ink-3 block">Total Monthly Sum</span>
+                  <span className="text-base font-black text-indigo-700 dark:text-indigo-300 font-mono">
                     {formatCurrency(monthlySectorsTotal)}
                   </span>
                 </div>
               </div>
             </div>
 
+            {/* Bulk select controls */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-ink-2">
+                {monthlySectorsState.filter((s) => s.enabled).length} of {monthlySectorsState.length} selected
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMonthlySectorsState((prev) => prev.map((s) => ({ ...s, enabled: true })))}
+                  className="px-3 py-1.5 rounded-lg bg-indigo-500/15 hover:bg-indigo-500/25 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 text-[11px] font-bold transition-colors cursor-pointer"
+                >
+                  Select All
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMonthlySectorsState((prev) => prev.map((s) => ({ ...s, enabled: false })))}
+                  className="px-3 py-1.5 rounded-lg bg-elevated hover:bg-line-strong text-ink-2 border border-line text-[11px] font-bold transition-colors cursor-pointer"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+
             {/* Date selector for monthly batch */}
-            <div className="flex items-center justify-between bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs">
-              <span className="text-slate-400 font-semibold flex items-center gap-1.5">
-                <Calendar className="w-4 h-4 text-slate-400" />
+            <div className="flex items-center justify-between bg-canvas p-3 rounded-2xl border border-line text-xs">
+              <span className="text-ink-3 font-semibold flex items-center gap-1.5">
+                <Calendar className="w-4 h-4 text-ink-3" />
                 Target Month & Date:
               </span>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="bg-slate-900 border border-slate-800 rounded-xl px-3 py-1.5 text-white font-mono text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+                className="bg-surface border border-line rounded-xl px-3 py-1.5 text-ink font-mono text-xs focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
               />
             </div>
 
@@ -560,8 +529,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   key={sec.key}
                   className={`p-3.5 rounded-2xl border transition-all ${
                     sec.enabled
-                      ? 'bg-slate-950/80 border-slate-800 hover:border-slate-700'
-                      : 'bg-slate-950/30 border-slate-900 opacity-60'
+                      ? 'bg-canvas/80 border-line hover:border-line-strong'
+                      : 'bg-canvas/30 border-line opacity-60'
                   }`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -575,13 +544,24 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                           next[idx].enabled = e.target.checked;
                           setMonthlySectorsState(next);
                         }}
-                        className="mt-1 w-4 h-4 rounded text-indigo-600 bg-slate-900 border-slate-700 focus:ring-indigo-500 cursor-pointer"
+                        className="mt-1 w-4 h-4 rounded text-indigo-700 bg-surface border-line-strong focus:ring-indigo-500 cursor-pointer"
                       />
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <h4 className="text-xs font-bold text-white">{sec.label}</h4>
-                        </div>
-                        <span className="text-[10px] text-slate-400 block">{sec.desc}</span>
+                      <div className="min-w-0">
+                        {sec.isCustom ? (
+                          <input
+                            type="text"
+                            value={sec.label}
+                            onChange={(e) => {
+                              const next = [...monthlySectorsState];
+                              next[idx].label = e.target.value;
+                              setMonthlySectorsState(next);
+                            }}
+                            placeholder="Cost name (e.g. Gym, Insurance)"
+                            className="w-40 sm:w-56 px-2.5 py-1.5 bg-surface border border-line rounded-lg text-xs font-bold text-ink placeholder-ink-4 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                          />
+                        ) : (
+                          <h4 className="text-xs font-bold text-ink">{sec.label}</h4>
+                        )}
                       </div>
                     </div>
 
@@ -602,7 +582,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                               setMonthlySectorsState(next);
                             }}
                             placeholder="Amount"
-                            className="w-full pl-6 pr-2 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs font-black text-white font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none text-right"
+                            className="w-full pl-6 pr-2 py-1.5 bg-surface border border-line rounded-xl text-xs font-black text-ink font-mono focus:ring-2 focus:ring-indigo-500 focus:outline-none text-right"
                           />
                         </div>
 
@@ -614,7 +594,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                             next[idx].paymentMethod = e.target.value as PaymentMethod;
                             setMonthlySectorsState(next);
                           }}
-                          className="px-2.5 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+                          className="px-2.5 py-1.5 bg-surface border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
                         >
                           {PAYMENT_METHODS.map((pm) => (
                             <option key={pm} value={pm}>
@@ -629,10 +609,34 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               ))}
             </div>
 
+            {/* Add a custom monthly cost */}
+            <button
+              type="button"
+              onClick={() =>
+                setMonthlySectorsState((prev) => [
+                  ...prev,
+                  {
+                    key: `custom_${Date.now()}`,
+                    category: 'Other',
+                    label: '',
+                    desc: '',
+                    enabled: true,
+                    amount: '',
+                    paymentMethod: 'Cash' as PaymentMethod,
+                    notes: '',
+                    isCustom: true,
+                  },
+                ])
+              }
+              className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-dashed border-line-strong hover:border-indigo-500/50 bg-canvas hover:bg-elevated text-ink-2 hover:text-ink text-xs font-bold transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4" /> Add Custom Cost
+            </button>
+
             {/* Bottom Actions for Monthly Sectors */}
-            <div className="pt-3 border-t border-slate-800 flex items-center justify-between sticky bottom-0 bg-slate-900 py-3">
+            <div className="pt-3 border-t border-line flex items-center justify-between sticky bottom-0 bg-surface py-3">
               <div>
-                <span className="text-xs text-slate-400 block">
+                <span className="text-xs text-ink-3 block">
                   {enabledMonthlyCount} sectors selected
                 </span>
                 <span className="text-sm font-black text-emerald-400 font-mono">
@@ -644,7 +648,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl bg-elevated hover:bg-line-strong text-ink-2 text-xs font-bold transition-all cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -664,42 +668,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           /* VIEW 2: DAILY EXPENSE / SINGLE EXPENSE / INCOME FORM                      */
           /* ========================================================================= */
           <form onSubmit={handleSubmitSingle} className="p-6 space-y-5 overflow-y-auto flex-1">
-            {/* Quick Presets for Daily Expenses */}
-            {type === 'expense' && (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    Quick 1-Click Daily Presets
-                  </label>
-                  <span className="text-[10px] text-amber-400/80">Tap to auto-fill</span>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {BANGLADESH_DAILY_PRESETS.map((preset) => (
-                    <button
-                      key={preset.label}
-                      type="button"
-                      onClick={() => handleDailyPresetSelect(preset)}
-                      className="p-2 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all active:scale-95 cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-200 truncate">{preset.label}</span>
-                        <span className="text-xs font-black text-amber-400 font-mono">
-                          {formatCurrency(preset.amount)}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-slate-500 block truncate mt-0.5">{preset.desc}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Amount Field with Quick Taka Bumps */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-300">
-                  {type === 'income' ? 'Income Amount' : isDailyRoutineEnabled ? 'Daily Rate' : 'Expense Amount'}
+                <label className="text-xs font-bold text-ink-2">
+                  {type === 'income' ? 'Income Amount' : 'Expense Amount'}
                 </label>
                 <span className="text-xs font-black text-emerald-400 font-mono">
                   {amount ? formatCurrency(parseFloat(amount) || 0) : `${profile.currencySymbol || 'Tk'}0`}
@@ -707,7 +680,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               </div>
 
               <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-black text-slate-400">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xl font-black text-ink-3">
                   {profile.currencySymbol || 'Tk'}
                 </span>
                 <input
@@ -716,172 +689,17 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   value={amount}
                   onChange={(e) => {
                     setAmount(e.target.value);
-                    if (isDailyRoutineEnabled) setDailyRateInput(e.target.value);
                   }}
                   placeholder="0.00"
                   required
-                  className="w-full pl-10 pr-4 py-3.5 bg-slate-950 border border-slate-800 rounded-2xl text-2xl font-black text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono"
+                  className="w-full pl-10 pr-4 py-3.5 bg-canvas border border-line rounded-2xl text-2xl font-black text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none font-mono"
                 />
-              </div>
-
-              {/* Quick Taka Chip Bumps */}
-              <div className="flex flex-wrap gap-1.5 pt-1">
-                {(type === 'income' ? [500, 1000, 2000, 5000, 10000, 25000] : [20, 50, 100, 200, 500, 1000, 2000]).map((bump) => (
-                  <button
-                    key={bump}
-                    type="button"
-                    onClick={() => handleAmountBump(bump)}
-                    className="px-2.5 py-1 rounded-lg bg-slate-950 hover:bg-slate-800 border border-slate-800 text-[11px] font-bold text-slate-300 hover:text-white transition-colors cursor-pointer font-mono"
-                  >
-                    +{formatCurrency(bump)}
-                  </button>
-                ))}
               </div>
             </div>
 
-            {/*  USER REQUEST CORE: DAILY ROUTINE & MONTHLY CALCULATION WITH OFF-DAYS */}
-            {type === 'expense' && (
-              <div className="p-4 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-amber-500/30 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Calculator className="w-4 h-4 text-amber-400" />
-                    <div>
-                      <h4 className="text-xs font-bold text-white">
-                        Daily Routine & Monthly Auto-Calculation
-                      </h4>
-                      <p className="text-[10px] text-slate-400">
-                        Calculate monthly bill by multiplying daily rate with active days (minus off/missed days).
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Toggle Switch */}
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isDailyRoutineEnabled}
-                      onChange={(e) => {
-                        setIsDailyRoutineEnabled(e.target.checked);
-                        if (e.target.checked && !dailyRateInput) {
-                          setDailyRateInput(amount || '150');
-                        }
-                      }}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
-                  </label>
-                </div>
-
-                {isDailyRoutineEnabled && (
-                  <div className="space-y-3 pt-2 border-t border-slate-800/80 animate-in fade-in duration-200">
-                    {/* Controls Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                      {/* Total Days in Month */}
-                      <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                        <label className="text-[10px] font-bold text-slate-400 block mb-1">
-                          Total Days in Month
-                        </label>
-                        <select
-                          value={totalMonthDays}
-                          onChange={(e) => setTotalMonthDays(parseInt(e.target.value))}
-                          className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-mono focus:outline-none"
-                        >
-                          <option value={30}>30 Days (Standard Month)</option>
-                          <option value={31}>31 Days (Full Month)</option>
-                          <option value={28}>28 Days (February)</option>
-                          <option value={26}>26 Working Days (No Fri/Sat)</option>
-                          <option value={22}>22 Official Work Days</option>
-                        </select>
-                      </div>
-
-                      {/* Off-Days / Missed Days */}
-                      <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                        <label className="text-[10px] font-bold text-amber-400 block mb-1">
-                          Off / Missed Days
-                        </label>
-                        <div className="flex items-center space-x-1.5">
-                          <button
-                            type="button"
-                            onClick={() => setOffDaysCount(Math.max(0, offDaysCount - 1))}
-                            className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold flex items-center justify-center cursor-pointer"
-                          >
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            value={offDaysCount}
-                            onChange={(e) => setOffDaysCount(Math.max(0, parseInt(e.target.value) || 0))}
-                            className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2 py-1 text-xs text-center font-bold text-amber-300 font-mono"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setOffDaysCount(offDaysCount + 1)}
-                            className="w-7 h-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold flex items-center justify-center cursor-pointer"
-                          >
-                            +
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Reason for Off Days */}
-                      <div className="bg-slate-950 p-2.5 rounded-xl border border-slate-800">
-                        <label className="text-[10px] font-bold text-slate-400 block mb-1">
-                          Off-Day Reason
-                        </label>
-                        <input
-                          type="text"
-                          value={offDaysReason}
-                          onChange={(e) => setOffDaysReason(e.target.value)}
-                          placeholder="e.g., Went Home / Roza / Sick"
-                          className="w-full bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Interactive Calculation Breakdown Ribbon */}
-                    <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <div className="flex items-center space-x-2 text-xs">
-                        <span className="text-slate-400 font-mono">
-                          ({calculatedRoutine.days} Days - {calculatedRoutine.off} Off)
-                        </span>
-                        <span className="text-slate-500">=</span>
-                        <span className="text-emerald-400 font-black font-mono">
-                          {calculatedRoutine.activeDays} Active Days
-                        </span>
-                        <span className="text-slate-500">×</span>
-                        <span className="text-amber-400 font-bold font-mono">
-                          {formatCurrency(calculatedRoutine.rate)}
-                        </span>
-                      </div>
-
-                      <div className="text-right">
-                        <span className="text-[10px] text-slate-400 mr-2">Projected Month Total:</span>
-                        <span className="text-sm font-black text-amber-300 font-mono">
-                          {formatCurrency(calculatedRoutine.monthlyTotal)}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Checkbox: Save Full Monthly Calculated Routine vs Single Today Log */}
-                    <label className="flex items-center space-x-2 cursor-pointer bg-slate-950/60 p-2 rounded-xl border border-slate-800">
-                      <input
-                        type="checkbox"
-                        checked={saveAsRoutineMonthlyTotal}
-                        onChange={(e) => setSaveAsRoutineMonthlyTotal(e.target.checked)}
-                        className="w-4 h-4 rounded text-amber-500 bg-slate-900 border-slate-700 focus:ring-amber-500 cursor-pointer"
-                      />
-                      <span className="text-xs text-slate-300">
-                        Commit full calculated monthly total (<strong>{formatCurrency(calculatedRoutine.monthlyTotal)}</strong>) as a monthly recurring bill
-                      </span>
-                    </label>
-                  </div>
-                )}
-              </div>
-            )}
-
             {/* Category / Stream Grid */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300">
+              <label className="text-xs font-bold text-ink-2">
                 {type === 'income' ? 'Income Stream' : 'Expense Sector'}
               </label>
 
@@ -904,15 +722,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                           ? type === 'income'
                             ? 'bg-emerald-500/20 border-emerald-500/50 shadow-sm ring-1 ring-emerald-500/30'
                             : 'bg-rose-500/20 border-rose-500/50 shadow-sm ring-1 ring-rose-500/30'
-                          : 'bg-slate-950 hover:bg-slate-800/80 border-slate-800'
+                          : 'bg-canvas hover:bg-elevated/80 border-line'
                       }`}
                     >
                       <div className="mt-0.5 shrink-0">{details.icon}</div>
                       <div className="min-w-0">
-                        <span className={`text-xs font-bold block truncate ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                        <span className={`text-xs font-bold block truncate ${isSelected ? 'text-ink' : 'text-ink-2'}`}>
                           {details.label}
                         </span>
-                        <span className="text-[10px] text-slate-500 block truncate">{details.desc}</span>
                       </div>
                     </button>
                   );
@@ -923,7 +740,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Description & Payer/Client Input */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-ink-2 block mb-1">
                   Description
                 </label>
                 <input
@@ -931,12 +748,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder={type === 'income' ? 'e.g. Upwork Client Milestone / Tech Salary' : 'e.g. Mess Meal, Rickshaw, Grocery'}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-ink-2 block mb-1">
                   {type === 'income' ? 'Payer / Client / Institution' : 'Merchant / Store / Person'}
                 </label>
                 <input
@@ -944,7 +761,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   value={payerOrClient}
                   onChange={(e) => setPayerOrClient(e.target.value)}
                   placeholder={type === 'income' ? 'e.g. Brain Station 23 / RUET CSE' : 'e.g. Shwapno, Mess Manager, Rickshaw'}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -952,14 +769,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             {/* Payment Method / Way of Dealing & Date */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1 flex items-center justify-between">
+                <label className="text-xs font-bold text-ink-2 block mb-1 flex items-center justify-between">
                   <span>Payment Method</span>
                   <span className="text-[10px] text-pink-400 font-bold">bKash • Nagad • Rocket</span>
                 </label>
                 <select
                   value={paymentMethod}
                   onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                 >
                   {PAYMENT_METHODS.map((pm) => (
                     <option key={pm} value={pm}>
@@ -970,21 +787,21 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               </div>
 
               <div>
-                <label className="text-xs font-bold text-slate-300 block mb-1">
+                <label className="text-xs font-bold text-ink-2 block mb-1">
                   Date
                 </label>
                 <input
                   type="date"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink font-mono focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                 />
               </div>
             </div>
 
             {/* Recurring Schedule */}
             <div>
-              <label className="text-xs font-bold text-slate-300 block mb-1">
+              <label className="text-xs font-bold text-ink-2 block mb-1">
                 Recurring Frequency
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -1000,8 +817,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     onClick={() => setRecurring(rec.key as any)}
                     className={`py-2 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                       recurring === rec.key
-                        ? 'bg-slate-800 border-slate-600 text-white shadow-sm'
-                        : 'bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200'
+                        ? 'bg-elevated border-line-strong text-ink shadow-sm'
+                        : 'bg-canvas border-line text-ink-3 hover:text-ink'
                     }`}
                   >
                     {rec.label}
@@ -1012,7 +829,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
             {/* Tags & Notes */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-300 block">
+              <label className="text-xs font-bold text-ink-2 block">
                 Tags & Reference Notes
               </label>
               <div className="flex items-center space-x-2">
@@ -1027,12 +844,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     }
                   }}
                   placeholder="Add tag (e.g. Mess, RUET, Client) and hit enter"
-                  className="flex-1 px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:outline-none"
+                  className="flex-1 px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => handleAddTag()}
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-3 py-2 bg-elevated hover:bg-line-strong text-ink rounded-xl text-xs font-bold cursor-pointer"
                 >
                   Add Tag
                 </button>
@@ -1043,7 +860,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   {tags.map((t) => (
                     <span
                       key={t}
-                      className="px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-300 text-[11px] font-mono flex items-center gap-1 border border-slate-700"
+                      className="px-2.5 py-0.5 rounded-full bg-elevated text-ink-2 text-[11px] font-mono flex items-center gap-1 border border-line-strong"
                     >
                       #{t}
                       <button
@@ -1060,11 +877,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-3 border-t border-slate-800 flex items-center justify-end space-x-3 sticky bottom-0 bg-slate-900 py-3">
+            <div className="pt-3 border-t border-line flex items-center justify-end space-x-3 sticky bottom-0 bg-surface py-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition-all cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-elevated hover:bg-line-strong text-ink-2 text-xs font-bold transition-all cursor-pointer"
               >
                 Cancel
               </button>
@@ -1082,8 +899,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                     ? 'Save Changes'
                     : type === 'income'
                     ? `Deposit Income (${amount ? formatCurrency(parseFloat(amount)) : 'Tk0'})`
-                    : isDailyRoutineEnabled && saveAsRoutineMonthlyTotal
-                    ? `Save Monthly Routine (${formatCurrency(calculatedRoutine.monthlyTotal)})`
                     : `Log Expense (${amount ? formatCurrency(parseFloat(amount)) : 'Tk0'})`}
                 </span>
               </button>

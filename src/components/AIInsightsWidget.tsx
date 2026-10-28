@@ -100,13 +100,13 @@ export const AIInsightsWidget: React.FC = () => {
   if (insights.length === 0) return null;
 
   return (
-    <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-emerald-950/30 border border-emerald-500/20 shadow-sm">
+    <div className="p-5 rounded-2xl bg-gradient-to-r from-elevated via-elevated to-emerald-950/30 border border-emerald-500/20 shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-emerald-500/20 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-emerald-400" />
           </div>
-          <h3 className="text-xs font-bold text-white uppercase tracking-wider">AI Insights</h3>
+          <h3 className="text-xs font-bold text-ink uppercase tracking-wider">AI Insights</h3>
         </div>
         <span className="text-[10px] font-semibold text-emerald-400/70 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
           Live
@@ -119,10 +119,10 @@ export const AIInsightsWidget: React.FC = () => {
           return (
             <div
               key={idx}
-              className="flex items-start gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 hover:border-slate-700 transition-colors"
+              className="flex items-start gap-3 p-3 rounded-xl bg-canvas/60 border border-line/60 hover:border-line-strong transition-colors"
             >
               <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${insight.color}`} />
-              <p className="text-xs text-slate-300 leading-relaxed">{insight.text}</p>
+              <p className="text-xs text-ink-2 leading-relaxed">{insight.text}</p>
             </div>
           );
         })}

@@ -27,19 +27,20 @@ import {
   LogIn,
   UserPlus,
   CloudCheck,
-  Zap,
   Lock,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import ProfileEditModal from './ProfileEditModal';
 import { useFinance } from '../context/FinanceContext';
+import { useTheme } from '../context/ThemeContext';
 
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onOpenAuthModal: (tab?: 'login' | 'register') => void;
-  onOpenSmartImport: () => void;
   onSignOut?: () => void;
 }
 
@@ -58,7 +59,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
   onOpenAuthModal,
-  onOpenSmartImport,
   onSignOut,
 }) => {
   const {
@@ -79,6 +79,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     logout,
     syncDatabase,
   } = useFinance();
+  const { theme, toggleTheme } = useTheme();
+
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -112,7 +114,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
-    <header className="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-sm" id="finora-navbar">
+    <header className="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-line text-ink shadow-sm" id="finora-navbar">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Brand Logo & Tagline */}
@@ -125,7 +127,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {/* Precision Designed Emblem Logo */}
               <div className="relative">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 p-[1px] shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/35 transition-all">
-                  <div className="w-full h-full bg-slate-950/95 rounded-[11px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
+                  <div className="w-full h-full bg-surface rounded-[11px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
                     <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/15 via-transparent to-cyan-500/15" />
                     <Wallet className="w-5 h-5 text-emerald-400 stroke-[2.2] relative z-10 group-hover:scale-110 transition-transform duration-300" />
                     <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full blur-[2px] opacity-70" />
@@ -135,14 +137,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 
               <div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-emerald-300">
+                  <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ink via-ink to-emerald-500">
                     FINORA
                   </span>
-                  <span className="text-[9px] uppercase font-extrabold tracking-widest px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                  <span className="text-[9px] uppercase font-extrabold tracking-widest px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
                     Vault OS
                   </span>
                 </div>
-                <p className="text-[10px] text-slate-400 font-medium tracking-wide hidden sm:block">
+                <p className="text-[10px] text-ink-3 font-medium tracking-wide hidden sm:block">
                   Wealth Architecture & Intelligence
                 </p>
               </div>
@@ -161,10 +163,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     className={`shrink-0 flex items-center space-x-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                       isActive
                         ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-sm'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                        : 'text-ink-2 hover:text-ink hover:bg-elevated/60'
                     }`}
                   >
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-ink-3'}`} />
                     <span className="hidden 2xl:inline">{item.label}</span>
                     {item.badge && (
                       <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-500 text-slate-950 ml-1 hidden 2xl:inline">
@@ -179,16 +181,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Controls */}
           <div className="flex items-center space-x-1.5 sm:space-x-2.5 shrink-0">
-            {/* Smart Import Button */}
+            {/* Theme Toggle */}
             <button
-              id="smart-import-btn"
-              onClick={() => onOpenSmartImport()}
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-violet-500 hover:bg-violet-400 text-white text-xs font-bold shadow-md shadow-violet-500/25 transition-all active:scale-95 cursor-pointer"
-              title="Import Bank / bKash / Nagad transactions"
+              id="theme-toggle-btn"
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-elevated border border-line text-ink-2 hover:text-emerald-700 hover:border-emerald-500/40 transition-colors cursor-pointer"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle color theme"
             >
-              <Zap className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Smart Import</span>
-              <span className="sm:hidden">Import</span>
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             {/* Currency Selector */}
@@ -202,7 +203,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     updateProfile({ currency: found.code, currencySymbol: found.symbol });
                   }
                 }}
-                className="bg-slate-800/80 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                className="bg-elevated/80 border border-line-strong text-ink text-xs rounded-lg px-2.5 py-2 focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
               >
                 {CURRENCIES.map((c) => (
                   <option key={c.code} value={c.code}>
@@ -217,7 +218,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="notifications-bell-btn"
                 onClick={() => setIsNotifOpen(!isNotifOpen)}
-                className="relative p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition-colors cursor-pointer"
+                className="relative p-2 rounded-lg text-ink-2 hover:text-ink hover:bg-elevated/80 transition-colors cursor-pointer"
                 title="Notifications"
               >
                 <Bell className="w-5 h-5" />
@@ -231,12 +232,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               {isNotifOpen && (
                 <div
                   id="notifications-dropdown"
-                  className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                  className="absolute right-0 mt-2 w-80 sm:w-96 rounded-xl bg-surface border border-line shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
                 >
-                  <div className="flex items-center justify-between px-4 py-3 bg-slate-800/50 border-b border-slate-800">
+                  <div className="flex items-center justify-between px-4 py-3 bg-elevated/50 border-b border-line">
                     <div className="flex items-center space-x-2">
                       <Bell className="w-4 h-4 text-emerald-400" />
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">
+                      <span className="text-xs font-bold text-ink uppercase tracking-wider">
                         Notifications ({notifications.length})
                       </span>
                     </div>
@@ -244,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {unreadNotificationCount > 0 && (
                         <button
                           onClick={markAllNotificationsAsRead}
-                          className="text-[11px] text-emerald-400 hover:text-emerald-300 font-medium flex items-center gap-1 cursor-pointer"
+                          className="text-[11px] text-emerald-400 hover:text-emerald-700 font-medium flex items-center gap-1 cursor-pointer"
                         >
                           <CheckCheck className="w-3.5 h-3.5" /> Mark read
                         </button>
@@ -252,7 +253,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       {notifications.length > 0 && (
                         <button
                           onClick={clearAllNotifications}
-                          className="text-[11px] text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
+                          className="text-[11px] text-ink-3 hover:text-rose-400 transition-colors cursor-pointer"
                           title="Clear all"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -261,9 +262,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/60">
+                  <div className="max-h-80 overflow-y-auto divide-y divide-line/60">
                     {notifications.length === 0 ? (
-                      <div className="p-6 text-center text-slate-400 text-xs">
+                      <div className="p-6 text-center text-ink-3 text-xs">
                         <CheckCircle2 className="w-8 h-8 text-emerald-500/50 mx-auto mb-2" />
                         No notifications yet. You're all caught up!
                       </div>
@@ -273,7 +274,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                           key={notif.id}
                           onClick={() => markNotificationAsRead(notif.id)}
                           className={`p-3.5 transition-colors cursor-pointer flex items-start justify-between gap-3 ${
-                            notif.read ? 'bg-slate-900/40 hover:bg-slate-850' : 'bg-slate-800/40 hover:bg-slate-800/70 border-l-2 border-emerald-400'
+                            notif.read ? 'bg-surface/40 hover:bg-elevated' : 'bg-elevated/40 hover:bg-elevated/70 border-l-2 border-emerald-400'
                           }`}
                         >
                           <div className="flex items-start space-x-2.5">
@@ -287,13 +288,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                               <FileText className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
                             )}
                             <div>
-                              <p className={`text-xs font-semibold ${notif.read ? 'text-slate-300' : 'text-white'}`}>
+                              <p className={`text-xs font-semibold ${notif.read ? 'text-ink-2' : 'text-ink'}`}>
                                 {notif.title}
                               </p>
-                              <p className="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+                              <p className="text-[11px] text-ink-3 mt-0.5 leading-relaxed">
                                 {notif.message}
                               </p>
-                              <span className="text-[10px] text-slate-500 mt-1 block">
+                              <span className="text-[10px] text-ink-4 mt-1 block">
                                 {new Date(notif.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                             </div>
@@ -303,7 +304,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                               e.stopPropagation();
                               deleteNotification(notif.id);
                             }}
-                            className="text-slate-500 hover:text-rose-400 p-1 cursor-pointer"
+                            className="text-ink-4 hover:text-rose-400 p-1 cursor-pointer"
                           >
                             <X className="w-3.5 h-3.5" />
                           </button>
@@ -320,7 +321,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 id="user-profile-btn"
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
-                className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-slate-800/80 transition-colors text-left cursor-pointer border border-transparent hover:border-slate-700"
+                className="flex items-center space-x-2 p-1.5 rounded-lg hover:bg-elevated/80 transition-colors text-left cursor-pointer border border-transparent hover:border-line-strong"
               >
                 <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center font-bold text-emerald-400 text-xs overflow-hidden">
                   {profile.avatarUrl ? (
@@ -330,7 +331,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   )}
                 </div>
                 <div className="hidden sm:block text-left">
-                  <p className="text-xs font-semibold text-white leading-tight flex items-center gap-1">
+                  <p className="text-xs font-semibold text-ink leading-tight flex items-center gap-1">
                     {profile.name}
                     {isAuthenticated && (
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -338,23 +339,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </p>
                   <p className="text-[10px] text-emerald-400 font-medium">{profile.role}</p>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                <ChevronDown className="w-3.5 h-3.5 text-ink-3" />
               </button>
 
               {isProfileMenuOpen && (
                 <div
                   id="profile-dropdown-menu"
-                  className="absolute right-0 mt-2 w-72 rounded-xl bg-slate-900 border border-slate-800 shadow-2xl z-50 p-2 text-xs"
+                  className="absolute right-0 mt-2 w-72 rounded-xl bg-surface border border-line shadow-2xl z-50 p-2 text-xs"
                 >
-                  <div className="px-3 py-2.5 border-b border-slate-800 mb-1.5 bg-slate-950/60 rounded-lg">
+                  <div className="px-3 py-2.5 border-b border-line mb-1.5 bg-canvas/60 rounded-lg">
                     <div className="flex items-center justify-between">
-                      <p className="font-bold text-white text-sm">{profile.name}</p>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300">
+                      <p className="font-bold text-ink text-sm">{profile.name}</p>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-700">
                         {isAuthenticated ? 'Logged In' : 'Registered'}
                       </span>
                     </div>
-                    <p className="text-[11px] text-slate-400">{profile.email}</p>
-                    <div className="mt-2 flex items-center justify-between text-[11px] text-slate-300 pt-1.5 border-t border-slate-800/80">
+                    <p className="text-[11px] text-ink-3">{profile.email}</p>
+                    <div className="mt-2 flex items-center justify-between text-[11px] text-ink-2 pt-1.5 border-t border-line/80">
                       <span>Monthly Balance:</span>
                       <span className="font-bold text-emerald-400">{formatCurrency(summary.remainingBalance)}</span>
                     </div>
@@ -368,7 +369,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenAuthModal('login');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-[10px] cursor-pointer transition-colors"
+                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] cursor-pointer transition-colors"
                     >
                       <LogIn className="w-3.5 h-3.5" />
                       <span>Sign In</span>
@@ -379,7 +380,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onOpenAuthModal('register');
                         setIsProfileMenuOpen(false);
                       }}
-                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold text-[10px] cursor-pointer transition-colors border border-slate-700"
+                      className="flex items-center justify-center gap-1 py-1.5 px-1 rounded-lg bg-elevated hover:bg-line-strong text-ink font-bold text-[10px] cursor-pointer transition-colors border border-line-strong"
                     >
                       <UserPlus className="w-3.5 h-3.5" />
                       <span>Register</span>
@@ -387,14 +388,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </div>
 
                   <div className="px-3 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg mb-1">
-                    <p className="text-[11px] font-semibold text-emerald-300 flex items-center gap-1.5">
+                    <p className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1.5">
                       <User className="w-3.5 h-3.5" />
                       {profile.name}
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-0.5">
+                    <p className="text-[10px] text-ink-3 mt-0.5">
                       {profile.role} · {profile.currency} ({profile.currencySymbol})
                     </p>
-                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-slate-300">
+                    <div className="mt-1.5 flex items-center justify-between text-[10px] text-ink-2">
                       <span>Target: <b className="text-emerald-400">{formatCurrency(profile.monthlyIncomeTarget ?? 0)}</b></span>
                       <span>Budget: <b className="text-amber-400">{formatCurrency(profile.monthlyExpenseBudget ?? 0)}</b></span>
                     </div>
@@ -411,13 +412,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </button>
                   </div>
 
-                  <div className="border-t border-slate-800 my-1 pt-1 space-y-0.5">
+                  <div className="border-t border-line my-1 pt-1 space-y-0.5">
                     <button
                       onClick={() => {
                         syncDatabase();
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 text-left cursor-pointer"
+                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-ink-2 hover:bg-elevated text-left cursor-pointer"
                     >
                       <Database className="w-3.5 h-3.5 text-emerald-400" />
                       <span>Sync Data to Cloud Database</span>
@@ -428,9 +429,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         resetCurrentProfile();
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 text-left cursor-pointer"
+                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-ink-2 hover:bg-elevated text-left cursor-pointer"
                     >
-                      <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
+                      <RefreshCw className="w-3.5 h-3.5 text-ink-3" />
                       <span>Reset Local Data</span>
                     </button>
 
@@ -439,9 +440,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         exportJSON();
                         setIsProfileMenuOpen(false);
                       }}
-                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-slate-300 hover:bg-slate-800 text-left cursor-pointer"
+                      className="w-full flex items-center space-x-2 px-3 py-1.5 rounded-lg text-ink-2 hover:bg-elevated text-left cursor-pointer"
                     >
-                      <Download className="w-3.5 h-3.5 text-slate-400" />
+                      <Download className="w-3.5 h-3.5 text-ink-3" />
                       <span>Export JSON Backup</span>
                     </button>
 
@@ -465,7 +466,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="mobile-nav-toggle"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 cursor-pointer"
+              className="xl:hidden p-2 rounded-lg text-ink-2 hover:text-ink hover:bg-elevated cursor-pointer"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -474,7 +475,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden py-3 border-t border-slate-800 space-y-1" id="mobile-nav-menu">
+          <div className="xl:hidden py-3 border-t border-line space-y-1" id="mobile-nav-menu">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -486,11 +487,11 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setIsMobileMenuOpen(false);
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-semibold cursor-pointer ${
-                    isActive ? 'bg-emerald-500/20 text-emerald-400' : 'text-slate-300 hover:bg-slate-800'
+                    isActive ? 'bg-emerald-500/20 text-emerald-400' : 'text-ink-2 hover:bg-elevated'
                   }`}
                 >
                   <div className="flex items-center space-x-2.5">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-400' : 'text-ink-3'}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
@@ -503,7 +504,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
 
             {/* Sign Out in mobile menu */}
-            <div className="border-t border-slate-800 mt-2 pt-2">
+            <div className="border-t border-line mt-2 pt-2">
               <button
                 onClick={async () => {
                   await logout();

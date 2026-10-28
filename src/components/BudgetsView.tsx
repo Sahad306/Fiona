@@ -242,24 +242,24 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
   return (
     <div className="space-y-6 animate-in fade-in duration-200" id="finora-budgets-view">
       {onBackToDashboard && (
-        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
+        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-ink-3 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
         </button>
       )}
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface/60 p-5 rounded-2xl border border-line backdrop-blur-sm">
         <div>
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
               Budget Planning
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span className="text-xs text-slate-400">Monthly Caps & Category Thresholds</span>
+            <span className="text-xs text-ink-3">Monthly Caps & Category Thresholds</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+          <h1 className="text-2xl font-black text-ink tracking-tight mt-0.5">
             Budget vs Actual Spending
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             Compare planned budget limits with real-time expenses to stay within your targets.
           </p>
         </div>
@@ -269,7 +269,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
+            className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
             id="budgets-view-add-btn"
           >
             <Plus className="w-4 h-4 stroke-[3]" />
@@ -289,14 +289,14 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
       {/* Budget Planner Panel */}
       {showPlanner && (
-        <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
+        <div className="bg-surface/80 border border-emerald-500/30 rounded-2xl p-6 space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <h3 className="text-lg font-bold text-ink flex items-center gap-2">
                 <Lightbulb className="w-5 h-5 text-yellow-400" />
                 Monthly Budget Planner
               </h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-ink-3 mt-1">
                 Set budget limits for all expense categories at once. Leave blank to skip.
               </p>
             </div>
@@ -322,16 +322,16 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
           {/* Category Inputs Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
-              <div key={cat} className="bg-slate-950/60 border border-slate-800 rounded-xl p-3">
-                <label className="text-[11px] font-semibold text-slate-300 block mb-1.5">{cat}</label>
+              <div key={cat} className="bg-canvas/60 border border-line rounded-xl p-3">
+                <label className="text-[11px] font-semibold text-ink-2 block mb-1.5">{cat}</label>
                 <div className="relative">
-                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-slate-500 pointer-events-none">{profile.currencySymbol}</span>
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sm text-ink-4 pointer-events-none">{profile.currencySymbol}</span>
                   <input
                     type="number"
                     value={plannerAmounts[cat] || ''}
                     onChange={(e) => setPlannerAmounts((prev) => ({ ...prev, [cat]: e.target.value }))}
                     placeholder="0"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg pl-8 pr-3 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
+                    className="w-full bg-surface border border-line-strong rounded-lg pl-8 pr-3 py-2 text-sm text-ink focus:outline-none focus:border-emerald-500 transition-colors"
                   />
                 </div>
               </div>
@@ -339,9 +339,9 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
           </div>
 
           {/* Alert Threshold + Save */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-slate-800">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2 border-t border-line">
             <div className="flex items-center gap-3">
-              <label className="text-xs text-slate-400 font-semibold">Alert at:</label>
+              <label className="text-xs text-ink-3 font-semibold">Alert at:</label>
               <input
                 type="range"
                 min="50"
@@ -354,7 +354,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
             </div>
             <button
               onClick={handleSaveAll}
-              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
+              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-emerald-500/25 transition-all active:scale-95 cursor-pointer"
             >
               <Save className="w-4 h-4" />
               Apply All Budgets
@@ -365,7 +365,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
       {/* Overall Monthly Budget Master Card */}
       {overallBudget && (
-        <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-950 border border-slate-800 shadow-md">
+        <div className="p-6 rounded-2xl bg-gradient-to-r from-elevated via-elevated to-canvas border border-line shadow-md">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-2">
@@ -389,17 +389,17 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
                 </span>
               </div>
               <div className="mt-2 flex items-baseline space-x-3">
-                <span className="text-3xl font-black text-white">
+                <span className="text-3xl font-black text-ink">
                   {formatCurrency(overallBudget.spent)}
                 </span>
-                <span className="text-sm font-semibold text-slate-400">
+                <span className="text-sm font-semibold text-ink-3">
                   of {formatCurrency(overallBudget.limitAmount)} budgeted
                 </span>
               </div>
             </div>
 
             <div className="text-left sm:text-right">
-              <span className="text-xs text-slate-400">Remaining Safe Balance</span>
+              <span className="text-xs text-ink-3">Remaining Safe Balance</span>
               <p
                 className={`text-xl font-black ${
                   overallBudget.remaining >= 0 ? 'text-teal-400' : 'text-rose-400'
@@ -407,14 +407,14 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
               >
                 {formatCurrency(overallBudget.remaining)}
               </p>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-ink-3 mt-0.5">
                 Safe pace: ~{formatCurrency(overallBudget.dailyRemainingAllowance)}/day remaining
               </p>
             </div>
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-slate-800 h-3.5 rounded-full overflow-hidden mt-4 p-0.5 border border-slate-700/50">
+          <div className="w-full bg-elevated h-3.5 rounded-full overflow-hidden mt-4 p-0.5 border border-line-strong/50">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
                 overallBudget.ratio >= 100
@@ -427,9 +427,9 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
             />
           </div>
 
-          <div className="mt-2 flex items-center justify-between text-xs text-slate-400">
+          <div className="mt-2 flex items-center justify-between text-xs text-ink-3">
             <span>0%</span>
-            <span className="font-bold text-white">{Math.round(overallBudget.ratio)}% Consumed</span>
+            <span className="font-bold text-ink">{Math.round(overallBudget.ratio)}% Consumed</span>
             <span>100% Target Limit</span>
           </div>
         </div>
@@ -437,23 +437,23 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
       {/* Visual Chart: Category Budget vs Actual Bar Chart */}
       {chartData.length > 0 && (
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <h3 className="text-sm font-bold text-ink flex items-center gap-2">
                 <CreditCard className="w-4 h-4 text-emerald-400" />
                 Category Spending vs Planned Budgets
               </h3>
-              <p className="text-[11px] text-slate-400">Real-time category spending comparisons</p>
+              <p className="text-[11px] text-ink-3">Real-time category spending comparisons</p>
             </div>
             <div className="flex items-center space-x-4 text-xs font-semibold">
               <div className="flex items-center space-x-1.5">
                 <div className="w-3 h-3 rounded-sm bg-slate-600"></div>
-                <span className="text-slate-300">Planned Budget</span>
+                <span className="text-ink-2">Planned Budget</span>
               </div>
               <div className="flex items-center space-x-1.5">
                 <div className="w-3 h-3 rounded-sm bg-rose-500"></div>
-                <span className="text-slate-300">Actual Spent</span>
+                <span className="text-ink-2">Actual Spent</span>
               </div>
             </div>
           </div>
@@ -461,14 +461,14 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: 10, bottom: 25 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.4} />
-                <XAxis dataKey="name" stroke="#94a3b8" fontSize={10} interval={0} angle={-20} textAnchor="end" />
-                <YAxis stroke="#94a3b8" fontSize={11} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--c-line-strong)" opacity={0.4} />
+                <XAxis dataKey="name" stroke="var(--c-ink-3)" fontSize={10} interval={0} angle={-20} textAnchor="end" />
+                <YAxis stroke="var(--c-ink-3)" fontSize={11} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                   formatter={(val: number | undefined) => [formatCurrency(val || 0), '']}
                 />
-                <Bar dataKey="Budget" name="Planned Limit" fill="#475569" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="Budget" name="Planned Limit" fill="var(--c-ink-4)" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="Spent" name="Actual Spent" fill="#f43f5e" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -481,13 +481,13 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
         {categoryBudgets.map((b) => (
           <div
             key={b.id}
-            className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm hover:border-slate-700 transition-all flex flex-col justify-between"
+            className="p-5 rounded-2xl bg-surface border border-line shadow-sm hover:border-line-strong transition-all flex flex-col justify-between"
           >
             <div>
               <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="text-sm font-bold text-white">{b.category}</h4>
-                  <span className="text-[11px] text-slate-400">Monthly Budget</span>
+                  <h4 className="text-sm font-bold text-ink">{b.category}</h4>
+                  <span className="text-[11px] text-ink-3">Monthly Budget</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <span
@@ -507,13 +507,13 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
                   </span>
                   <button
                     onClick={() => handleOpenModal(b)}
-                    className="p-1 rounded-lg text-slate-400 hover:text-white cursor-pointer ml-1"
+                    className="p-1 rounded-lg text-ink-3 hover:text-ink cursor-pointer ml-1"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => deleteBudget(b.id)}
-                    className="p-1 rounded-lg text-slate-400 hover:text-rose-400 cursor-pointer"
+                    className="p-1 rounded-lg text-ink-3 hover:text-rose-400 cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -523,10 +523,10 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
               {/* Numbers */}
               <div className="mt-3 flex items-baseline justify-between">
                 <div>
-                  <span className="text-lg font-black text-white">
+                  <span className="text-lg font-black text-ink">
                     {formatCurrency(b.spent)}
                   </span>
-                  <span className="text-xs text-slate-400 ml-1">
+                  <span className="text-xs text-ink-3 ml-1">
                     / {formatCurrency(b.limitAmount)}
                   </span>
                 </div>
@@ -544,7 +544,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden mt-3 border border-slate-800">
+              <div className="w-full bg-canvas h-2.5 rounded-full overflow-hidden mt-3 border border-line">
                 <div
                   className={`h-full rounded-full transition-all duration-500 ${
                     b.ratio >= 100
@@ -558,7 +558,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
               </div>
             </div>
 
-            <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-400">
+            <div className="mt-3 pt-2.5 border-t border-line/80 flex items-center justify-between text-[11px] text-ink-3">
               <span>Alert threshold: {b.alertThreshold}%</span>
               <span>
                 {b.remaining > 0
@@ -572,24 +572,24 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
 
       {/* Add/Edit Budget Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 text-slate-100">
-            <h3 className="text-base font-bold text-white mb-1">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/75 backdrop-blur-sm">
+          <div className="w-full max-w-md rounded-2xl bg-surface border border-line shadow-2xl p-6 text-ink">
+            <h3 className="text-base font-bold text-ink mb-1">
               {editingBudget ? 'Edit Budget Plan' : 'Create Category Budget'}
             </h3>
-            <p className="text-xs text-slate-400 mb-4">
+            <p className="text-xs text-ink-3 mb-4">
               Set spending limits and alert notifications for this category.
             </p>
 
             <form onSubmit={handleSaveBudget} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-ink-2 mb-1">
                   Budget Category
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                  className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                 >
                   <option value="Overall">Overall Total Budget</option>
                   {DEFAULT_EXPENSE_CATEGORIES.map((c) => (
@@ -601,7 +601,7 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-ink-2 mb-1">
                   Monthly Limit Amount ({profile.currencySymbol})
                 </label>
                 <input
@@ -609,13 +609,13 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
                   value={limitAmount}
                   onChange={(e) => setLimitAmount(e.target.value)}
                   placeholder="e.g. 10000"
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-sm font-bold text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="text-xs font-semibold text-slate-300">
+                  <label className="text-xs font-semibold text-ink-2">
                     Warning Alert Threshold ({alertThreshold}%)
                   </label>
                   <span className="text-[11px] text-amber-400 font-semibold">
@@ -637,13 +637,13 @@ export const BudgetsView: React.FC<BudgetsViewProps> = ({ onBackToDashboard }) =
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl bg-elevated hover:bg-line-strong text-ink-2 text-xs font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-500/25 cursor-pointer"
                 >
                   Save Budget Plan
                 </button>

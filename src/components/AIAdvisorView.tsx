@@ -228,12 +228,12 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
       {/* Everything interactive is screen-only; the print statement renders at the end. */}
       <div className="print:hidden">
       {onBackToDashboard && (
-        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
+        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-ink-3 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
         </button>
       )}
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface/60 p-5 rounded-2xl border border-line backdrop-blur-sm">
         <div>
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
@@ -241,12 +241,12 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               {aiProvider === 'mistral' ? 'Mistral 14B AI Intelligence' : 'Gemini AI Intelligence'}
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span className="text-xs text-slate-400">Personalized Financial Diagnosis</span>
+            <span className="text-xs text-ink-3">Personalized Financial Diagnosis</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+          <h1 className="text-2xl font-black text-ink tracking-tight mt-0.5">
             AI Financial Advisor & Health Check
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             Real-time pattern analysis, expense optimization, and interactive advisory chat.
           </p>
         </div>
@@ -265,8 +265,8 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
       {/* Health Score & Key Assessment Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Financial Health Score Dial Card */}
-        <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden">
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+        <div className="p-6 rounded-2xl bg-surface border border-line shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden">
+          <span className="text-xs font-bold uppercase tracking-wider text-ink-3 mb-3">
             Financial Health Score
           </span>
 
@@ -275,14 +275,14 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               summary.financialHealthScore
             )}`}
           >
-            <span className="text-3xl font-black tracking-tight text-white">
+            <span className="text-3xl font-black tracking-tight text-ink">
               {summary.financialHealthScore}
             </span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">/ 100</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-ink-3">/ 100</span>
           </div>
 
           <div className="mt-4">
-            <span className="text-sm font-bold text-white">
+            <span className="text-sm font-bold text-ink">
               {summary.financialHealthScore >= 80
                 ? 'Excellent Condition'
                 : summary.financialHealthScore >= 65
@@ -291,7 +291,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
                 ? 'Fair / Needs Attention'
                 : 'High Risk'}
             </span>
-            <p className="text-[11px] text-slate-400 mt-1 max-w-xs">
+            <p className="text-[11px] text-ink-3 mt-1 max-w-xs">
               Based on your savings rate ({summary.savingsRate}%), budget adherence ({summary.budgetUtilization.percentage}%), and goal progress.
             </p>
           </div>
@@ -330,7 +330,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             </button>
             <button
               onClick={() => window.print()}
-              className="flex flex-1 items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[10px] font-bold border border-slate-700 transition-colors cursor-pointer"
+              className="flex flex-1 items-center justify-center gap-1 px-2 py-1.5 rounded-lg bg-elevated hover:bg-line-strong text-ink text-[10px] font-bold border border-line-strong transition-colors cursor-pointer"
             >
               <Printer className="w-3 h-3" /> Print PDF
             </button>
@@ -338,49 +338,49 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
         </div>
 
         {/* 2 Diagnostic Key Highlights */}
-        <div className="md:col-span-2 p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm space-y-4">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="md:col-span-2 p-6 rounded-2xl bg-surface border border-line shadow-sm space-y-4">
+          <h3 className="text-sm font-bold text-ink flex items-center gap-2">
             <Lightbulb className="w-4 h-4 text-amber-400" />
             AI Health Diagnostic Highlights
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="p-3.5 rounded-xl bg-canvas border border-line/80">
               <div className="flex items-center space-x-2 text-xs font-bold text-emerald-400">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Savings Velocity</span>
               </div>
-              <p className="text-xs text-slate-300 mt-1.5">
+              <p className="text-xs text-ink-2 mt-1.5">
                 Saving {formatCurrency(summary.monthlySavings)}/mo ({summary.savingsRate}% of total earnings).
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="p-3.5 rounded-xl bg-canvas border border-line/80">
               <div className="flex items-center space-x-2 text-xs font-bold text-teal-400">
                 <ShieldCheck className="w-4 h-4 shrink-0" />
                 <span>Budget Adherence</span>
               </div>
-              <p className="text-xs text-slate-300 mt-1.5">
+              <p className="text-xs text-ink-2 mt-1.5">
                 Utilizing {summary.budgetUtilization.percentage}% of overall budgeted limits this month.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="p-3.5 rounded-xl bg-canvas border border-line/80">
               <div className="flex items-center space-x-2 text-xs font-bold text-indigo-400">
                 <TrendingUp className="w-4 h-4 shrink-0" />
                 <span>Active Goals</span>
               </div>
-              <p className="text-xs text-slate-300 mt-1.5">
+              <p className="text-xs text-ink-2 mt-1.5">
                 {savingsGoals.length} savings goals configured with ongoing monthly contributions.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="p-3.5 rounded-xl bg-canvas border border-line/80">
               <div className="flex items-center space-x-2 text-xs font-bold text-rose-400">
                 <AlertTriangle className="w-4 h-4 shrink-0" />
                 <span>Top Expense Pressure</span>
               </div>
-              <p className="text-xs text-slate-300 mt-1.5">
+              <p className="text-xs text-ink-2 mt-1.5">
                 {summary.topExpenseCategories[0]?.category || 'General'} represents {summary.topExpenseCategories[0]?.percentage || 0}% of all outflows.
               </p>
             </div>
@@ -390,11 +390,11 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
 
       {/* Generated Deep Audit Section (If loaded) */}
       {auditReport && (
-        <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-emerald-500/40 shadow-lg space-y-4 animate-in slide-in-from-top-2">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="p-6 rounded-2xl bg-gradient-to-br from-elevated to-canvas border border-emerald-500/40 shadow-lg space-y-4 animate-in slide-in-from-top-2">
+          <div className="flex items-center justify-between pb-3 border-b border-line">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-5 h-5 text-emerald-400" />
-              <h3 className="text-base font-bold text-white">
+              <h3 className="text-base font-bold text-ink">
                 {aiProvider === 'mistral' ? 'Mistral 14B Full Financial Audit' : 'Gemini AI Full Financial Audit'}
               </h3>
             </div>
@@ -403,7 +403,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             </span>
           </div>
 
-          <p className="text-xs text-slate-200 leading-relaxed font-medium">
+          <p className="text-xs text-ink leading-relaxed font-medium">
             {auditReport.executiveSummary}
           </p>
 
@@ -412,7 +412,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               <h4 className="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <TrendingUp className="w-3.5 h-3.5" /> Spending Trend Insights
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-ink-2">
                 {auditReport.trendInsights.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start space-x-2">
                     <span className="text-indigo-400 font-bold">•</span>
@@ -428,7 +428,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               <h4 className="text-xs font-bold text-teal-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                 <Target className="w-3.5 h-3.5" /> Goal Projections
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-ink-2">
                 {auditReport.goalProjections.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start space-x-2">
                     <span className="text-teal-400 font-bold">•</span>
@@ -444,7 +444,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-2">
                 Actionable Recommendations
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-ink-2">
                 {auditReport.actionableRecommendations.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start space-x-2">
                     <span className="text-emerald-400 font-bold">•</span>
@@ -460,7 +460,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               <h4 className="text-xs font-bold text-rose-400 uppercase tracking-wider mb-2">
                 Identified Cutback Opportunities
               </h4>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+              <ul className="space-y-1.5 text-xs text-ink-2">
                 {auditReport.cutbackOpportunities.map((item: string, idx: number) => (
                   <li key={idx} className="flex items-start space-x-2">
                     <span className="text-rose-400 font-bold">•</span>
@@ -474,15 +474,15 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
       )}
 
       {/* Interactive Chat Console */}
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm flex flex-col h-[520px] overflow-hidden" id="ai-chat-console">
+      <div className="bg-surface rounded-2xl border border-line shadow-sm flex flex-col h-[520px] overflow-hidden" id="ai-chat-console">
         {/* Chat Header */}
-        <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between gap-3 bg-slate-950/50">
+        <div className="px-5 py-4 border-b border-line flex items-center justify-between gap-3 bg-canvas/50">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <Bot className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-white">FINORA Assistant Chat</h3>
+              <h3 className="text-xs font-bold text-ink">FINORA Assistant Chat</h3>
               <p className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                 Connected to {aiProvider === 'mistral' ? 'Mistral 14B Latest' : 'Gemini Flash-Lite (latest)'}
@@ -491,11 +491,11 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           </div>
 
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">AI Model</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-ink-4">AI Model</p>
             <select
               value={aiProvider}
               onChange={(e) => setAiProvider(e.target.value as 'mistral' | 'gemini')}
-              className="mt-1 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-semibold text-emerald-300 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
+              className="mt-1 px-2.5 py-1.5 rounded-lg bg-surface border border-line text-[11px] font-semibold text-emerald-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
             >
               <option value="gemini">Gemini Flash-Lite (latest)</option>
               <option value="mistral">Mistral 14B Latest</option>
@@ -514,7 +514,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               >
                 <div
                   className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold ${
-                    isUser ? 'bg-emerald-500 text-slate-950' : 'bg-slate-800 text-emerald-400'
+                    isUser ? 'bg-emerald-500 text-slate-950' : 'bg-elevated text-emerald-400'
                   }`}
                 >
                   {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
@@ -524,13 +524,13 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
                   className={`max-w-[80%] rounded-2xl px-4 py-3 text-xs leading-relaxed ${
                     isUser
                       ? 'bg-emerald-500 text-slate-950 font-medium'
-                      : 'bg-slate-950 border border-slate-800 text-slate-200 whitespace-pre-wrap'
+                      : 'bg-canvas border border-line text-ink whitespace-pre-wrap'
                   }`}
                 >
                   <p>{msg.text}</p>
                   <span
                     className={`block text-[9px] mt-1.5 ${
-                      isUser ? 'text-slate-900/70' : 'text-slate-500'
+                      isUser ? 'text-slate-900/70' : 'text-ink-4'
                     }`}
                   >
                     {msg.timestamp}
@@ -541,7 +541,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           })}
 
           {isLoading && (
-            <div className="flex items-center space-x-2 text-slate-400 text-xs py-2">
+            <div className="flex items-center space-x-2 text-ink-3 text-xs py-2">
               <div className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               <span>FINORA AI is calculating financial insights...</span>
             </div>
@@ -549,8 +549,8 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
         </div>
 
         {/* Quick Prompts Bar */}
-        <div className="px-5 py-2.5 bg-slate-950/60 border-t border-slate-800/80 flex items-center gap-2 overflow-x-auto">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 shrink-0">
+        <div className="px-5 py-2.5 bg-canvas/60 border-t border-line/80 flex items-center gap-2 overflow-x-auto">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-ink-4 shrink-0">
             Suggested:
           </span>
           {quickPrompts.map((p) => (
@@ -558,7 +558,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
               key={p}
               onClick={() => handleSendMessage(p)}
               disabled={isLoading}
-              className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors whitespace-nowrap cursor-pointer shrink-0 disabled:opacity-50"
+              className="text-[11px] px-2.5 py-1 rounded-lg bg-elevated hover:bg-line-strong text-ink-2 hover:text-ink transition-colors whitespace-nowrap cursor-pointer shrink-0 disabled:opacity-50"
             >
               {p}
             </button>
@@ -571,7 +571,7 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             e.preventDefault();
             handleSendMessage();
           }}
-          className="p-4 bg-slate-950 border-t border-slate-800 flex items-center space-x-2"
+          className="p-4 bg-canvas border-t border-line flex items-center space-x-2"
         >
           <input
             type="text"
@@ -579,12 +579,12 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
             onChange={(e) => setInputQuery(e.target.value)}
             placeholder="Ask FINORA AI about budgeting, saving, or investing..."
             disabled={isLoading}
-            className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50"
+            className="flex-1 px-4 py-2.5 bg-surface border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none disabled:opacity-50"
           />
           <button
             type="submit"
             disabled={!inputQuery.trim() || isLoading}
-            className="p-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 disabled:opacity-40 transition-all cursor-pointer"
+            className="p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-40 transition-all cursor-pointer"
           >
             <Send className="w-4 h-4 stroke-[2.5]" />
           </button>
@@ -598,32 +598,32 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           <div className="flex items-start justify-between pb-3 border-b border-slate-300">
             <div>
               <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
-              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+              <p className="text-[9px] uppercase tracking-widest text-ink-4">Precision Wealth &amp; Personal Finance Intelligence</p>
             </div>
             <div className="text-right text-xs">
               <p className="font-bold text-sm text-slate-900">FINANCIAL HEALTH STATEMENT</p>
-              <p className="text-slate-500">Period: {selectedMonth}</p>
-              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+              <p className="text-ink-4">Period: {selectedMonth}</p>
+              <p className="text-ink-4">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
           <div>
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Prepared For</p>
             <p className="font-bold text-base">{profile.name}</p>
-            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+            <p className="text-ink-4">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
           </div>
           <div className="text-right">
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Financial Health Score</p>
-            <p className={`font-black text-4xl ${summary.financialHealthScore >= 80 ? 'text-emerald-700' : summary.financialHealthScore >= 50 ? 'text-amber-600' : 'text-red-700'}`}>{summary.financialHealthScore}<span className="text-lg text-slate-500"> / 100</span></p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Financial Health Score</p>
+            <p className={`font-black text-4xl ${summary.financialHealthScore >= 80 ? 'text-emerald-700' : summary.financialHealthScore >= 50 ? 'text-amber-700' : 'text-red-700'}`}>{summary.financialHealthScore}<span className="text-lg text-ink-4"> / 100</span></p>
           </div>
         </div>
 
         <div className="grid grid-cols-4 gap-3 mb-6">
           {[['Excellent', '80-100', summary.financialHealthScore >= 80], ['Good', '65-79', summary.financialHealthScore >= 65 && summary.financialHealthScore < 80], ['Fair', '50-64', summary.financialHealthScore >= 50 && summary.financialHealthScore < 65], ['Worse / High Risk', '0-49', summary.financialHealthScore < 50]].map(([label, range, active]) => (
-            <div key={label as string} className={`border rounded p-2.5 text-center ${active ? 'border-slate-800 border-2 bg-slate-50' : 'border-slate-200'}`}>
-              <p className="text-[9px] uppercase font-black tracking-wider text-slate-600">{label}</p>
+            <div key={label as string} className={`border rounded p-2.5 text-center ${active ? 'border-line border-2 bg-slate-50' : 'border-slate-200'}`}>
+              <p className="text-[9px] uppercase font-black tracking-wider text-ink-4">{label}</p>
               <p className="text-sm font-black text-slate-900">{range}</p>
               {active && <p className="text-[8px] font-bold text-emerald-700 uppercase tracking-wider">You are here</p>}
             </div>
@@ -634,18 +634,18 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
         <table className="w-full text-xs border-collapse">
           <thead>
             <tr>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Item</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Detail</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Max</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Points</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Item</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Detail</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Max</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Points</th>
             </tr>
           </thead>
           <tbody>
             {summary.financialHealthBreakdown.map((row, i) => (
               <tr key={row.label} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
                 <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{row.label}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{row.note}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-500">{row.max > 0 ? row.max : '—'}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-ink-4">{row.note}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-ink-4">{row.max > 0 ? row.max : '—'}</td>
                 <td className={`border-b border-slate-200 px-2.5 py-1.5 text-right font-black ${row.points < 0 ? 'text-red-700' : 'text-emerald-700'}`}>
                   {row.points > 0 && row.max > 0 ? `+${row.points}` : row.points}
                 </td>
@@ -654,24 +654,24 @@ export const AIAdvisorView: React.FC<AIAdvisorViewProps> = ({ onBackToDashboard 
           </tbody>
           <tfoot>
             <tr>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={3}>Final Score</td>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-slate-900">{summary.financialHealthScore} / 100</td>
+              <td className="border-t-2 border-line px-2.5 py-2 font-black text-slate-900" colSpan={3}>Final Score</td>
+              <td className="border-t-2 border-line px-2.5 py-2 text-right font-black text-slate-900">{summary.financialHealthScore} / 100</td>
             </tr>
           </tfoot>
         </table>
 
         <div className="print-keep-together mt-10 flex items-end justify-between">
-          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-ink-4">Client Signature</div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
             <div>
               <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
-              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-ink-4">Precision • Clarity • Prosperity</p>
             </div>
           </div>
           <div className="w-56"></div>
         </div>
-        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2 mt-4">
+        <p className="text-[9px] text-ink-3 border-t border-slate-200 pt-2 mt-4">
           This health statement was generated by FINORA on {new Date().toLocaleString('en-GB')} for the selected period. Scores reflect savings rate, budget discipline, cash flow, goal progress, and applicable penalties. For internal and personal use.
         </p>
       </div>

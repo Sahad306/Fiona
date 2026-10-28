@@ -7,3 +7,6 @@ coverage/
 .env*
 !.env.example
 .editor_tools_backups/
+
+data/finora_db.json
+data/*.json

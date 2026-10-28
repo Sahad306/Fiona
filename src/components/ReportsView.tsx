@@ -104,13 +104,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
       alert('No transactions for this month.');
       return;
     }
-    // Temporarily set printReport to current data (does NOT save to DB)
-    setPrintReport({
-      ...currentSnapshot,
-      id: 'temp-' + Date.now(),
-      savedAt: new Date().toISOString(),
-      isTemporary: true,
-    });
+    // Clear any archived selection so ONLY the live statement prints (never both).
+    setPrintReport(null);
     setTimeout(() => window.print(), 100);
   };
 
@@ -245,24 +240,24 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
       {/* Everything interactive is screen-only; the print document renders below. */}
       <div className="print:hidden">
       {onBackToDashboard && (
-        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
+        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-ink-3 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
         </button>
       )}
       {/* Header & Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface/60 p-5 rounded-2xl border border-line backdrop-blur-sm">
         <div>
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
               Financial Intelligence
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span className="text-xs text-slate-400">Monthly Statements & Analytics</span>
+            <span className="text-xs text-ink-3">Monthly Statements & Analytics</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+          <h1 className="text-2xl font-black text-ink tracking-tight mt-0.5">
             Financial Reports & Summaries
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             Export structured audits, analyze spending habits, and evaluate cash flows.
           </p>
         </div>
@@ -272,7 +267,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
 
           <button
             onClick={() => exportCSV('all')}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-elevated hover:bg-line-strong text-ink border border-line-strong text-xs font-semibold transition-all cursor-pointer"
             title="Download CSV Ledger"
           >
             <FileSpreadsheet className="w-4 h-4" />
@@ -319,16 +314,16 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
       </div>
 
       {/* Statement Card Header */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="p-6 rounded-2xl bg-surface border border-line shadow-md">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-line">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">FINORA Financial Statement</span>
-            <h2 className="text-xl font-black text-white mt-0.5">{profile.name} — Statement</h2>
-            <p className="text-xs text-slate-400">Account Role: {profile.role} • Reporting Period: {selectedMonth}</p>
+            <h2 className="text-xl font-black text-ink mt-0.5">{profile.name} — Statement</h2>
+            <p className="text-xs text-ink-3">Account Role: {profile.role} • Reporting Period: {selectedMonth}</p>
           </div>
 
           <div className="flex items-center space-x-2">
-            <span className="text-xs text-slate-400 font-semibold">Net Cash Flow:</span>
+            <span className="text-xs text-ink-3 font-semibold">Net Cash Flow:</span>
             <span className={`text-xl font-black ${netSavings >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
               {formatCurrency(netSavings)}
             </span>
@@ -337,41 +332,41 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
 
         {/* 4 Metrics in Statement */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] font-bold text-slate-400 uppercase">Total Revenue / Inflow</span>
+          <div className="p-4 rounded-xl bg-canvas border border-line/80">
+            <span className="text-[11px] font-bold text-ink-3 uppercase">Total Revenue / Inflow</span>
             <p className="text-xl font-black text-emerald-400 mt-1">{formatCurrency(totalIncome)}</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] font-bold text-slate-400 uppercase">Total Expense / Outflow</span>
+          <div className="p-4 rounded-xl bg-canvas border border-line/80">
+            <span className="text-[11px] font-bold text-ink-3 uppercase">Total Expense / Outflow</span>
             <p className="text-xl font-black text-rose-400 mt-1">{formatCurrency(totalExpense)}</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] font-bold text-slate-400 uppercase">Savings Efficiency</span>
+          <div className="p-4 rounded-xl bg-canvas border border-line/80">
+            <span className="text-[11px] font-bold text-ink-3 uppercase">Savings Efficiency</span>
             <p className="text-xl font-black text-teal-400 mt-1">{savingsRate}% Saved</p>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-950 border border-slate-800/80">
-            <span className="text-[11px] font-bold text-slate-400 uppercase">Audited Transactions</span>
-            <p className="text-xl font-black text-white mt-1">{reportTransactions.length} items</p>
+          <div className="p-4 rounded-xl bg-canvas border border-line/80">
+            <span className="text-[11px] font-bold text-ink-3 uppercase">Audited Transactions</span>
+            <p className="text-xl font-black text-ink mt-1">{reportTransactions.length} items</p>
           </div>
         </div>
       </div>
 
       {/* Category Breakdown Data Table */}
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden" id="report-table-card">
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+      <div className="bg-surface rounded-2xl border border-line shadow-sm overflow-hidden" id="report-table-card">
+        <div className="px-6 py-4 border-b border-line flex items-center justify-between">
+          <h3 className="text-sm font-bold text-ink flex items-center gap-2">
             <PieIcon className="w-4 h-4 text-emerald-400" />
             Category Spending Audit & Variance
           </h3>
-          <span className="text-xs text-slate-400">Total Spent: {formatCurrency(totalExpense)}</span>
+          <span className="text-xs text-ink-3">Total Spent: {formatCurrency(totalExpense)}</span>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-950/70 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800">
+          <table className="w-full text-left text-xs text-ink-2">
+            <thead className="bg-canvas/70 text-[11px] font-bold uppercase tracking-wider text-ink-3 border-b border-line">
               <tr>
                 <th className="px-6 py-3">Category</th>
                 <th className="px-6 py-3">Transactions</th>
@@ -381,30 +376,30 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
                 <th className="px-6 py-3 text-right">Variance / Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-line">
               {categoryBreakdown.map((row) => (
-                <tr key={row.category} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-6 py-3.5 font-bold text-white flex items-center space-x-2">
+                <tr key={row.category} className="hover:bg-elevated/40 transition-colors">
+                  <td className="px-6 py-3.5 font-bold text-ink flex items-center space-x-2">
                     <div
                       className="w-2.5 h-2.5 rounded-full"
                       style={{ backgroundColor: CATEGORY_COLORS[row.category] || '#64748b' }}
                     />
                     <span>{row.category}</span>
                   </td>
-                  <td className="px-6 py-3.5 text-slate-400">{row.count} entries</td>
-                  <td className="px-6 py-3.5 font-bold text-slate-100">{formatCurrency(row.spent)}</td>
+                  <td className="px-6 py-3.5 text-ink-3">{row.count} entries</td>
+                  <td className="px-6 py-3.5 font-bold text-ink">{formatCurrency(row.spent)}</td>
                   <td className="px-6 py-3.5">
                     <div className="flex items-center space-x-2">
-                      <div className="w-16 bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div className="w-16 bg-elevated h-1.5 rounded-full overflow-hidden">
                         <div
                           className="h-full bg-emerald-500 rounded-full"
                           style={{ width: `${row.percentage}%` }}
                         />
                       </div>
-                      <span className="text-[11px] text-slate-400">{row.percentage}%</span>
+                      <span className="text-[11px] text-ink-3">{row.percentage}%</span>
                     </div>
                   </td>
-                  <td className="px-6 py-3.5 text-slate-300">
+                  <td className="px-6 py-3.5 text-ink-2">
                     {row.budget > 0 ? formatCurrency(row.budget) : '—'}
                   </td>
                   <td className="px-6 py-3.5 text-right font-bold">
@@ -415,7 +410,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
                         <span className="text-rose-400">-{formatCurrency(Math.abs(row.variance))} over</span>
                       )
                     ) : (
-                      <span className="text-slate-500">No Limit</span>
+                      <span className="text-ink-4">No Limit</span>
                     )}
                   </td>
                 </tr>
@@ -427,18 +422,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
       </div>
 
       {/* ══════════ PRINT-ONLY PROFESSIONAL STATEMENT ══════════ */}
-      <div className="hidden print:block text-slate-900">
+      {/* Only prints when NO archived report is selected (avoids double-printing). */}
+      <div className={`${(printReport || reportTransactions.length === 0) ? 'hidden' : 'hidden print:block'} text-slate-900`}>
         {/* Letterhead — emerald accent bar keeps it branded but light */}
         <div className="border-t-4 border-emerald-600 pt-3 mb-6">
           <div className="flex items-start justify-between pb-3 border-b border-slate-300">
             <div>
               <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
-              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+              <p className="text-[9px] uppercase tracking-widest text-ink-4">Precision Wealth &amp; Personal Finance Intelligence</p>
             </div>
             <div className="text-right text-xs">
               <p className="font-bold text-sm text-slate-900">FINANCIAL STATEMENT</p>
-              <p className="text-slate-500">Period: {selectedMonth}</p>
-              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+              <p className="text-ink-4">Period: {selectedMonth}</p>
+              <p className="text-ink-4">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
             </div>
           </div>
         </div>
@@ -446,12 +442,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
         {/* Client block */}
         <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
           <div>
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Prepared For</p>
             <p className="font-bold text-base">{profile.name}</p>
-            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+            <p className="text-ink-4">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
           </div>
           <div className="text-right">
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Net Cash Flow</p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Net Cash Flow</p>
             <p className={`font-black text-2xl ${netSavings >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>{formatCurrency(netSavings)}</p>
           </div>
         </div>
@@ -459,19 +455,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
         {/* Summary metrics */}
         <div className="grid grid-cols-4 gap-3 mb-6 mt-6">
           <div className="border border-slate-300 rounded p-3">
-            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Income</p>
+            <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Total Income</p>
             <p className="text-lg font-black text-emerald-700">{formatCurrency(totalIncome)}</p>
           </div>
           <div className="border border-slate-300 rounded p-3">
-            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Expenses</p>
+            <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Total Expenses</p>
             <p className="text-lg font-black text-red-700">{formatCurrency(totalExpense)}</p>
           </div>
           <div className="border border-slate-300 rounded p-3">
-            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Savings Rate</p>
+            <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Savings Rate</p>
             <p className="text-lg font-black text-slate-900">{savingsRate}%</p>
           </div>
           <div className="border border-slate-300 rounded p-3">
-            <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Transactions</p>
+            <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Transactions</p>
             <p className="text-lg font-black text-slate-900">{reportTransactions.length}</p>
           </div>
         </div>
@@ -481,23 +477,23 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
         <table className="w-full text-xs border-collapse">
           <thead>
             <tr>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Category</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Entries</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Spent</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Share</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Budget</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Variance</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Category</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Entries</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Spent</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Share</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Budget</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Variance</th>
             </tr>
           </thead>
           <tbody>
             {categoryBreakdown.map((row, i) => (
               <tr key={row.category} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
                 <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{row.category}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.count}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-ink-4">{row.count}</td>
                 <td className="border-b border-slate-200 px-2.5 py-1.5 text-right font-bold text-slate-900">{formatCurrency(row.spent)}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.percentage}%</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-slate-600">{row.budget > 0 ? formatCurrency(row.budget) : '—'}</td>
-                <td className={`border-b border-slate-200 px-2.5 py-1.5 text-right font-bold ${row.budget > 0 ? (row.variance >= 0 ? 'text-emerald-700' : 'text-red-600') : 'text-slate-400'}`}>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-ink-4">{row.percentage}%</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-right text-ink-4">{row.budget > 0 ? formatCurrency(row.budget) : '—'}</td>
+                <td className={`border-b border-slate-200 px-2.5 py-1.5 text-right font-bold ${row.budget > 0 ? (row.variance >= 0 ? 'text-emerald-700' : 'text-red-600') : 'text-ink-3'}`}>
                   {row.budget > 0 ? (row.variance >= 0 ? `+${formatCurrency(row.variance)}` : `−${formatCurrency(Math.abs(row.variance))}`) : 'No limit'}
                 </td>
               </tr>
@@ -505,9 +501,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
           </tbody>
           <tfoot>
             <tr>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={2}>Total</td>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-slate-900">{formatCurrency(totalExpense)}</td>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2" colSpan={3}></td>
+              <td className="border-t-2 border-line px-2.5 py-2 font-black text-slate-900" colSpan={2}>Total</td>
+              <td className="border-t-2 border-line px-2.5 py-2 text-right font-black text-slate-900">{formatCurrency(totalExpense)}</td>
+              <td className="border-t-2 border-line px-2.5 py-2" colSpan={3}></td>
             </tr>
           </tfoot>
         </table>
@@ -515,7 +511,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
         {/* Signature + Produced-by brand block */}
         {advisorNote && (
           <div className="print-keep-together mt-8 border-t border-slate-300 pt-4">
-            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500 mb-2">Advisor's Note</p>
+            <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-ink-4 mb-2">Advisor's Note</p>
             <p className="text-[11.5px] text-slate-800 leading-relaxed text-justify" style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}>
               {advisorNote.replace(/\*\*/g, '').replace(/^[•\-\u2022\u2013\u2014]\s*/gm, '').trim()}
             </p>
@@ -523,58 +519,58 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
         )}
 
         <div className="print-keep-together mt-10 flex items-end justify-between">
-          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="border-t border-slate-400 pt-1 w-56 text-[10px] text-ink-4">Client Signature</div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
             <div>
               <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
-              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-ink-4">Precision • Clarity • Prosperity</p>
             </div>
           </div>
           <div className="w-56"></div>
         </div>
-        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2">
+        <p className="text-[9px] text-ink-3 border-t border-slate-200 pt-2">
           This statement was generated by FINORA on {new Date().toLocaleString('en-GB')} and reflects transactions recorded for the selected period. For internal and personal use.
         </p>
       </div>
 
       {/* ══════════ REPORT HISTORY ARCHIVE ══════════ */}
       <div className="print:hidden mt-8">
-        <h2 className="text-lg font-black text-white tracking-tight mb-4 flex items-center gap-2">
+        <h2 className="text-lg font-black text-ink tracking-tight mb-4 flex items-center gap-2">
           <span>📁</span> Report History
         </h2>
 
         {savedReports.length === 0 ? (
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 text-center">
-            <p className="text-slate-400 text-sm">No saved reports yet. Click "Save Report" to archive the current month.</p>
+          <div className="bg-surface/60 border border-line rounded-2xl p-6 text-center">
+            <p className="text-ink-3 text-sm">No saved reports yet. Click "Save Report" to archive the current month.</p>
           </div>
         ) : (
           <div className="space-y-3">
             {[...savedReports].sort((a, b) => b.savedAt.localeCompare(a.savedAt)).map((report) => (
-              <div key={report.id} className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div key={report.id} className="bg-surface/60 border border-line rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-sm font-bold text-white">{report.month}</span>
-                    <span className="text-[10px] text-slate-500">Saved {new Date(report.savedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                    <span className="text-sm font-bold text-ink">{report.month}</span>
+                    <span className="text-[10px] text-ink-4">Saved {new Date(report.savedAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
                   </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs">
                     <span className="text-emerald-400">Income: {formatCurrency(report.totalIncome)}</span>
                     <span className="text-rose-400">Expenses: {formatCurrency(report.totalExpenses)}</span>
                     <span className={report.netSavings >= 0 ? 'text-teal-400' : 'text-red-400'}>Net: {formatCurrency(report.netSavings)}</span>
-                    <span className="text-slate-400">{report.transactionCount} txns</span>
+                    <span className="text-ink-3">{report.transactionCount} txns</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => handleExportPDF(report)}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition-colors cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-elevated hover:bg-line-strong text-ink-2 text-xs font-semibold border border-line-strong transition-colors cursor-pointer"
                     title="Print as PDF"
                   >
                     <FileText className="w-3.5 h-3.5" /> PDF
                   </button>
                   <button
                     onClick={() => handleExportExcel(report)}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 transition-colors cursor-pointer"
+                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-elevated hover:bg-line-strong text-ink-2 text-xs font-semibold border border-line-strong transition-colors cursor-pointer"
                     title="Download Excel CSV"
                   >
                     <FileSpreadsheet className="w-3.5 h-3.5" /> Excel
@@ -600,30 +596,30 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
             <div className="flex items-start justify-between pb-3 border-b border-slate-300">
               <div>
                 <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
-                <p className="text-[9px] uppercase tracking-widest text-slate-500">Archived Financial Report</p>
+                <p className="text-[9px] uppercase tracking-widest text-ink-4">Archived Financial Report</p>
               </div>
               <div className="text-right text-xs">
                 <p className="font-bold text-sm text-slate-900">SAVED REPORT</p>
-                <p className="text-slate-500">Period: {printReport.month}</p>
-                <p className="text-slate-500">Saved: {new Date(printReport.savedAt).toLocaleDateString('en-GB')}</p>
+                <p className="text-ink-4">Period: {printReport.month}</p>
+                <p className="text-ink-4">Saved: {new Date(printReport.savedAt).toLocaleDateString('en-GB')}</p>
               </div>
             </div>
           </div>
           <div className="grid grid-cols-4 gap-3 mb-6">
             <div className="border border-slate-300 rounded p-3">
-              <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Income</p>
+              <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Total Income</p>
               <p className="text-lg font-black text-emerald-700">{formatCurrency(printReport.totalIncome)}</p>
             </div>
             <div className="border border-slate-300 rounded p-3">
-              <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Total Expenses</p>
+              <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Total Expenses</p>
               <p className="text-lg font-black text-red-700">{formatCurrency(printReport.totalExpenses)}</p>
             </div>
             <div className="border border-slate-300 rounded p-3">
-              <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Net Savings</p>
+              <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Net Savings</p>
               <p className={`text-lg font-black ${printReport.netSavings >= 0 ? 'text-emerald-700' : 'text-red-700'}`}>{formatCurrency(printReport.netSavings)}</p>
             </div>
             <div className="border border-slate-300 rounded p-3">
-              <p className="text-[9px] uppercase font-bold tracking-wider text-slate-500">Savings Rate</p>
+              <p className="text-[9px] uppercase font-bold tracking-wider text-ink-4">Savings Rate</p>
               <p className="text-lg font-black text-slate-900">{printReport.savingsRate}%</p>
             </div>
           </div>
@@ -631,9 +627,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
           <table className="w-full text-xs border-collapse mb-6">
             <thead>
               <tr>
-                <th className="border-b-2 border-slate-800 px-2 py-1.5 text-left font-black uppercase text-[10px] text-slate-700">Category</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1.5 text-right font-black uppercase text-[10px] text-slate-700">Spent</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1.5 text-right font-black uppercase text-[10px] text-slate-700">Share</th>
+                <th className="border-b-2 border-line px-2 py-1.5 text-left font-black uppercase text-[10px] text-slate-700">Category</th>
+                <th className="border-b-2 border-line px-2 py-1.5 text-right font-black uppercase text-[10px] text-slate-700">Spent</th>
+                <th className="border-b-2 border-line px-2 py-1.5 text-right font-black uppercase text-[10px] text-slate-700">Share</th>
               </tr>
             </thead>
             <tbody>
@@ -641,7 +637,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
                 <tr key={row.category} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
                   <td className="border-b border-slate-200 px-2 py-1 font-semibold text-slate-900">{row.category}</td>
                   <td className="border-b border-slate-200 px-2 py-1 text-right font-bold text-slate-900">{formatCurrency(row.spent)}</td>
-                  <td className="border-b border-slate-200 px-2 py-1 text-right text-slate-600">{row.percentage}%</td>
+                  <td className="border-b border-slate-200 px-2 py-1 text-right text-ink-4">{row.percentage}%</td>
                 </tr>
               ))}
             </tbody>
@@ -650,20 +646,20 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ onBackToDashboard }) =
           <table className="w-full text-[10px] border-collapse">
             <thead>
               <tr>
-                <th className="border-b-2 border-slate-800 px-2 py-1 text-left font-black uppercase text-slate-700">Date</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1 text-left font-black uppercase text-slate-700">Type</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1 text-left font-black uppercase text-slate-700">Category</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1 text-left font-black uppercase text-slate-700">Description</th>
-                <th className="border-b-2 border-slate-800 px-2 py-1 text-right font-black uppercase text-slate-700">Amount</th>
+                <th className="border-b-2 border-line px-2 py-1 text-left font-black uppercase text-slate-700">Date</th>
+                <th className="border-b-2 border-line px-2 py-1 text-left font-black uppercase text-slate-700">Type</th>
+                <th className="border-b-2 border-line px-2 py-1 text-left font-black uppercase text-slate-700">Category</th>
+                <th className="border-b-2 border-line px-2 py-1 text-left font-black uppercase text-slate-700">Description</th>
+                <th className="border-b-2 border-line px-2 py-1 text-right font-black uppercase text-slate-700">Amount</th>
               </tr>
             </thead>
             <tbody>
               {printReport.transactions.map((tx, i) => (
                 <tr key={tx.id} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
-                  <td className="border-b border-slate-200 px-2 py-0.5 text-slate-600">{tx.date}</td>
+                  <td className="border-b border-slate-200 px-2 py-0.5 text-ink-4">{tx.date}</td>
                   <td className="border-b border-slate-200 px-2 py-0.5 font-semibold text-slate-900">{tx.type}</td>
-                  <td className="border-b border-slate-200 px-2 py-0.5 text-slate-600">{tx.category}</td>
-                  <td className="border-b border-slate-200 px-2 py-0.5 text-slate-600">{tx.description}</td>
+                  <td className="border-b border-slate-200 px-2 py-0.5 text-ink-4">{tx.category}</td>
+                  <td className="border-b border-slate-200 px-2 py-0.5 text-ink-4">{tx.description}</td>
                   <td className={`border-b border-slate-200 px-2 py-0.5 text-right font-bold ${tx.type === 'income' ? 'text-emerald-700' : 'text-red-700'}`}>{formatCurrency(tx.amount)}</td>
                 </tr>
               ))}

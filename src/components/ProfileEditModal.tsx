@@ -52,20 +52,20 @@ interface ProfileEditModalProps {
 type Mode = 'view' | 'password' | 'edit';
 
 const inputCls =
-  'w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-cyan-500 focus:outline-none placeholder-slate-600';
+  'w-full px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-cyan-500 focus:outline-none placeholder-slate-600';
 
 /* ── dark navy / cyan theme tokens ── */
-const cardCls = 'rounded-xl border border-slate-800 bg-[#131c2e]';
+const cardCls = 'rounded-xl border border-line bg-elevated';
 const btnPrimary =
   'rounded-xl bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold transition-colors';
 const btnSecondary =
-  'rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition-colors border border-slate-700';
+  'rounded-xl bg-elevated hover:bg-line-strong text-ink font-bold transition-colors border border-line-strong';
 
 const InfoRow: React.FC<{ icon: React.ReactNode; label: string; value: React.ReactNode }> = ({ icon, label, value }) => (
-  <div className="flex items-start gap-3 py-2.5 border-b border-slate-800/60 last:border-0">
+  <div className="flex items-start gap-3 py-2.5 border-b border-line/60 last:border-0">
     <span className="mt-0.5 text-cyan-400 shrink-0">{icon}</span>
-    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500 w-24 shrink-0 pt-0.5">{label}</span>
-    <span className="text-xs text-slate-100 font-medium text-right flex-1 min-w-0 break-words">{value || '—'}</span>
+    <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-4 w-24 shrink-0 pt-0.5">{label}</span>
+    <span className="text-xs text-ink font-medium text-right flex-1 min-w-0 break-words">{value || '—'}</span>
   </div>
 );
 
@@ -268,13 +268,13 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={close} />
-      <div className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-[#0f172a] border border-slate-800 rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.08)]">
+      <div className="relative w-full max-w-lg max-h-[85vh] overflow-y-auto bg-surface border border-line rounded-2xl shadow-[0_0_40px_rgba(6,182,212,0.08)]">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-[#0f172a]/95 backdrop-blur border-b border-slate-800">
+        <div className="sticky top-0 z-10 flex items-center justify-between px-5 py-4 bg-surface/95 backdrop-blur border-b border-line">
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 flex items-center justify-center font-black text-[13px] text-slate-950 shadow-[0_0_12px_rgba(6,182,212,0.35)]">F</div>
             <div>
-              <h2 className="text-sm font-bold text-white leading-tight">Profile Center</h2>
+              <h2 className="text-sm font-bold text-ink leading-tight">Profile Center</h2>
               <p className="text-[9px] uppercase tracking-[0.2em] text-cyan-400/80 font-semibold">FINORA Account &amp; Security</p>
             </div>
             {mode === 'edit' && (
@@ -288,7 +288,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
               </span>
             )}
           </div>
-          <button onClick={close} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+          <button onClick={close} className="p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-elevated transition-colors">
             <X size={16} />
           </button>
         </div>
@@ -310,7 +310,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   {/* avatar with cyan glowing ring + photo upload */}
                   <div className="relative shrink-0">
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 p-[2px] shadow-[0_0_18px_rgba(6,182,212,0.35)]">
-                      <div className="w-full h-full bg-[#0f172a] rounded-full flex items-center justify-center overflow-hidden">
+                      <div className="w-full h-full bg-surface rounded-full flex items-center justify-center overflow-hidden">
                         {profile.avatarUrl ? (
                           <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
                         ) : (
@@ -322,8 +322,8 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                     </div>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-black text-white truncate">{profile.name}</p>
-                    <p className="text-[11px] text-slate-400 truncate">{profile.email}</p>
+                    <p className="text-sm font-black text-ink truncate">{profile.name}</p>
+                    <p className="text-[11px] text-ink-3 truncate">{profile.email}</p>
                     <span className="mt-1 inline-flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/25">
                       <span className="w-1 h-1 rounded-full bg-cyan-400" /> {profile.role}
                     </span>
@@ -342,6 +342,16 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                 <InfoRow icon={<Shield className="w-3.5 h-3.5" />} label="Risk Tolerance" value={profile.riskTolerance ? profile.riskTolerance.charAt(0).toUpperCase() + profile.riskTolerance.slice(1) : ''} />
                 <InfoRow icon={<Target className="w-3.5 h-3.5" />} label="Goal" value={profile.financialGoal} />
                 <InfoRow icon={<Sparkles className="w-3.5 h-3.5" />} label="Bio" value={profile.bio} />
+                {profile.role === 'University Student' && (
+                  <>
+                    <InfoRow icon={<GraduationCap className="w-3.5 h-3.5" />} label="University" value={profile.university} />
+                    <InfoRow icon={<GraduationCap className="w-3.5 h-3.5" />} label="Program" value={profile.program} />
+                    <InfoRow icon={<GraduationCap className="w-3.5 h-3.5" />} label="Degree" value={profile.degree} />
+                    <InfoRow icon={<Calendar className="w-3.5 h-3.5" />} label="Year" value={profile.year} />
+                    <InfoRow icon={<Calendar className="w-3.5 h-3.5" />} label="Semester" value={profile.semester} />
+                    <InfoRow icon={<IdCard className="w-3.5 h-3.5" />} label="Student ID" value={profile.studentId} />
+                  </>
+                )}
                 <InfoRow icon={<Calendar className="w-3.5 h-3.5" />} label="Member Since" value={profile.joinedDate} />
                 <InfoRow icon={<IdCard className="w-3.5 h-3.5" />} label="Account ID" value={<span className="font-mono text-[10px]">{currentUser?.id || profile.id}</span>} />
               </div>
@@ -354,8 +364,8 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
               </button>
 
               {/* Security section */}
-              <div className="mt-4 rounded-xl border border-slate-800 bg-[#131c2e]/60 p-4">
-                <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-1.5">
+              <div className="mt-4 rounded-xl border border-line bg-elevated/60 p-4">
+                <h3 className="text-[11px] font-bold uppercase tracking-wider text-ink-3 mb-3 flex items-center gap-1.5">
                   <KeyRound size={12} className="text-cyan-400" /> Security
                 </h3>
 
@@ -427,7 +437,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
 
                 {secTab === 'email' && (
                   <form onSubmit={handleChangeEmail} className="space-y-2.5">
-                    <p className="text-[10px] text-slate-500 flex items-center gap-1.5"><Mail size={11} /> Current: {profile.email}</p>
+                    <p className="text-[10px] text-ink-4 flex items-center gap-1.5"><Mail size={11} /> Current: {profile.email}</p>
                     <input
                       type="email"
                       value={nextEmail}
@@ -470,12 +480,12 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
             <form onSubmit={handleVerify} className="space-y-4">
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
                 <Lock size={16} className="text-amber-400 shrink-0" />
-                <p className="text-[11px] text-amber-200">
+                <p className="text-[11px] text-amber-700 dark:text-amber-200">
                   For your security, enter your account password to unlock profile editing.
                 </p>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Account Password</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Account Password</label>
                 <input
                   type="password"
                   autoFocus
@@ -512,7 +522,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
               <div className="flex items-center gap-4 pb-1">
                 <div className="relative shrink-0">
                   <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 p-[2px] shadow-[0_0_18px_rgba(6,182,212,0.35)]">
-                    <div className="w-full h-full bg-[#0f172a] rounded-full flex items-center justify-center overflow-hidden">
+                    <div className="w-full h-full bg-surface rounded-full flex items-center justify-center overflow-hidden">
                       {profile.avatarUrl ? (
                         <img src={profile.avatarUrl} alt={profile.name} className="w-full h-full object-cover" />
                       ) : (
@@ -534,18 +544,18 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleAvatarPick} />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-white">Profile Photo</p>
-                  <p className="text-[10px] text-slate-400">Circle-cropped automatically, saved to your account.</p>
+                  <p className="text-xs font-semibold text-ink">Profile Photo</p>
+                  <p className="text-[10px] text-ink-3">Circle-cropped automatically, saved to your account.</p>
                   {avatarError && <p className="text-[10px] text-red-400 font-semibold mt-0.5">{avatarError}</p>}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Full Name</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Full Name</label>
                   <input value={form.name} onChange={(e) => set('name', e.target.value)} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Role</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Role</label>
                   <select value={form.role} onChange={(e) => set('role', e.target.value as UserRole)} className={inputCls}>
                     {ROLE_OPTIONS.map((r) => (
                       <option key={r} value={r}>{r}</option>
@@ -553,7 +563,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Currency</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Currency</label>
                   <select value={form.currency} onChange={(e) => set('currency', e.target.value)} className={inputCls}>
                     {CURRENCY_OPTIONS.map((c) => (
                       <option key={c.code} value={c.code}>{c.label}</option>
@@ -561,7 +571,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Monthly Income Target</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Monthly Income Target</label>
                   <input
                     type="number"
                     value={form.monthlyIncomeTarget}
@@ -570,7 +580,7 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Monthly Expense Budget</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Monthly Expense Budget</label>
                   <input
                     type="number"
                     value={form.monthlyExpenseBudget}
@@ -579,19 +589,19 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Phone</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Phone</label>
                   <input value={form.phone} onChange={(e) => set('phone', e.target.value)} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Location</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Location</label>
                   <input value={form.location} onChange={(e) => set('location', e.target.value)} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Occupation</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Occupation</label>
                   <input value={form.occupation} onChange={(e) => set('occupation', e.target.value)} className={inputCls} />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Risk Tolerance</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Risk Tolerance</label>
                   <select
                     value={form.riskTolerance}
                     onChange={(e) => set('riskTolerance', e.target.value as EditForm['riskTolerance'])}
@@ -603,11 +613,11 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   </select>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Financial Goal</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Financial Goal</label>
                   <input value={form.financialGoal} onChange={(e) => set('financialGoal', e.target.value)} className={inputCls} />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Bio</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Bio</label>
                   <textarea
                     rows={2}
                     value={form.bio}
@@ -622,27 +632,27 @@ const ProfileEditModal: React.FC<ProfileEditModalProps> = ({ isOpen, onClose }) 
                   <p className="text-[10px] font-bold uppercase tracking-wider text-cyan-400">Academic Details</p>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">University</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">University</label>
                       <input value={form.university} onChange={(e) => set('university', e.target.value)} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Department / Program</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">Department / Program</label>
                       <input value={form.program} onChange={(e) => set('program', e.target.value)} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Degree</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">Degree</label>
                       <input value={form.degree} onChange={(e) => set('degree', e.target.value)} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Year</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">Year</label>
                       <input value={form.year} onChange={(e) => set('year', e.target.value)} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Semester</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">Semester</label>
                       <input value={form.semester} onChange={(e) => set('semester', e.target.value)} className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">Student ID</label>
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">Student ID</label>
                       <input value={form.studentId} onChange={(e) => set('studentId', e.target.value)} className={inputCls} />
                     </div>
                   </div>

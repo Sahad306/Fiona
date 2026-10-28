@@ -35,7 +35,7 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
       <div
         role="tablist"
         aria-label="Budget and savings tools"
-        className="inline-flex items-center gap-1 p-1 rounded-xl bg-slate-900 border border-slate-800"
+        className="inline-flex items-center gap-1 p-1 rounded-xl bg-surface border border-line"
         id="planning-subtabs"
       >
         {tabs.map(({ id, label, icon: Icon }) => {
@@ -49,7 +49,7 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
               className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold border transition-colors cursor-pointer ${
                 isActive
                   ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-slate-800/60 border-transparent'
+                  : 'text-ink-2 hover:text-ink hover:bg-elevated/60 border-transparent'
               }`}
             >
               <Icon className="w-4 h-4" />

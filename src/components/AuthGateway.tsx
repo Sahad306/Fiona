@@ -14,6 +14,8 @@ import {
   EyeOff,
   ArrowRight,
   ShieldCheck,
+  TrendingUp,
+  Target,
   Briefcase,
   GraduationCap,
   Phone,
@@ -253,16 +255,16 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
   return (
     <div
       id="finora_auth_gateway"
-      className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950"
+      className="min-h-screen bg-canvas text-ink flex flex-col justify-between selection:bg-emerald-500 selection:text-white"
     >
       {/* Top Brand Bar */}
-      <header className="border-b border-slate-900 bg-slate-950/90 backdrop-blur-xl px-6 py-4 sticky top-0 z-30">
+      <header className="border-b border-slate-200 bg-surface/90 backdrop-blur-xl px-6 py-4 sticky top-0 z-30">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3.5 group cursor-pointer">
             {/* Precision Designed Emblem Logo */}
             <div className="relative">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 p-[1px] shadow-lg shadow-emerald-500/20 group-hover:shadow-emerald-500/35 transition-all">
-                <div className="w-full h-full bg-slate-950/95 rounded-[11px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
+                <div className="w-full h-full bg-surface rounded-[11px] flex items-center justify-center relative overflow-hidden backdrop-blur-sm">
                   <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/15 via-transparent to-cyan-500/15" />
                   <Wallet className="w-5 h-5 text-emerald-400 stroke-[2.2] relative z-10 group-hover:scale-110 transition-transform duration-300" />
                   <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-400 rounded-full blur-[2px] opacity-70" />
@@ -273,21 +275,21 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
             {/* Polished Design Name & Brand Hierarchy */}
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-emerald-300">
+                <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ink via-ink to-emerald-600">
                   FINORA
                 </span>
-                <span className="text-[9px] uppercase font-extrabold tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 shadow-xs">
+                <span className="text-[9px] uppercase font-extrabold tracking-widest px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 shadow-xs">
                   Vault OS
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 font-medium tracking-wide">
+              <p className="text-[11px] text-ink-3 font-medium tracking-wide">
                 Intelligent Financial Architecture
               </p>
             </div>
           </div>
 
           <div className="flex items-center space-x-3">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25">
               <Database className="w-3.5 h-3.5" />
               {isDbConnected ? 'Encrypted Vault Active' : 'Local Sandbox Mode'}
             </span>
@@ -295,7 +297,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               <button
                 id="btn_guest_bypass"
                 onClick={onEnterGuest}
-                className="text-xs text-slate-400 hover:text-emerald-300 transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-slate-900 border border-slate-800/80 hover:border-emerald-500/30 font-semibold"
+                className="text-xs text-ink-2 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer px-3 py-1.5 rounded-lg hover:bg-elevated border border-line-strong hover:border-emerald-500/40 font-semibold"
               >
                 Explore Preview →
               </button>
@@ -305,32 +307,56 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
       </header>
 
       {/* Main Authentication Container */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8 my-auto">
-        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <main className="flex-1 flex justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
+        <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center m-auto">
           {/* Left Column: Value Proposition & Inspiring Visual Callout */}
-          <div className="lg:col-span-5 space-y-6 text-left">
-            <div>
-              <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-[1.15]">
-                Master Your Capital. <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400">
-                  Command Your Future.
-                </span>
-              </h1>
-            </div>
+          <div className="lg:col-span-5 text-left py-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-emerald-700 dark:text-emerald-400 mb-3">
+              Personal Finance OS
+            </p>
 
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-black text-ink tracking-tight leading-[1.25] pb-1">
+              <span className="block">Master Your Capital.</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-400 dark:via-teal-300 dark:to-cyan-400">
+                Command Your Future.
+              </span>
+            </h1>
+
+            <div className="h-px w-24 bg-gradient-to-r from-emerald-500 to-transparent my-5" />
+
+            <ul className="space-y-3">
+              <li className="flex items-center gap-3">
+                <span className="w-9 h-9 shrink-0 rounded-lg bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4 text-emerald-700 stroke-[2.2]" />
+                </span>
+                <span className="text-sm font-semibold text-ink-2">Live Cashflow Tracking</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="w-9 h-9 shrink-0 rounded-lg bg-teal-50 dark:bg-teal-500/10 border border-teal-500/30 flex items-center justify-center">
+                  <Target className="w-4 h-4 text-teal-700 stroke-[2.2]" />
+                </span>
+                <span className="text-sm font-semibold text-ink-2">Goal Milestone Engine</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="w-9 h-9 shrink-0 rounded-lg bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                  <ShieldCheck className="w-4 h-4 text-cyan-700 stroke-[2.2]" />
+                </span>
+                <span className="text-sm font-semibold text-ink-2">Bank-Grade Encryption</span>
+              </li>
+            </ul>
           </div>
 
           {/* Right Column: Authentication Card */}
           <div className="lg:col-span-7">
             <div
               id="auth_gateway_card"
-              className="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 relative overflow-hidden"
+              className="bg-surface border border-line rounded-2xl shadow-xl p-6 sm:p-8 relative overflow-hidden"
             >
               {/* Decorative Accent Glow */}
               <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
 
               {/* Mode Switch Tabs */}
-              <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 mb-6">
+              <div className="grid grid-cols-3 gap-1 bg-elevated p-1 rounded-xl border border-line mb-6">
                 <button
                   id="tab_gateway_login"
                   type="button"
@@ -340,8 +366,8 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   }}
                   className={`py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'login'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                      : 'text-ink-3 hover:text-ink'
                   }`}
                 >
                   <LogIn className="w-3.5 h-3.5" /> Sign In
@@ -356,8 +382,8 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   }}
                   className={`py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                     activeTab === 'register'
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
-                      : 'text-slate-400 hover:text-slate-200'
+                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
+                      : 'text-ink-3 hover:text-ink'
                   }`}
                 >
                   <UserPlus className="w-3.5 h-3.5" /> Register
@@ -378,7 +404,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               {successMessage && (
                 <div
                   id="gateway_success_alert"
-                  className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2.5 animate-in fade-in"
+                  className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-xs flex items-start gap-2.5 animate-in fade-in"
                 >
                   <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400 mt-0.5" />
                   <span>{successMessage}</span>
@@ -389,18 +415,18 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               {activeTab === 'login' && !forgotMode && (
                 <form id="form_gateway_login" onSubmit={handleLoginSubmit} className="space-y-4">
                   <div className="text-left">
-                    <h2 className="text-lg font-bold text-white">Sign In to Your Vault</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-lg font-bold text-ink">Sign In to Your Vault</h2>
+                    <p className="text-xs text-ink-4">
                       Enter your login credentials to access your financial records.
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Email Address / Login ID
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_login_email"
                         type="email"
@@ -408,17 +434,17 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
                         placeholder="e.g. demo@finora.io or sarah@finora.io"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Password
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_login_password"
                         type={showLoginPassword ? 'text' : 'password'}
@@ -426,12 +452,12 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
                         placeholder="••••••••"
-                        className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-10 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowLoginPassword(!showLoginPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-4 hover:text-ink cursor-pointer"
                       >
                         {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -447,7 +473,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         setErrorMessage(null);
                         setSuccessMessage(null);
                       }}
-                      className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                      className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-700 dark:text-emerald-300 cursor-pointer"
                     >
                       Forgot password?
                     </button>
@@ -457,7 +483,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     id="btn_gateway_submit_login"
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
                   >
                     {loading ? (
                       <>
@@ -471,7 +497,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   </button>
 
                   {/* Switch to Register link */}
-                  <div className="pt-2 text-center text-xs text-slate-400">
+                  <div className="pt-2 text-center text-xs text-ink-4">
                     Don't have an account yet?{' '}
                     <button
                       type="button"
@@ -492,8 +518,8 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               {activeTab === 'login' && forgotMode && (
                 <div className="space-y-4">
                   <div className="text-left">
-                    <h2 className="text-lg font-bold text-white">Reset Your Password</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-lg font-bold text-ink">Reset Your Password</h2>
+                    <p className="text-xs text-ink-4">
                       Verify your email with a 6-digit code and choose a new password.
                     </p>
                   </div>
@@ -505,9 +531,9 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         <span>Enter your registered email and we'll send you a 6-digit reset code, valid for 15 minutes.</span>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">Email Address</label>
+                        <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">Email Address</label>
                         <div className="relative">
-                          <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <Mail className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                           <input
                             type="email"
                             required
@@ -515,14 +541,14 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                             value={forgotEmail}
                             onChange={(e) => setForgotEmail(e.target.value)}
                             placeholder="your@email.com"
-                            className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                            className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                           />
                         </div>
                       </div>
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                        className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
                       >
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mail className="w-4 h-4" />}
                         {loading ? 'Sending…' : 'Send Reset Code'}
@@ -540,7 +566,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         </div>
                       )}
                       <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">Reset Code</label>
+                        <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">Reset Code</label>
                         <input
                           type="text"
                           required
@@ -550,13 +576,13 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                           value={resetCode}
                           onChange={(e) => setResetCode(e.target.value.replace(/\D/g, ''))}
                           placeholder="6-digit code"
-                          className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white text-center tracking-[0.4em] placeholder-slate-500 placeholder:tracking-normal focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          className="w-full px-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-sm text-ink text-center tracking-[0.4em] placeholder-ink-4 placeholder:tracking-normal focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">New Password</label>
+                        <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">New Password</label>
                         <div className="relative">
-                          <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                          <Lock className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                           <input
                             type="password"
                             required
@@ -564,14 +590,14 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             placeholder="At least 6 characters"
-                            className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                            className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                           />
                         </div>
                       </div>
                       <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
+                        className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2"
                       >
                         {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
                         {loading ? 'Resetting…' : 'Reset Password'}
@@ -582,7 +608,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   <button
                     type="button"
                     onClick={exitForgotMode}
-                    className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition-colors cursor-pointer"
+                    className="w-full py-2 rounded-xl bg-slate-200 hover:bg-slate-300 text-ink-2 text-[11px] font-bold transition-colors cursor-pointer"
                   >
                     ← Back to Sign In
                   </button>
@@ -593,8 +619,8 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
               {activeTab === 'register' && (
                 <form id="form_gateway_register" onSubmit={handleRegisterSubmit} className="space-y-3.5">
                   <div className="text-left">
-                    <h2 className="text-lg font-bold text-white">Create Your Account</h2>
-                    <p className="text-xs text-slate-400">
+                    <h2 className="text-lg font-bold text-ink">Create Your Account</h2>
+                    <p className="text-xs text-ink-4">
                       Register once — you'll land directly in your FINORA dashboard.
                     </p>
                   </div>
@@ -603,7 +629,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   <div className="flex items-center gap-4 pt-1">
                     <div className="relative shrink-0">
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 p-[2px] shadow-[0_0_14px_rgba(16,185,129,0.3)]">
-                        <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
+                        <div className="w-full h-full rounded-full bg-elevated flex items-center justify-center overflow-hidden">
                           {regAvatar ? (
                             <img src={regAvatar} alt="Profile preview" className="w-full h-full object-cover" />
                           ) : (
@@ -619,17 +645,17 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                       </label>
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-white">Profile Photo</p>
-                      <p className="text-[10px] text-slate-400">Optional — auto-cropped to a circle. Change it anytime in Profile Center.</p>
+                      <p className="text-xs font-semibold text-ink">Profile Photo</p>
+                      <p className="text-[10px] text-ink-4">Optional — auto-cropped to a circle. Change it anytime in Profile Center.</p>
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Full Name *
                     </label>
                     <div className="relative">
-                      <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <User className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_name"
                         type="text"
@@ -637,17 +663,17 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regName}
                         onChange={(e) => setRegName(e.target.value)}
                         placeholder="e.g. Sahad (RUET CSE)"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Login Email / ID *
                     </label>
                     <div className="relative">
-                      <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Mail className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_email"
                         type="email"
@@ -655,17 +681,17 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regEmail}
                         onChange={(e) => setRegEmail(e.target.value)}
                         placeholder="e.g. demo@finora.io or you@example.com"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Create Password (min 6 chars) *
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_password"
                         type={showRegPassword ? 'text' : 'password'}
@@ -673,12 +699,12 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regPassword}
                         onChange={(e) => setRegPassword(e.target.value)}
                         placeholder="Create a strong password"
-                        className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-10 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegPassword(!showRegPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-4 hover:text-ink cursor-pointer"
                       >
                         {showRegPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -686,11 +712,11 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Confirm Password *
                     </label>
                     <div className="relative">
-                      <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Lock className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_confirm_password"
                         type={showRegConfirmPassword ? 'text' : 'password'}
@@ -698,12 +724,12 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regConfirmPassword}
                         onChange={(e) => setRegConfirmPassword(e.target.value)}
                         placeholder="Re-enter your password"
-                        className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-10 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                       <button
                         type="button"
                         onClick={() => setShowRegConfirmPassword(!showRegConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-4 hover:text-ink cursor-pointer"
                       >
                         {showRegConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -712,18 +738,18 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
 
                   {/* Profession */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Profession / Occupation
                     </label>
                     <div className="relative">
-                      <Briefcase className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Briefcase className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_profession"
                         type="text"
                         value={regProfession}
                         onChange={(e) => setRegProfession(e.target.value)}
                         placeholder="e.g. Software Engineer, Student, Doctor"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -731,18 +757,18 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   {/* University/College — conditional on Student role */}
                   {regRole === 'University Student' && (
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                         University / College *
                       </label>
                       <div className="relative">
-                        <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <GraduationCap className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           id="input_gateway_register_university"
                           type="text"
                           value={regUniversity}
                           onChange={(e) => setRegUniversity(e.target.value)}
                           placeholder="e.g. RUET, MIT, Dhaka University"
-                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -751,34 +777,34 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   {/* Phone + City row */}
                   <div className="grid grid-cols-2 gap-3 text-left">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         Phone Number
                       </label>
                       <div className="relative">
-                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <Phone className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           id="input_gateway_register_phone"
                           type="tel"
                           value={regPhone}
                           onChange={(e) => setRegPhone(e.target.value)}
                           placeholder="+880 1XXX-XXXXXX"
-                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         City / Location
                       </label>
                       <div className="relative">
-                        <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                        <MapPin className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                         <input
                           id="input_gateway_register_city"
                           type="text"
                           value={regCity}
                           onChange={(e) => setRegCity(e.target.value)}
                           placeholder="e.g. Dhaka, New York"
-                          className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                          className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                         />
                       </div>
                     </div>
@@ -786,31 +812,31 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
 
                   {/* Date of Birth */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1 text-left">
+                    <label className="block text-xs font-semibold text-ink-2 mb-1 text-left">
                       Date of Birth
                     </label>
                     <div className="relative">
-                      <Calendar className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Calendar className="w-4 h-4 text-ink-4 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         id="input_gateway_register_dob"
                         type="date"
                         value={regDob}
                         onChange={(e) => setRegDob(e.target.value)}
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-surface border border-line-strong rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 text-left">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         Account Type
                       </label>
                       <select
                         id="select_gateway_role"
                         value={regRole}
                         onChange={(e) => setRegRole(e.target.value as UserRole)}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                        className="w-full px-3 py-2 bg-surface border border-line-strong rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                       >
                         <option value="University Student"> Student (University / College)</option>
                         <option value="Salaried Employee"> Salaried Employee</option>
@@ -822,14 +848,14 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         Currency
                       </label>
                       <select
                         id="select_gateway_currency"
                         value={regCurrency}
                         onChange={(e) => setRegCurrency(e.target.value)}
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                        className="w-full px-3 py-2 bg-surface border border-line-strong rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                       >
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
@@ -844,7 +870,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
 
                   <div className="grid grid-cols-2 gap-3 text-left">
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         Monthly Income Target
                       </label>
                       <input
@@ -854,12 +880,12 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regIncomeTarget}
                         onChange={(e) => setRegIncomeTarget(e.target.value)}
                         placeholder="1800"
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full px-3 py-2 bg-surface border border-line-strong rounded-xl text-xs font-bold text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      <label className="block text-xs font-semibold text-ink-2 mb-1">
                         Monthly Expense Budget
                       </label>
                       <input
@@ -869,7 +895,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                         value={regExpenseBudget}
                         onChange={(e) => setRegExpenseBudget(e.target.value)}
                         placeholder="1200"
-                        className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                        className="w-full px-3 py-2 bg-surface border border-line-strong rounded-xl text-xs font-bold text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -878,7 +904,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     id="btn_gateway_submit_register"
                     type="submit"
                     disabled={loading}
-                    className="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
+                    className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-emerald-500/25 transition-all cursor-pointer flex items-center justify-center gap-2 mt-2"
                   >
                     {loading ? (
                       <>
@@ -891,7 +917,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                     )}
                   </button>
 
-                  <div className="pt-2 text-center text-xs text-slate-400">
+                  <div className="pt-2 text-center text-xs text-ink-4">
                     Already have an account?{' '}
                     <button
                       type="button"
@@ -913,15 +939,15 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-4.5 text-center text-xs text-slate-500">
+      <footer className="border-t border-line bg-surface py-4.5 text-center text-xs text-ink-3">
         <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600 dark:from-emerald-400 dark:to-teal-300">
               FINORA
             </span>
-            <span className="text-slate-400">— Precision Wealth & Personal Finance Intelligence System</span>
+            <span className="text-ink-3">— Precision Wealth & Personal Finance Intelligence System</span>
           </div>
-          <div className="flex items-center space-x-3 text-[11px] text-slate-400">
+          <div className="flex items-center space-x-3 text-[11px] text-ink-3">
             <span>Encrypted Ledger Storage</span>
             <span>•</span>
             <span>PBKDF2 Password Security</span>

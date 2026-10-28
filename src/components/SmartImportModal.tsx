@@ -198,15 +198,15 @@ export const SmartImportModal: React.FC<SmartImportModalProps> = ({ isOpen, onCl
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/80 backdrop-blur-sm">
+      <div className="w-full max-w-2xl bg-surface border border-line-strong rounded-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+        <div className="flex items-center justify-between p-5 border-b border-line">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-lg font-bold text-white">Smart Import — Bank / bKash / Nagad</h2>
+            <h2 className="text-lg font-bold text-ink">Smart Import — Bank / bKash / Nagad</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-elevated transition-colors cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -220,7 +220,7 @@ export const SmartImportModal: React.FC<SmartImportModalProps> = ({ isOpen, onCl
 
           {/* Input Area */}
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-2">
+            <label className="block text-xs font-semibold text-ink-2 mb-2">
               Paste Transaction Text (SMS, notification, or statement)
             </label>
             <textarea
@@ -228,7 +228,7 @@ export const SmartImportModal: React.FC<SmartImportModalProps> = ({ isOpen, onCl
               onChange={(e) => setRawText(e.target.value)}
               rows={5}
               placeholder={`e.g.\nYou have sent Tk. 500 to 01712345678 on 08/09/2026. Fee: Tk. 5. Balance: Tk. 1,234. TrxID: ABC123\nNagad: Tk. 1,200 sent to 01898765432 on 07-09-2026. Balance: Tk. 5,000\nYour a/c 1234 has been debited BDT 2,500.00 on 06/09/2026 for grocery payment.`}
-              className="w-full bg-slate-950 border border-slate-700 rounded-xl p-3.5 text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-y font-mono"
+              className="w-full bg-canvas border border-line-strong rounded-xl p-3.5 text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-y font-mono"
             />
           </div>
 
@@ -249,40 +249,40 @@ export const SmartImportModal: React.FC<SmartImportModalProps> = ({ isOpen, onCl
           {parsed.length > 0 && (
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white">Parsed Transactions ({parsed.length})</h3>
+                <h3 className="text-sm font-bold text-ink">Parsed Transactions ({parsed.length})</h3>
                 <button
                   onClick={handleImportAll}
-                  className="flex items-center gap-1.5 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition-all cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" /> Import All ({parsed.length})
                 </button>
               </div>
 
               {parsed.map((tx) => (
-                <div key={tx.id} className="bg-slate-950/60 border border-slate-800 rounded-xl p-3.5 space-y-2">
+                <div key={tx.id} className="bg-canvas/60 border border-line rounded-xl p-3.5 space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       {tx.source === 'bKash' && <Smartphone className="w-4 h-4 text-pink-400" />}
                       {tx.source === 'Nagad' && <Smartphone className="w-4 h-4 text-orange-400" />}
                       {tx.source === 'Bank' && <Building2 className="w-4 h-4 text-blue-400" />}
-                      {tx.source === 'Other' && <Wallet className="w-4 h-4 text-slate-400" />}
-                      <span className="text-sm font-bold text-white">{formatCurrency(tx.amount)}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300 font-semibold">{tx.source}</span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-slate-800 text-slate-300">{tx.paymentMethod}</span>
+                      {tx.source === 'Other' && <Wallet className="w-4 h-4 text-ink-3" />}
+                      <span className="text-sm font-bold text-ink">{formatCurrency(tx.amount)}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-elevated text-ink-2 font-semibold">{tx.source}</span>
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-elevated text-ink-2">{tx.paymentMethod}</span>
                     </div>
-                    <button onClick={() => removeParsed(tx.id)} className="p-1 rounded text-slate-500 hover:text-rose-400 cursor-pointer">
+                    <button onClick={() => removeParsed(tx.id)} className="p-1 rounded text-ink-4 hover:text-rose-400 cursor-pointer">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <p className="text-[11px] text-slate-400 line-clamp-1">{tx.description}</p>
+                  <p className="text-[11px] text-ink-3 line-clamp-1">{tx.description}</p>
 
                   <div className="flex items-center gap-3 text-[11px]">
-                    <span className="text-slate-500">{tx.date}</span>
+                    <span className="text-ink-4">{tx.date}</span>
                     <select
                       value={tx.category}
                       onChange={(e) => updateParsedCategory(tx.id, e.target.value as ExpenseCategory)}
-                      className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-[11px] text-white focus:outline-none focus:border-emerald-500 cursor-pointer"
+                      className="bg-surface border border-line-strong rounded-lg px-2 py-1 text-[11px] text-ink focus:outline-none focus:border-emerald-500 cursor-pointer"
                     >
                       {DEFAULT_EXPENSE_CATEGORIES.map((cat) => (
                         <option key={cat} value={cat}>{cat}</option>
@@ -296,7 +296,7 @@ export const SmartImportModal: React.FC<SmartImportModalProps> = ({ isOpen, onCl
 
           {/* Success Message */}
           {imported && (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center gap-2 text-emerald-300 text-xs font-semibold animate-in fade-in">
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 flex items-center gap-2 text-emerald-700 text-xs font-semibold animate-in fade-in">
               <CheckCircle2 className="w-4 h-4" /> All transactions imported successfully!
             </div>
           )}

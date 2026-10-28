@@ -261,17 +261,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <div
       id="auth_modal_overlay"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-canvas/80 backdrop-blur-md animate-in fade-in"
     >
       <div
         id="auth_modal_card"
-        className="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 text-slate-100 max-h-[92vh] overflow-y-auto relative"
+        className="w-full max-w-lg rounded-2xl bg-surface border border-line shadow-2xl p-6 text-ink max-h-[92vh] overflow-y-auto relative"
       >
         {/* Close Button */}
         <button
           id="btn_close_auth_modal"
           onClick={onClose}
-          className="absolute top-5 right-5 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-elevated transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -280,29 +280,29 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         <div className="mb-5">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 p-[1px] shadow-md shadow-emerald-500/20">
-              <div className="w-full h-full bg-slate-950 rounded-[7px] flex items-center justify-center">
+              <div className="w-full h-full bg-canvas rounded-[7px] flex items-center justify-center">
                 <Wallet className="w-4 h-4 text-emerald-400 stroke-[2.2]" />
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-emerald-300">
+              <span className="text-sm font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-ink via-ink to-emerald-500">
                 FINORA
               </span>
-              <span className="text-[9px] uppercase font-extrabold tracking-widest px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[9px] uppercase font-extrabold tracking-widest px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-700 border border-emerald-500/30">
                 Vault OS
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 ml-auto">
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 ml-auto">
                 <Database className="w-3 h-3" />
                 {isDbConnected ? 'Vault Persistent' : 'Local Storage'}
               </span>
             </div>
           </div>
-          <h2 className="text-xl font-black text-white tracking-tight mt-1.5">
+          <h2 className="text-xl font-black text-ink tracking-tight mt-1.5">
             {activeTab === 'login' && !forgotMode && 'Sign In to Your Financial Vault'}
             {activeTab === 'login' && forgotMode && 'Reset Your Password'}
             {activeTab === 'register' && 'Create Your FINORA Account'}
           </h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-ink-3 mt-0.5">
             {activeTab === 'login' && !forgotMode && 'Enter your credentials to securely access your cloud-saved financial records.'}
             {activeTab === 'login' && forgotMode && 'Verify your email with a 6-digit code and choose a new password.'}
             {activeTab === 'register' && 'Register a new profile to start tracking budgets, incomes, and goals.'}
@@ -323,7 +323,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {successMessage && (
           <div
             id="auth_success_alert"
-            className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2.5"
+            className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 text-xs flex items-start gap-2.5"
           >
             <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400 mt-0.5" />
             <span>{successMessage}</span>
@@ -331,7 +331,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         )}
 
         {/* Tab Switcher */}
-        <div className="grid grid-cols-3 gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 mb-5">
+        <div className="grid grid-cols-3 gap-1 bg-canvas p-1 rounded-xl border border-line mb-5">
           <button
             id="tab_login"
             onClick={() => {
@@ -341,7 +341,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'login'
                 ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-ink-3 hover:text-ink'
             }`}
           >
             <LogIn className="w-3.5 h-3.5" /> Sign In
@@ -355,7 +355,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             className={`py-2 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
               activeTab === 'register'
                 ? 'bg-emerald-500 text-slate-950 shadow-sm'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-ink-3 hover:text-ink'
             }`}
           >
             <UserPlus className="w-3.5 h-3.5" /> Register
@@ -367,9 +367,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {activeTab === 'login' && !forgotMode && (
           <form id="form_login" onSubmit={handleLoginSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Email Address</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   id="input_login_email"
                   type="email"
@@ -377,15 +377,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="e.g. sarah@finora.io"
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Password</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   id="input_login_password"
                   type={showPassword ? 'text' : 'password'}
@@ -393,12 +393,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full pl-9 pr-10 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -414,7 +414,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   setErrorMessage(null);
                   setSuccessMessage(null);
                 }}
-                className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 cursor-pointer"
+                className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-700 cursor-pointer"
               >
                 Forgot password?
               </button>
@@ -451,9 +451,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <span>Enter your registered email and we'll send you a 6-digit reset code, valid for 15 minutes.</span>
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Email Address</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="email"
                       required
@@ -461,7 +461,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       value={forgotEmail}
                       onChange={(e) => setForgotEmail(e.target.value)}
                       placeholder="your@email.com"
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -486,7 +486,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </div>
                 )}
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">Reset Code</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">Reset Code</label>
                   <input
                     type="text"
                     required
@@ -496,13 +496,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={resetCode}
                     onChange={(e) => setResetCode(e.target.value.replace(/\D/g, ''))}
                     placeholder="6-digit code"
-                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white text-center tracking-[0.4em] placeholder-slate-500 placeholder:tracking-normal focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-sm text-ink text-center tracking-[0.4em] placeholder-ink-4 placeholder:tracking-normal focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">New Password</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">New Password</label>
                   <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Lock className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       required
@@ -510,12 +510,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="At least 6 characters"
-                      className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                      className="w-full pl-9 pr-10 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -535,7 +535,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <button
               type="button"
               onClick={exitForgotMode}
-              className="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-[11px] font-bold transition-colors cursor-pointer"
+              className="w-full py-2 rounded-xl bg-elevated hover:bg-line-strong text-ink-2 text-[11px] font-bold transition-colors cursor-pointer"
             >
               ← Back to Sign In
             </button>
@@ -549,7 +549,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="flex items-center gap-4">
               <div className="relative shrink-0">
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 via-teal-400 to-emerald-500 p-[2px] shadow-[0_0_14px_rgba(16,185,129,0.3)]">
-                  <div className="w-full h-full rounded-full bg-slate-950 flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-full rounded-full bg-canvas flex items-center justify-center overflow-hidden">
                     {regAvatar ? (
                       <img src={regAvatar} alt="Profile preview" className="w-full h-full object-cover" />
                     ) : (
@@ -565,44 +565,44 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </label>
               </div>
               <div>
-                <p className="text-xs font-semibold text-white">Profile Photo</p>
-                <p className="text-[10px] text-slate-400">Optional — auto-cropped to a circle.</p>
+                <p className="text-xs font-semibold text-ink">Profile Photo</p>
+                <p className="text-[10px] text-ink-3">Optional — auto-cropped to a circle.</p>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Mobile Number</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Mobile Number</label>
                 <div className="relative">
-                  <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Phone className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+880 1XXX-XXXXXX"
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Profession</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Profession</label>
                 <div className="relative">
-                  <Briefcase className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Briefcase className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={occupation}
                     onChange={(e) => setOccupation(e.target.value)}
                     placeholder="e.g. Student, Engineer, Doctor"
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Full Name *</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Full Name *</label>
               <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <User className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   id="input_register_name"
                   type="text"
@@ -610,15 +610,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Jordan Lee"
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Email Address *</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Email Address *</label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   id="input_register_email"
                   type="email"
@@ -626,15 +626,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="jordan@example.com"
-                  className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Password (min 6 characters) *</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Password (min 6 characters) *</label>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   id="input_register_password"
                   type={showPassword ? 'text' : 'password'}
@@ -642,12 +642,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a strong password"
-                  className="w-full pl-9 pr-10 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full pl-9 pr-10 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200 cursor-pointer"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-ink-3 hover:text-ink cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -656,12 +656,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Financial Archetype</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Financial Archetype</label>
                 <select
                   id="select_register_role"
                   value={role}
                   onChange={(e) => setRole(e.target.value as UserRole)}
-                  className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                  className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                 >
                   <option value="Salaried Employee">Salaried Employee</option>
                   <option value="Freelancer">Freelancer</option>
@@ -673,12 +673,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Base Currency</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Base Currency</label>
                 <select
                   id="select_register_currency"
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
+                  className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none cursor-pointer"
                 >
                   <option value="USD">USD ($)</option>
                   <option value="EUR">EUR (€)</option>
@@ -692,7 +692,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-ink-2 mb-1">
                   Monthly Income Target
                 </label>
                 <input
@@ -702,12 +702,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={incomeTarget}
                   onChange={(e) => setIncomeTarget(e.target.value)}
                   placeholder="4500"
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs font-bold text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">
+                <label className="block text-xs font-semibold text-ink-2 mb-1">
                   Monthly Expense Budget
                 </label>
                 <input
@@ -717,7 +717,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   value={expenseBudget}
                   onChange={(e) => setExpenseBudget(e.target.value)}
                   placeholder="2800"
-                  className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs font-bold text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs font-bold text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -727,43 +727,43 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <div className="space-y-3 p-4 bg-teal-500/5 border border-teal-500/20 rounded-xl animate-in fade-in slide-in-from-bottom-1 duration-200">
                 <div className="flex items-center gap-2 mb-1">
                   <GraduationCap className="w-4 h-4 text-teal-400" />
-                  <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">Academic Details</span>
+                  <span className="text-xs font-bold text-teal-700 dark:text-teal-300 uppercase tracking-wider">Academic Details</span>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1">University / Institution</label>
+                  <label className="block text-xs font-semibold text-ink-2 mb-1">University / Institution</label>
                   <div className="relative">
-                    <GraduationCap className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <GraduationCap className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       value={university}
                       onChange={(e) => setUniversity(e.target.value)}
                       placeholder="e.g. MIT, Stanford, BUET"
-                      className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                      className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Program / Major</label>
+                    <label className="block text-xs font-semibold text-ink-2 mb-1">Program / Major</label>
                     <div className="relative">
-                      <BookOpen className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <BookOpen className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={program}
                         onChange={(e) => setProgram(e.target.value)}
                         placeholder="e.g. Computer Science"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Degree</label>
+                    <label className="block text-xs font-semibold text-ink-2 mb-1">Degree</label>
                     <select
                       value={degree}
                       onChange={(e) => setDegree(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
+                      className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
                     >
                       <option value="">Select degree</option>
                       <option value="BSc">BSc (Bachelor of Science)</option>
@@ -782,11 +782,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Year</label>
+                    <label className="block text-xs font-semibold text-ink-2 mb-1">Year</label>
                     <select
                       value={year}
                       onChange={(e) => setYear(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
+                      className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
                     >
                       <option value="">Year</option>
                       <option value="1st Year">1st Year</option>
@@ -798,11 +798,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Semester</label>
+                    <label className="block text-xs font-semibold text-ink-2 mb-1">Semester</label>
                     <select
                       value={semester}
                       onChange={(e) => setSemester(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
+                      className="w-full px-3 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
                     >
                       <option value="">Semester</option>
                       <option value="Spring">Spring</option>
@@ -812,15 +812,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-300 mb-1">Student ID</label>
+                    <label className="block text-xs font-semibold text-ink-2 mb-1">Student ID</label>
                     <div className="relative">
-                      <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <Hash className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={studentId}
                         onChange={(e) => setStudentId(e.target.value)}
                         placeholder="ID number"
-                        className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                        className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-teal-500 focus:outline-none"
                       />
                     </div>
                   </div>
@@ -831,41 +831,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             {/* Extended Profile Fields (all roles) */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Location</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Location</label>
                 <div className="relative">
-                  <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <MapPin className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="City, Country"
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Financial Goal</label>
+                <label className="block text-xs font-semibold text-ink-2 mb-1">Financial Goal</label>
                 <div className="relative">
-                  <Target className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Target className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     value={financialGoal}
                     onChange={(e) => setFinancialGoal(e.target.value)}
                     placeholder="e.g. Save for masters"
-                    className="w-full pl-9 pr-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                    className="w-full pl-9 pr-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Short Bio</label>
+              <label className="block text-xs font-semibold text-ink-2 mb-1">Short Bio</label>
               <textarea
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
                 rows={2}
                 placeholder="Tell us a bit about yourself..."
-                className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none"
+                className="w-full px-3.5 py-2.5 bg-canvas border border-line rounded-xl text-xs text-ink placeholder-ink-4 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none"
               />
             </div>
 

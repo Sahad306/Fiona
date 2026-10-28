@@ -85,9 +85,9 @@ const SECTOR_ICON_MAP: Record<string, React.ReactNode> = {
   'Shopping': <ShoppingBag className="w-4 h-4 text-pink-400" />,
   'Entertainment': <Film className="w-4 h-4 text-cyan-400" />,
   'Healthcare & Medical': <HeartPulse className="w-4 h-4 text-rose-400" />,
-  'Personal Care': <HeartPulse className="w-4 h-4 text-teal-300" />,
+  'Personal Care': <HeartPulse className="w-4 h-4 text-teal-700 dark:text-teal-300" />,
   'Travel': <Plane className="w-4 h-4 text-orange-400" />,
-  'Other': <SlidersHorizontal className="w-4 h-4 text-slate-400" />,
+  'Other': <SlidersHorizontal className="w-4 h-4 text-ink-3" />,
 };
 
 // Daily Quick Expense Presets in Taka (Tk BDT)
@@ -263,28 +263,25 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
     <div className="space-y-6 animate-in fade-in duration-200" id="finora-expenses-view">
       <div className="print:hidden">
       {onBackToDashboard && (
-        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer">
+        <button onClick={onBackToDashboard} className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-ink-3 hover:text-emerald-400 transition-colors cursor-pointer">
           <ArrowLeft className="w-3.5 h-3.5" /> Return to Dashboard
         </button>
       )}
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface/60 p-5 rounded-2xl border border-line backdrop-blur-sm">
         <div>
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-400">
               Expense Engine & Sectors
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-ink-3">
               Food & Dining • Housing & Rent • Household & Living • Daily Expenses
             </span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+          <h1 className="text-2xl font-black text-ink tracking-tight mt-0.5">
             Expense Tracking & Sector Division
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Track daily living expenses and analyze sector allocations across food, rent, household, and utilities.
-          </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
@@ -292,7 +289,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
           <button
             onClick={() => exportCSV('expense')}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-elevated hover:bg-line-strong text-ink border border-line-strong text-xs font-semibold transition-all cursor-pointer"
             title="Download Expense CSV"
           >
             <Download className="w-4 h-4" />
@@ -320,17 +317,14 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
       </div>
 
       {/* Quick 1-Tap Daily Expense Bar */}
-      <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+      <div className="bg-surface/80 p-4 rounded-2xl border border-line">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div className="flex items-center space-x-2">
             <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
               <Coffee className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-white">Daily Expense 1-Click Fast-Log</h3>
-              <p className="text-[10px] text-slate-400">
-                Log common daily purchases into Food, Transit, and Household with a single tap.
-              </p>
+              <h3 className="text-xs font-bold text-ink">Daily Expense 1-Click Fast-Log</h3>
             </div>
           </div>
           <span className="text-[11px] text-emerald-400 font-bold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 self-start sm:self-auto">
@@ -344,17 +338,17 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
               key={preset.label}
               type="button"
               onClick={() => handleQuickLog(preset)}
-              className="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all active:scale-95 cursor-pointer group"
+              className="p-2.5 rounded-xl bg-canvas hover:bg-elevated/80 border border-line hover:border-line-strong text-left transition-all active:scale-95 cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                <span className="text-xs font-bold text-ink group-hover:text-ink truncate">
                   {preset.label}
                 </span>
                 <span className="text-xs font-black text-rose-400 font-mono">
                   {formatCurrency(preset.amount)}
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+              <span className="text-[10px] text-ink-4 block truncate mt-0.5">
                 {preset.category}
               </span>
             </button>
@@ -365,9 +359,9 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
       {/* 4 Summary Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Outflow */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Monthly Outflow</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Total Monthly Outflow</span>
             <div className="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center">
               <ArrowDownRight className="w-4 h-4 stroke-[2.5]" />
             </div>
@@ -375,7 +369,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           <p className="text-2xl font-black text-rose-400 tracking-tight mt-2 font-mono">
             {formatCurrency(totalMonthlyExpense)}
           </p>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mt-1">
+          <div className="flex items-center justify-between text-[11px] text-ink-3 mt-1">
             <span>Budget: {formatCurrency(monthlyBudgetLimit)}</span>
             <span className={totalMonthlyExpense > monthlyBudgetLimit ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
               {((totalMonthlyExpense / monthlyBudgetLimit) * 100).toFixed(0)}% Used
@@ -384,18 +378,18 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
         </div>
 
         {/* Daily Burn Rate */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Daily Burn Velocity</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Daily Burn Velocity</span>
             <div className="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center">
               <Flame className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-white tracking-tight mt-2 font-mono">
+          <p className="text-2xl font-black text-ink tracking-tight mt-2 font-mono">
             {formatCurrency(actualAvgDailySpend)}
-            <span className="text-xs font-normal text-slate-400">/day</span>
+            <span className="text-xs font-normal text-ink-3">/day</span>
           </p>
-          <p className="text-[11px] text-slate-400 mt-1 flex items-center gap-1">
+          <p className="text-[11px] text-ink-3 mt-1 flex items-center gap-1">
             {actualAvgDailySpend <= targetDailyBudget ? (
               <span className="text-emerald-400 font-bold flex items-center gap-0.5">
                 <CheckCircle2 className="w-3 h-3" /> Pacing under {formatCurrency(targetDailyBudget)}
@@ -409,48 +403,48 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
         </div>
 
         {/* Top Outflow Sector */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Primary Sector</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Primary Sector</span>
             <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
               <Layers className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl font-black text-white tracking-tight mt-2 truncate">
+          <p className="text-xl font-black text-ink tracking-tight mt-2 truncate">
             {topSector.name}
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-ink-3 mt-1">
             <strong className="text-rose-400 font-mono">{formatCurrency(topSector.value)}</strong> ({topSector.percentage.toFixed(0)}% of total)
           </p>
         </div>
 
         {/* Total Expense Entries */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Recorded Outflows</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Recorded Outflows</span>
             <div className="w-7 h-7 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-white tracking-tight mt-2">
-            {monthlyExpenses.length} <span className="text-xs font-normal text-slate-400">items</span>
+          <p className="text-2xl font-black text-ink tracking-tight mt-2">
+            {monthlyExpenses.length} <span className="text-xs font-normal text-ink-3">items</span>
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-ink-3 mt-1">
             Across {dailyGroups.length} active spending days
           </p>
         </div>
       </div>
 
       {/* Main View Mode Selector */}
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-        <div className="flex items-center space-x-2 bg-slate-950 p-1 rounded-xl border border-slate-800 overflow-x-auto max-w-full scrollbar-hide">
+      <div className="flex items-center justify-between border-b border-line pb-3">
+        <div className="flex items-center space-x-2 bg-canvas p-1 rounded-xl border border-line overflow-x-auto max-w-full scrollbar-hide">
           <button
             type="button"
             onClick={() => setActiveTab('all')}
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-ink-3 hover:text-ink'
             }`}
           >
             <ListFilter className="w-3.5 h-3.5" />
@@ -463,7 +457,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'daily'
                 ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-ink-3 hover:text-ink'
             }`}
           >
             <Calendar className="w-3.5 h-3.5" />
@@ -476,7 +470,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
               activeTab === 'sectors'
                 ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20'
-                : 'text-slate-400 hover:text-slate-200'
+                : 'text-ink-3 hover:text-ink'
             }`}
           >
             <LayoutGrid className="w-3.5 h-3.5" />
@@ -489,15 +483,15 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
       {activeTab === 'all' && (
         <div className="space-y-6 animate-in fade-in duration-150">
           {/* Sector Filter Chips */}
-          <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+          <div className="bg-surface/80 p-4 rounded-2xl border border-line">
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <span className="text-xs font-bold uppercase tracking-wider text-ink-3 flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5 text-rose-400" /> Filter by Sector
               </span>
               <button
                 onClick={() => setSelectedSector('all')}
                 className={`text-xs font-semibold cursor-pointer ${
-                  selectedSector === 'all' ? 'text-rose-400 font-bold underline' : 'text-slate-400 hover:text-white'
+                  selectedSector === 'all' ? 'text-rose-400 font-bold underline' : 'text-ink-3 hover:text-ink'
                 }`}
               >
                 Reset Filter (Show All)
@@ -514,7 +508,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                     className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center space-x-1.5 cursor-pointer ${
                       isSelected
                         ? 'bg-rose-500 text-white shadow-md shadow-rose-500/25 ring-2 ring-rose-400'
-                        : 'bg-slate-950 text-slate-300 hover:bg-slate-800 border border-slate-800'
+                        : 'bg-canvas text-ink-2 hover:bg-elevated border border-line'
                     }`}
                   >
                     <div
@@ -532,15 +526,15 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           </div>
 
           {/* Search & Sort Bar */}
-          <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div className="p-4 rounded-2xl bg-surface border border-line shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
             <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search expense merchant, sector, tag..."
-                className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-rose-500 focus:outline-none"
+                className="w-full pl-9 pr-4 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-rose-500 focus:outline-none"
               />
             </div>
 
@@ -548,7 +542,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
               <select
                 value={selectedPaymentMethod}
                 onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+                className="px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:outline-none cursor-pointer"
               >
                 <option value="all">All Payment Methods</option>
                 <option value="Credit Card">Credit Card</option>
@@ -562,7 +556,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+                className="px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:outline-none cursor-pointer"
               >
                 <option value="date_desc">Newest Date First</option>
                 <option value="date_asc">Oldest Date First</option>
@@ -573,11 +567,11 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           </div>
 
           {/* Expense Records List */}
-          <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden" id="expenses-table-card">
-            <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+          <div className="bg-surface rounded-2xl border border-line shadow-sm overflow-hidden" id="expenses-table-card">
+            <div className="px-5 py-4 border-b border-line flex items-center justify-between">
+              <h3 className="text-sm font-bold text-ink flex items-center gap-2">
                 <span>Expense Outflows</span>
-                <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-normal">
+                <span className="text-xs px-2 py-0.5 rounded-md bg-elevated text-ink-3 font-normal">
                   {displayExpenses.length} transactions
                 </span>
               </h3>
@@ -587,16 +581,16 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             </div>
 
             {displayExpenses.length === 0 ? (
-              <div className="py-16 text-center text-slate-400 text-xs">
-                <ShoppingBag className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+              <div className="py-16 text-center text-ink-3 text-xs">
+                <ShoppingBag className="w-10 h-10 text-ink-4 mx-auto mb-2" />
                 No expense transactions match your filters.
               </div>
             ) : (
-              <div className="divide-y divide-slate-800">
+              <div className="divide-y divide-line">
                 {displayExpenses.map((tx) => (
                   <div
                     key={tx.id}
-                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors"
+                    className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-elevated/40 transition-colors"
                   >
                     <div className="flex items-start space-x-3">
                       <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
@@ -604,9 +598,9 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                       </div>
                       <div>
                         <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                          <h4 className="text-xs font-bold text-white">{tx.description}</h4>
+                          <h4 className="text-xs font-bold text-ink">{tx.description}</h4>
                           <span
-                            className="text-[10px] font-bold px-2 py-0.5 rounded-full text-white"
+                            className="text-[10px] font-bold px-2 py-0.5 rounded-full text-ink"
                             style={{
                               backgroundColor: `${CATEGORY_COLORS[tx.category] || '#64748b'}25`,
                               color: CATEGORY_COLORS[tx.category] || '#94a3b8',
@@ -622,7 +616,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                           )}
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 mt-1">
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-3 mt-1">
                           <span className="font-mono">{tx.date}</span>
                           <span>•</span>
                           <span>{tx.paymentMethod}</span>
@@ -636,12 +630,12 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
                         {/* Multi-Sector Split Itemized Badges */}
                         {tx.sectorSplits && tx.sectorSplits.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-2 p-2 rounded-lg bg-slate-950 border border-slate-800 text-[10px]">
-                            <span className="text-slate-400 font-bold">Divided in Sectors:</span>
+                          <div className="flex flex-wrap gap-1.5 mt-2 p-2 rounded-lg bg-canvas border border-line text-[10px]">
+                            <span className="text-ink-3 font-bold">Divided in Sectors:</span>
                             {tx.sectorSplits.map((s, idx) => (
                               <span
                                 key={idx}
-                                className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-200"
+                                className="px-2 py-0.5 rounded bg-surface border border-line-strong text-ink"
                               >
                                 <strong>{s.sector}</strong>: {formatCurrency(s.amount)} {s.note ? `(${s.note})` : ''}
                               </span>
@@ -650,7 +644,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                         )}
 
                         {tx.notes && (
-                          <p className="text-[11px] text-slate-400 mt-1 italic">
+                          <p className="text-[11px] text-ink-3 mt-1 italic">
                             "{tx.notes}"
                           </p>
                         )}
@@ -660,7 +654,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                             {tx.tags.map((t) => (
                               <span
                                 key={t}
-                                className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono"
+                                className="text-[10px] px-1.5 py-0.2 rounded bg-elevated text-ink-2 font-mono"
                               >
                                 #{t}
                               </span>
@@ -677,14 +671,14 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                       <div className="flex items-center space-x-1">
                         <button
                           onClick={() => onEditTransaction(tx)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-elevated transition-colors cursor-pointer"
                           title="Edit Expense"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => deleteTransaction(tx.id)}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                          className="p-1.5 rounded-lg text-ink-3 hover:text-rose-400 hover:bg-elevated transition-colors cursor-pointer"
                           title="Delete Expense"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -703,22 +697,22 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
       {activeTab === 'daily' && (
         <div className="space-y-6 animate-in fade-in duration-150">
           {/* Daily Timeline Chart */}
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+          <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                <h3 className="text-sm font-bold text-ink flex items-center gap-2">
                   <Flame className="w-4 h-4 text-amber-400" />
                   Daily Spending Velocity & Budget Pacing
                 </h3>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-ink-3 mt-0.5">
                   Day-by-day outflow vs recommended daily budget limit ({formatCurrency(targetDailyBudget)}/day).
                 </p>
               </div>
               <div className="flex items-center gap-3 text-xs font-medium">
-                <span className="flex items-center gap-1 text-slate-300">
+                <span className="flex items-center gap-1 text-ink-2">
                   <span className="w-3 h-3 rounded bg-rose-500 inline-block"></span> Daily Outflow
                 </span>
-                <span className="flex items-center gap-1 text-slate-400">
+                <span className="flex items-center gap-1 text-ink-3">
                   <span className="w-3 h-0.5 bg-amber-400 inline-block"></span> Target Threshold
                 </span>
               </div>
@@ -727,11 +721,11 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             <div className="h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={dailyChartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.3} />
-                  <XAxis dataKey="day" stroke="#94a3b8" fontSize={10} tickFormatter={(val) => `D${val}`} />
-                  <YAxis stroke="#94a3b8" fontSize={10} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--c-line-strong)" opacity={0.3} />
+                  <XAxis dataKey="day" stroke="var(--c-ink-3)" fontSize={10} tickFormatter={(val) => `D${val}`} />
+                  <YAxis stroke="var(--c-ink-3)" fontSize={10} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                     formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Daily Spent']}
                     labelFormatter={(label) => `Day ${label} (${selectedMonth})`}
                   />
@@ -743,13 +737,13 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
           {/* Grouped Day-by-Day Expense Cards */}
           <div className="space-y-3">
-            <h3 className="text-sm font-bold text-white flex items-center justify-between">
+            <h3 className="text-sm font-bold text-ink flex items-center justify-between">
               <span>Day-by-Day Expense Feed ({dailyGroups.length} Active Days)</span>
-              <span className="text-xs text-slate-400 font-normal">Click day to expand/collapse details</span>
+              <span className="text-xs text-ink-3 font-normal">Click day to expand/collapse details</span>
             </h3>
 
             {dailyGroups.length === 0 ? (
-              <div className="p-12 text-center bg-slate-900 rounded-2xl border border-slate-800 text-slate-400 text-xs">
+              <div className="p-12 text-center bg-surface rounded-2xl border border-line text-ink-3 text-xs">
                 No daily expense records found for {selectedMonth}.
               </div>
             ) : (
@@ -760,12 +754,12 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                 return (
                   <div
                     key={group.date}
-                    className="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden transition-all shadow-sm"
+                    className="bg-surface rounded-2xl border border-line overflow-hidden transition-all shadow-sm"
                   >
                     {/* Day Header */}
                     <div
                       onClick={() => toggleDayExpansion(group.date)}
-                      className="p-4 bg-slate-950/60 flex items-center justify-between cursor-pointer hover:bg-slate-950 transition-colors"
+                      className="p-4 bg-canvas/60 flex items-center justify-between cursor-pointer hover:bg-canvas transition-colors"
                     >
                       <div className="flex items-center space-x-3">
                         <div
@@ -779,18 +773,18 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <h4 className="text-xs font-bold text-white font-mono">{group.date}</h4>
+                            <h4 className="text-xs font-bold text-ink font-mono">{group.date}</h4>
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                                 isOverDailyBudget
                                   ? 'bg-rose-500/20 text-rose-300'
-                                  : 'bg-emerald-500/20 text-emerald-300'
+                                  : 'bg-emerald-500/20 text-emerald-700'
                               }`}
                             >
                               {isOverDailyBudget ? 'Above Target' : 'Within Target'}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[11px] text-ink-3">
                             {group.transactions.length} purchase{group.transactions.length > 1 ? 's' : ''} logged
                           </p>
                         </div>
@@ -801,31 +795,31 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                           <span className="text-sm font-black text-rose-400 font-mono">
                             -{formatCurrency(group.total)}
                           </span>
-                          <span className="text-[10px] text-slate-500 block">Day Total</span>
+                          <span className="text-[10px] text-ink-4 block">Day Total</span>
                         </div>
                         {isExpanded ? (
-                          <ChevronUp className="w-4 h-4 text-slate-400" />
+                          <ChevronUp className="w-4 h-4 text-ink-3" />
                         ) : (
-                          <ChevronDown className="w-4 h-4 text-slate-400" />
+                          <ChevronDown className="w-4 h-4 text-ink-3" />
                         )}
                       </div>
                     </div>
 
                     {/* Day Itemized List */}
                     {isExpanded && (
-                      <div className="divide-y divide-slate-800/80 bg-slate-900/40">
+                      <div className="divide-y divide-line/80 bg-surface/40">
                         {group.transactions.map((tx) => (
                           <div
                             key={tx.id}
-                            className="p-3.5 sm:px-6 flex items-center justify-between hover:bg-slate-800/30 text-xs"
+                            className="p-3.5 sm:px-6 flex items-center justify-between hover:bg-elevated/30 text-xs"
                           >
                             <div className="flex items-center space-x-3">
-                              <div className="p-1.5 rounded-lg bg-slate-950 border border-slate-800">
-                                {SECTOR_ICON_MAP[tx.category] || <ShoppingBag className="w-3.5 h-3.5 text-slate-400" />}
+                              <div className="p-1.5 rounded-lg bg-canvas border border-line">
+                                {SECTOR_ICON_MAP[tx.category] || <ShoppingBag className="w-3.5 h-3.5 text-ink-3" />}
                               </div>
                               <div>
-                                <span className="font-bold text-slate-200">{tx.description}</span>
-                                <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                <span className="font-bold text-ink">{tx.description}</span>
+                                <div className="flex items-center gap-2 text-[10px] text-ink-3 mt-0.5">
                                   <span className="text-emerald-400 font-semibold">{tx.category}</span>
                                   <span>•</span>
                                   <span>{tx.paymentMethod}</span>
@@ -834,12 +828,12 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                             </div>
 
                             <div className="flex items-center space-x-3">
-                              <span className="font-bold text-slate-100 font-mono">
+                              <span className="font-bold text-ink font-mono">
                                 -{formatCurrency(tx.amount)}
                               </span>
                               <button
                                 onClick={() => onEditTransaction(tx)}
-                                className="p-1 text-slate-400 hover:text-white cursor-pointer"
+                                className="p-1 text-ink-3 hover:text-ink cursor-pointer"
                                 title="Edit"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -863,24 +857,24 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           {/* Sector Highlight Cards: Food, Housing/Rent, Household/Groceries */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Sector 1: Food & Dining */}
-            <div className="p-5 rounded-2xl bg-slate-900 border border-emerald-500/30 shadow-sm relative overflow-hidden">
+            <div className="p-5 rounded-2xl bg-surface border border-emerald-500/30 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
                     <Utensils className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Food & Dining Sector</h4>
-                    <p className="text-[10px] text-slate-400">Meals, Cafeteria, Dining, Coffee</p>
+                    <h4 className="text-xs font-bold text-ink">Food & Dining Sector</h4>
+                    <p className="text-[10px] text-ink-3">Meals, Cafeteria, Dining, Coffee</p>
                   </div>
                 </div>
               </div>
               <p className="text-2xl font-black text-emerald-400 tracking-tight mt-3 font-mono">
                 {formatCurrency(sectorSummary['Food & Dining']?.total || 0)}
               </p>
-              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+              <div className="text-[11px] text-ink-3 mt-1 flex items-center justify-between">
                 <span>{sectorSummary['Food & Dining']?.count || 0} meals logged</span>
-                <span className="text-emerald-300 font-bold">
+                <span className="text-emerald-700 font-bold">
                   {totalMonthlyExpense > 0
                     ? (((sectorSummary['Food & Dining']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
                     : 0}
@@ -890,24 +884,24 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             </div>
 
             {/* Sector 2: Housing & Rent */}
-            <div className="p-5 rounded-2xl bg-slate-900 border border-indigo-500/30 shadow-sm relative overflow-hidden">
+            <div className="p-5 rounded-2xl bg-surface border border-indigo-500/30 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
                     <Home className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Housing & Rent Sector</h4>
-                    <p className="text-[10px] text-slate-400">Apartment Rent, Hostel, Lease</p>
+                    <h4 className="text-xs font-bold text-ink">Housing & Rent Sector</h4>
+                    <p className="text-[10px] text-ink-3">Apartment Rent, Hostel, Lease</p>
                   </div>
                 </div>
               </div>
               <p className="text-2xl font-black text-indigo-400 tracking-tight mt-3 font-mono">
                 {formatCurrency(sectorSummary['Housing & Rent']?.total || 0)}
               </p>
-              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+              <div className="text-[11px] text-ink-3 mt-1 flex items-center justify-between">
                 <span>Fixed monthly shelter</span>
-                <span className="text-indigo-300 font-bold">
+                <span className="text-indigo-700 dark:text-indigo-300 font-bold">
                   {totalMonthlyExpense > 0
                     ? (((sectorSummary['Housing & Rent']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
                     : 0}
@@ -917,24 +911,24 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
             </div>
 
             {/* Sector 3: Household & Living */}
-            <div className="p-5 rounded-2xl bg-slate-900 border border-teal-500/30 shadow-sm relative overflow-hidden">
+            <div className="p-5 rounded-2xl bg-surface border border-teal-500/30 shadow-sm relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center">
                     <Layers className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-white">Household & Living Sector</h4>
-                    <p className="text-[10px] text-slate-400">Groceries, Essentials, Cleaning</p>
+                    <h4 className="text-xs font-bold text-ink">Household & Living Sector</h4>
+                    <p className="text-[10px] text-ink-3">Groceries, Essentials, Cleaning</p>
                   </div>
                 </div>
               </div>
               <p className="text-2xl font-black text-teal-400 tracking-tight mt-3 font-mono">
                 {formatCurrency(sectorSummary['Household & Living']?.total || 0)}
               </p>
-              <div className="text-[11px] text-slate-400 mt-1 flex items-center justify-between">
+              <div className="text-[11px] text-ink-3 mt-1 flex items-center justify-between">
                 <span>{sectorSummary['Household & Living']?.count || 0} purchases</span>
-                <span className="text-teal-300 font-bold">
+                <span className="text-teal-700 dark:text-teal-300 font-bold">
                   {totalMonthlyExpense > 0
                     ? (((sectorSummary['Household & Living']?.total || 0) / totalMonthlyExpense) * 100).toFixed(1)
                     : 0}
@@ -946,8 +940,8 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
 
           {/* Sector Breakdown Chart & Full Comparison */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+            <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
+              <h3 className="text-sm font-bold text-ink flex items-center gap-2 mb-3">
                 <PieIcon className="w-4 h-4 text-rose-400" />
                 Sector Allocation Share
               </h3>
@@ -968,7 +962,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                       ))}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                      contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                       formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Total Spent']}
                     />
                   </PieChart>
@@ -976,19 +970,19 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
               </div>
             </div>
 
-            <div className="lg:col-span-2 p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+            <div className="lg:col-span-2 p-5 rounded-2xl bg-surface border border-line shadow-sm">
+              <h3 className="text-sm font-bold text-ink flex items-center gap-2 mb-3">
                 <BarChart3 className="w-4 h-4 text-rose-400" />
                 Sector Expense Comparison
               </h3>
               <div className="h-48 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={sectorChartData} layout="vertical" margin={{ top: 5, right: 20, left: 65, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.4} />
-                    <XAxis type="number" stroke="#94a3b8" fontSize={11} />
-                    <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--c-line-strong)" opacity={0.4} />
+                    <XAxis type="number" stroke="var(--c-ink-3)" fontSize={11} />
+                    <YAxis dataKey="name" type="category" stroke="var(--c-ink-3)" fontSize={11} />
                     <Tooltip
-                      contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                      contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                       formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Spent']}
                     />
                     <Bar dataKey="value" fill="#f43f5e" radius={[0, 4, 4, 0]} />
@@ -1006,14 +1000,14 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
               return (
                 <div
                   key={cat}
-                  className="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between"
+                  className="p-4 rounded-xl bg-surface/90 border border-line hover:border-line-strong transition-all flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <div className="p-1.5 rounded-lg bg-slate-950 border border-slate-800">
-                        {SECTOR_ICON_MAP[cat] || <ShoppingBag className="w-4 h-4 text-slate-400" />}
+                      <div className="p-1.5 rounded-lg bg-canvas border border-line">
+                        {SECTOR_ICON_MAP[cat] || <ShoppingBag className="w-4 h-4 text-ink-3" />}
                       </div>
-                      <span className="text-xs font-bold text-white">{cat}</span>
+                      <span className="text-xs font-bold text-ink">{cat}</span>
                     </div>
                     <span className="text-xs font-mono font-bold text-rose-400">
                       {formatCurrency(data.total)}
@@ -1021,7 +1015,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                   </div>
 
                   <div className="mt-3 space-y-1">
-                    <div className="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-canvas rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-300"
                         style={{
@@ -1030,7 +1024,7 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
                         }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] text-slate-400">
+                    <div className="flex justify-between text-[10px] text-ink-3">
                       <span>{data.count} transactions</span>
                       <span className="font-bold">{pct.toFixed(1)}% of total</span>
                     </div>
@@ -1049,24 +1043,24 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
           <div className="flex items-start justify-between pb-3 border-b border-slate-300">
             <div>
               <p className="text-2xl font-black tracking-tight text-slate-900">FINORA</p>
-              <p className="text-[9px] uppercase tracking-widest text-slate-500">Precision Wealth &amp; Personal Finance Intelligence</p>
+              <p className="text-[9px] uppercase tracking-widest text-ink-4">Precision Wealth &amp; Personal Finance Intelligence</p>
             </div>
             <div className="text-right text-xs">
               <p className="font-bold text-sm text-slate-900">EXPENSE STATEMENT</p>
-              <p className="text-slate-500">Period: {selectedMonth}</p>
-              <p className="text-slate-500">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+              <p className="text-ink-4">Period: {selectedMonth}</p>
+              <p className="text-ink-4">Generated: {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-6 text-xs">
           <div>
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Prepared For</p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Prepared For</p>
             <p className="font-bold text-base">{profile.name}</p>
-            <p className="text-slate-600">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
+            <p className="text-ink-4">{profile.role}{profile.email ? ` • ${profile.email}` : ''}</p>
           </div>
           <div className="text-right">
-            <p className="uppercase tracking-wider text-slate-500 font-bold mb-0.5">Total Expenses</p>
+            <p className="uppercase tracking-wider text-ink-4 font-bold mb-0.5">Total Expenses</p>
             <p className="font-black text-2xl text-red-700">{formatCurrency(totalMonthlyExpense)}</p>
           </div>
         </div>
@@ -1076,45 +1070,45 @@ export const ExpensesView: React.FC<ExpensesViewProps> = ({
         <table className="w-full text-xs border-collapse min-w-[500px]">
           <thead>
             <tr>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Date</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Description</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Sector</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Method</th>
-              <th className="border-b-2 border-slate-800 px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Amount</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Date</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Description</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Sector</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-left font-black uppercase text-[10px] tracking-wider text-slate-700">Method</th>
+              <th className="border-b-2 border-line px-2.5 py-2 text-right font-black uppercase text-[10px] tracking-wider text-slate-700">Amount</th>
             </tr>
           </thead>
           <tbody>
             {displayExpenses.map((tx, i) => (
               <tr key={tx.id} className={i % 2 === 1 ? 'bg-slate-50' : ''}>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.date}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-ink-4">{tx.date}</td>
                 <td className="border-b border-slate-200 px-2.5 py-1.5 font-semibold text-slate-900">{tx.description || '—'}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.category}</td>
-                <td className="border-b border-slate-200 px-2.5 py-1.5 text-slate-600">{tx.paymentMethod}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-ink-4">{tx.category}</td>
+                <td className="border-b border-slate-200 px-2.5 py-1.5 text-ink-4">{tx.paymentMethod}</td>
                 <td className="border-b border-slate-200 px-2.5 py-1.5 text-right font-bold text-slate-900">{formatCurrency(tx.amount)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
             <tr>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 font-black text-slate-900" colSpan={4}>Total Expenses</td>
-              <td className="border-t-2 border-slate-800 px-2.5 py-2 text-right font-black text-red-700">{formatCurrency(totalMonthlyExpense)}</td>
+              <td className="border-t-2 border-line px-2.5 py-2 font-black text-slate-900" colSpan={4}>Total Expenses</td>
+              <td className="border-t-2 border-line px-2.5 py-2 text-right font-black text-red-700">{formatCurrency(totalMonthlyExpense)}</td>
             </tr>
           </tfoot>
         </table>
         </div>
 
         <div className="print-keep-together mt-10 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-          <div className="border-t border-slate-400 pt-1 w-full sm:w-56 text-[10px] text-slate-500">Client Signature</div>
+          <div className="border-t border-slate-400 pt-1 w-full sm:w-56 text-[10px] text-ink-4">Client Signature</div>
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xl">F</div>
             <div>
               <p className="text-base font-black tracking-tight text-emerald-700">Produced by FINORA</p>
-              <p className="text-[8px] uppercase tracking-[0.3em] text-slate-500">Precision • Clarity • Prosperity</p>
+              <p className="text-[8px] uppercase tracking-[0.3em] text-ink-4">Precision • Clarity • Prosperity</p>
             </div>
           </div>
           <div className="hidden sm:block w-56"></div>
         </div>
-        <p className="text-[9px] text-slate-400 border-t border-slate-200 pt-2 mt-4">
+        <p className="text-[9px] text-ink-3 border-t border-slate-200 pt-2 mt-4">
           This expense statement was generated by FINORA on {new Date().toLocaleString('en-GB')} and reflects all recorded outflows for the selected period. For internal and personal use.
         </p>
       </div>

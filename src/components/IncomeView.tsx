@@ -67,9 +67,9 @@ const SOURCE_ICONS: Record<string, React.ReactNode> = {
   Investments: <TrendingUp className="w-4 h-4 text-indigo-400" />,
   Allowances: <Gift className="w-4 h-4 text-pink-400" />,
   'Rental Income': <Home className="w-4 h-4 text-amber-400" />,
-  'Side Hustle': <Zap className="w-4 h-4 text-amber-300" />,
+  'Side Hustle': <Zap className="w-4 h-4 text-amber-700 dark:text-amber-300" />,
   Gifts: <Gift className="w-4 h-4 text-purple-400" />,
-  Other: <Wallet className="w-4 h-4 text-slate-400" />,
+  Other: <Wallet className="w-4 h-4 text-ink-3" />,
 };
 
 // 1-Click Fast Inflow Presets in Bangladeshi Taka (Tk)
@@ -193,7 +193,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       {onBackToDashboard && (
         <button
           onClick={onBackToDashboard}
-          className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
+          className="mb-3 flex items-center gap-1.5 text-xs font-semibold text-ink-3 hover:text-emerald-400 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           Return to Dashboard
@@ -201,19 +201,19 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900/60 p-5 rounded-2xl border border-slate-800 backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface/60 p-5 rounded-2xl border border-line backdrop-blur-sm">
         <div>
           <div className="flex items-center space-x-2">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
               Inflow Capital Engine
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span className="text-xs text-slate-400">Salary, Freelance, Business, Stipends & Dividends</span>
+            <span className="text-xs text-ink-3">Salary, Freelance, Business, Stipends & Dividends</span>
           </div>
-          <h1 className="text-2xl font-black text-white tracking-tight mt-0.5">
+          <h1 className="text-2xl font-black text-ink tracking-tight mt-0.5">
             Income Streams & Inflows
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-ink-3 mt-1">
             Capture, categorize, and forecast all revenue streams, client contracts, and academic stipends.
           </p>
         </div>
@@ -223,7 +223,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
 
           <button
             onClick={() => exportCSV('income')}
-            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition-all cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-elevated hover:bg-line-strong text-ink border border-line-strong text-xs font-semibold transition-all cursor-pointer"
             title="Download Income CSV"
           >
             <Download className="w-4 h-4" />
@@ -242,15 +242,15 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       </div>
 
       {/* Quick 1-Click Inflow Presets Toolbar */}
-      <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+      <div className="bg-surface/80 p-4 rounded-2xl border border-line">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div className="flex items-center space-x-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <Zap className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-xs font-bold text-white">Instant Inflow 1-Click Fast-Log</h3>
-              <p className="text-[10px] text-slate-400">
+              <h3 className="text-xs font-bold text-ink">Instant Inflow 1-Click Fast-Log</h3>
+              <p className="text-[10px] text-ink-3">
                 Instantly deposit standard paychecks, client milestones, and student scholarships.
               </p>
             </div>
@@ -266,17 +266,17 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
               key={preset.label}
               type="button"
               onClick={() => handleQuickAdd(preset)}
-              className="p-2.5 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 text-left transition-all active:scale-95 cursor-pointer group"
+              className="p-2.5 rounded-xl bg-canvas hover:bg-elevated/80 border border-line hover:border-line-strong text-left transition-all active:scale-95 cursor-pointer group"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-200 group-hover:text-white truncate">
+                <span className="text-xs font-bold text-ink group-hover:text-ink truncate">
                   {preset.label}
                 </span>
                 <span className="text-xs font-black text-emerald-400 font-mono">
                   +{formatCurrency(preset.amount)}
                 </span>
               </div>
-              <span className="text-[10px] text-slate-500 block truncate mt-0.5">
+              <span className="text-[10px] text-ink-4 block truncate mt-0.5">
                 {preset.payer}
               </span>
             </button>
@@ -287,9 +287,9 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       {/* 4 Summary Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Inflow */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Monthly Inflow</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Total Monthly Inflow</span>
             <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
               <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
             </div>
@@ -298,13 +298,13 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
             {formatCurrency(totalMonthlyIncome)}
           </p>
           <div className="mt-2 space-y-1">
-            <div className="w-full h-1.5 bg-slate-950 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-canvas rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-500 rounded-full transition-all duration-300"
                 style={{ width: `${incomePacingPercent}%` }}
               />
             </div>
-            <div className="flex justify-between text-[10px] text-slate-400">
+            <div className="flex justify-between text-[10px] text-ink-3">
               <span>Goal: {formatCurrency(targetMonthlyIncome)}</span>
               <span className="text-emerald-400 font-bold">{incomePacingPercent.toFixed(0)}% reached</span>
             </div>
@@ -312,33 +312,33 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
         </div>
 
         {/* Primary Source */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Top Income Stream</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Top Income Stream</span>
             <div className="w-7 h-7 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center">
               <Briefcase className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-xl font-black text-white tracking-tight mt-2 truncate">
+          <p className="text-xl font-black text-ink tracking-tight mt-2 truncate">
             {topSource.name}
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-ink-3 mt-1">
             <strong className="text-emerald-400 font-mono">{formatCurrency(topSource.value)}</strong> ({topSource.percentage.toFixed(0)}% of earnings)
           </p>
         </div>
 
         {/* Recurring Inflow */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Recurring Inflow</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Recurring Inflow</span>
             <div className="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
               <Target className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-white tracking-tight mt-2 font-mono">
+          <p className="text-2xl font-black text-ink tracking-tight mt-2 font-mono">
             {formatCurrency(recurringIncomeTotal)}
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-ink-3 mt-1">
             {totalMonthlyIncome > 0
               ? `${((recurringIncomeTotal / totalMonthlyIncome) * 100).toFixed(0)}% of income is guaranteed recurring`
               : 'Fixed monthly inflow'}
@@ -346,17 +346,17 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
         </div>
 
         {/* Total Entries & Average */}
-        <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
+        <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Deposits Logged</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-ink-3">Deposits Logged</span>
             <div className="w-7 h-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center">
               <TrendingUp className="w-4 h-4" />
             </div>
           </div>
-          <p className="text-2xl font-black text-white tracking-tight mt-2">
-            {monthlyIncomes.length} <span className="text-xs font-normal text-slate-400">deposits</span>
+          <p className="text-2xl font-black text-ink tracking-tight mt-2">
+            {monthlyIncomes.length} <span className="text-xs font-normal text-ink-3">deposits</span>
           </p>
-          <p className="text-[11px] text-slate-400 mt-1">
+          <p className="text-[11px] text-ink-3 mt-1">
             Avg <strong className="text-emerald-400 font-mono">{formatCurrency(avgIncomePerEntry)}</strong> per entry
           </p>
         </div>
@@ -365,8 +365,8 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       {/* Visual Charts */} 
       {sourceBreakdown.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+          <div className="p-5 rounded-2xl bg-surface border border-line shadow-sm">
+            <h3 className="text-sm font-bold text-ink flex items-center gap-2 mb-3">
               <PieIcon className="w-4 h-4 text-emerald-400" />
               Inflow Share by Stream
             </h3>
@@ -387,7 +387,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                     formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Amount']}
                   />
                 </PieChart>
@@ -395,19 +395,19 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
             </div>
           </div>
 
-          <div className="lg:col-span-2 p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
+          <div className="lg:col-span-2 p-5 rounded-2xl bg-surface border border-line shadow-sm">
+            <h3 className="text-sm font-bold text-ink flex items-center gap-2 mb-3">
               <BarChart3 className="w-4 h-4 text-emerald-400" />
               Income Stream Volume Comparison
             </h3>
             <div className="h-48 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={sourceBreakdown} layout="vertical" margin={{ top: 5, right: 20, left: 55, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#334155" opacity={0.4} />
-                  <XAxis type="number" stroke="#94a3b8" fontSize={11} />
-                  <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={11} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--c-line-strong)" opacity={0.4} />
+                  <XAxis type="number" stroke="var(--c-ink-3)" fontSize={11} />
+                  <YAxis dataKey="name" type="category" stroke="var(--c-ink-3)" fontSize={11} />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', fontSize: '12px' }}
+                    contentStyle={{ backgroundColor: 'var(--c-surface)', borderColor: 'var(--c-line-strong)', borderRadius: '12px', fontSize: '12px' }}
                     formatter={(val: number | undefined) => [formatCurrency(val || 0), 'Total Inflow']}
                   />
                   <Bar dataKey="value" fill="#10b981" radius={[0, 4, 4, 0]} />
@@ -419,15 +419,15 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       )}
 
       {/* Filter & Search Toolbar */}
-      <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="p-4 rounded-2xl bg-surface border border-line shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-ink-3 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search income description, payer, tags..."
-            className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-white focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            className="w-full pl-9 pr-4 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:ring-2 focus:ring-emerald-500 focus:outline-none"
           />
         </div>
 
@@ -436,7 +436,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
           <select
             value={selectedSource}
             onChange={(e) => setSelectedSource(e.target.value)}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+            className="px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:outline-none cursor-pointer"
           >
             <option value="all">All Income Streams</option>
             {DEFAULT_INCOME_SOURCES.map((src) => (
@@ -450,7 +450,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-3 py-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none cursor-pointer"
+            className="px-3 py-2 bg-canvas border border-line rounded-xl text-xs text-ink focus:outline-none cursor-pointer"
           >
             <option value="date_desc">Newest Date First</option>
             <option value="date_asc">Oldest Date First</option>
@@ -461,11 +461,11 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
       </div>
 
       {/* Income Records List */}
-      <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden" id="income-table-card">
-        <div className="px-5 py-4 border-b border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
+      <div className="bg-surface rounded-2xl border border-line shadow-sm overflow-hidden" id="income-table-card">
+        <div className="px-5 py-4 border-b border-line flex items-center justify-between">
+          <h3 className="text-sm font-bold text-ink flex items-center gap-2">
             <span>Income Transactions</span>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-slate-800 text-slate-400 font-normal">
+            <span className="text-xs px-2 py-0.5 rounded-md bg-elevated text-ink-3 font-normal">
               {displayIncomes.length} records
             </span>
           </h3>
@@ -475,16 +475,16 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
         </div>
 
         {displayIncomes.length === 0 ? (
-          <div className="py-16 text-center text-slate-400 text-xs">
-            <Wallet className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+          <div className="py-16 text-center text-ink-3 text-xs">
+            <Wallet className="w-10 h-10 text-ink-4 mx-auto mb-2" />
             No income transactions match your filters.
           </div>
         ) : (
-          <div className="divide-y divide-slate-800">
+          <div className="divide-y divide-line">
             {displayIncomes.map((tx) => (
               <div
                 key={tx.id}
-                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors"
+                className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-elevated/40 transition-colors"
               >
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
@@ -492,19 +492,19 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
                   </div>
                   <div>
                     <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                      <h4 className="text-xs font-bold text-white">{tx.description}</h4>
+                      <h4 className="text-xs font-bold text-ink">{tx.description}</h4>
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                         {tx.category}
                       </span>
                       {tx.payerOrClient && (
-                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700 flex items-center gap-1">
+                        <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-elevated text-ink-2 border border-line-strong flex items-center gap-1">
                           <UserCheck className="w-2.5 h-2.5 text-teal-400" />
                           {tx.payerOrClient}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400 mt-1">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-ink-3 mt-1">
                       <span className="font-mono">{tx.date}</span>
                       <span>•</span>
                       <span>{tx.paymentMethod}</span>
@@ -517,7 +517,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
                     </div>
 
                     {tx.notes && (
-                      <p className="text-[11px] text-slate-400 mt-1 italic">
+                      <p className="text-[11px] text-ink-3 mt-1 italic">
                         "{tx.notes}"
                       </p>
                     )}
@@ -527,7 +527,7 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
                         {tx.tags.map((t) => (
                           <span
                             key={t}
-                            className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono"
+                            className="text-[10px] px-1.5 py-0.2 rounded bg-elevated text-ink-2 font-mono"
                           >
                             #{t}
                           </span>
@@ -544,14 +544,14 @@ export const IncomeView: React.FC<IncomeViewProps> = ({
                   <div className="flex items-center space-x-1">
                     <button
                       onClick={() => onEditTransaction(tx)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-ink-3 hover:text-ink hover:bg-elevated transition-colors cursor-pointer"
                       title="Edit Income"
                     >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => deleteTransaction(tx.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-ink-3 hover:text-rose-400 hover:bg-elevated transition-colors cursor-pointer"
                       title="Delete Income"
                     >
                       <Trash2 className="w-4 h-4" />

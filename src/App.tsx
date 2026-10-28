@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FinanceProvider, useFinance } from './context/FinanceContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Dashboard } from './components/Dashboard';
 import { IncomeView } from './components/IncomeView';
@@ -9,7 +10,6 @@ import { ReportsAiView, ReportsAiTab } from './components/ReportsAiView';
 import { TransactionModal } from './components/TransactionModal';
 import { AuthModal } from './components/AuthModal';
 import { AuthGateway } from './components/AuthGateway';
-import { SmartImportModal } from './components/SmartImportModal';
 import { Transaction } from './types';
 
 const MainAppContent: React.FC = () => {
@@ -24,7 +24,6 @@ const MainAppContent: React.FC = () => {
   const [budgetGoalsTab, setBudgetGoalsTab] = useState<PlanningTab>('budgets');
   const [reportsAiTab, setReportsAiTab] = useState<ReportsAiTab>('reports');
   const [guestPreview, setGuestPreview] = useState(false);
-  const [isSmartImportOpen, setIsSmartImportOpen] = useState(false);
 
   // If user is not authenticated and hasn't selected guest preview, render the Auth Gateway
   if (!isAuthenticated && !currentUser && !guestPreview) {
@@ -71,13 +70,12 @@ const MainAppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-emerald-500 selection:text-slate-950 flex flex-col">
+    <div className="min-h-screen bg-canvas text-ink font-sans selection:bg-emerald-500 selection:text-white flex flex-col">
       {/* Navigation Header */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={handleSetActiveTab}
         onOpenAuthModal={handleOpenAuth}
-        onOpenSmartImport={() => setIsSmartImportOpen(true)}
         onSignOut={() => setGuestPreview(false)}
       />
 
@@ -127,15 +125,15 @@ const MainAppContent: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500">
+      <footer className="border-t border-line bg-surface py-6 text-center text-xs text-ink-3">
         <div className="max-w-[1600px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center space-x-2">
-            <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 tracking-wider">
+            <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-500 tracking-wider">
               FINORA
             </span>
-            <span className="text-slate-400">— Precision Wealth & Personal Finance Intelligence System</span>
+            <span className="text-ink-3">— Precision Wealth & Personal Finance Intelligence System</span>
           </div>
-          <div className="flex items-center space-x-4 text-[11px] text-slate-400">
+          <div className="flex items-center space-x-4 text-[11px] text-ink-3">
             <span>Encrypted Ledger Storage</span>
             <span>•</span>
             <span>Gemini AI Intelligence</span>
@@ -162,19 +160,17 @@ const MainAppContent: React.FC = () => {
         onClose={() => setIsAuthModalOpen(false)}
       />
 
-      <SmartImportModal
-        isOpen={isSmartImportOpen}
-        onClose={() => setIsSmartImportOpen(false)}
-      />
     </div>
   );
 };
 
 export function App() {
   return (
-    <FinanceProvider>
-      <MainAppContent />
-    </FinanceProvider>
+    <ThemeProvider>
+      <FinanceProvider>
+        <MainAppContent />
+      </FinanceProvider>
+    </ThemeProvider>
   );
 }
 
