@@ -14,9 +14,6 @@ import {
   EyeOff,
   ArrowRight,
   ShieldCheck,
-  Sparkles,
-  TrendingUp,
-  Target,
   Briefcase,
   GraduationCap,
   Phone,
@@ -312,11 +309,6 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
         <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Column: Value Proposition & Inspiring Visual Callout */}
           <div className="lg:col-span-5 space-y-6 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next-Gen Wealth Management System</span>
-            </div>
-
             <div>
               <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-[1.15]">
                 Master Your Capital. <br />
@@ -324,55 +316,8 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({ onEnterGuest }) => {
                   Command Your Future.
                 </span>
               </h1>
-              <p className="text-sm text-slate-400 mt-3 leading-relaxed font-normal">
-                An institutional-grade personal financial operating system with real-time transaction tracking, predictive budget guardrails, and AI wealth intelligence.
-              </p>
             </div>
 
-            {/* Inspiring Statement Card (Replaced Welcome Banner) */}
-            <div className="p-4.5 rounded-2xl bg-gradient-to-br from-slate-900/95 via-slate-900/80 to-emerald-950/40 border border-emerald-500/25 shadow-xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
-              
-              <div className="flex items-center space-x-2.5 mb-2">
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shadow-sm">
-                  <ShieldCheck className="w-4 h-4 stroke-[2.2]" />
-                </div>
-                <div>
-                  <h3 className="text-xs font-bold text-white tracking-wide uppercase">
-                    Architect Your Financial Independence
-                  </h3>
-                  <div className="text-[10px] text-emerald-400/90 font-semibold">
-                    Autonomous Intelligence • Complete Data Sovereignty
-                  </div>
-                </div>
-              </div>
-
-              <p className="text-xs text-slate-300 leading-relaxed pt-1">
-                Gain uncompromising clarity over every dollar. Eliminate wasteful spending, automate compounding savings targets, and let proactive intelligence guide your wealth accumulation.
-              </p>
-
-              <div className="mt-3 pt-2.5 border-t border-slate-800/80 flex items-center justify-between text-[11px]">
-                <span className="text-slate-400 flex items-center gap-1.5 font-medium">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Bank-Grade Encryption
-                </span>
-                <span className="text-emerald-400 font-semibold">100% Private & Persistent</span>
-              </div>
-            </div>
-
-            {/* Highlights Grid */}
-            <div className="grid grid-cols-2 gap-3 pt-1">
-              <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition-colors">
-                <TrendingUp className="w-4 h-4 text-emerald-400 mb-1.5 stroke-[2.2]" />
-                <div className="text-xs font-bold text-white">Live Cashflow Analytics</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Multi-stream income & recurring bills</div>
-              </div>
-              <div className="p-3.5 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-slate-700 transition-colors">
-                <Target className="w-4 h-4 text-teal-400 mb-1.5 stroke-[2.2]" />
-                <div className="text-xs font-bold text-white">Target Milestone Engine</div>
-                <div className="text-[11px] text-slate-400 mt-0.5">Visual progress & pacing analytics</div>
-              </div>
-            </div>
           </div>
 
           {/* Right Column: Authentication Card */}
